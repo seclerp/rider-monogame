@@ -1,5 +1,5 @@
 <idea-plugin require-restart="true">
-  <id>com.jetbrains.rider.plugins.monogamerider</id>
+  <id>monogame.rider</id>
   <name>MonoGameRider</name>
   <version>_PLACEHOLDER_</version>
   <vendor url="https://project-url">Author</vendor>
@@ -13,11 +13,18 @@
   </description>
 
   <extensions defaultExtensionNs="com.intellij">
-    <applicationConfigurable groupId="language" instance="com.jetbrains.rider.plugins.monogamerider.SampleOptionsPage" id="SampleOptionsPage" />
+    <applicationConfigurable groupId="language" instance="monogame.rider.SampleOptionsPage" id="SampleOptionsPage" />
+    <fileType name="MonoGame Content Pipeline File" implementationClass="monogame.rider.mgcb.MgcbFileType"
+              fieldName="Instance" language="MGCB" extensions="mgcb"/>
+    <lang.parserDefinition language="MGCB"
+                           implementationClass="monogame.rider.mgcb.MgcbParserDefinition"/>
+    <lang.syntaxHighlighterFactory language="MGCB"
+                                   implementationClass="monogame.rider.mgcb.MgcbSyntaxHighlighterFactory"/>
+    <colorSettingsPage implementation="monogame.rider.mgcb.settings.MgcbColorSettingsPage"/>
   </extensions>
 
   <actions>
-    <action id="SampleAction" class="com.jetbrains.rider.plugins.monogamerider.SampleAction"
+    <action id="SampleAction" class="monogame.rider.SampleAction"
             text="Do Something" description="Do Something Description">
     </action>
   </actions>

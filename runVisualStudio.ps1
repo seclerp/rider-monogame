@@ -8,7 +8,7 @@ $ErrorActionPreference = "Stop"
 $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 Set-Location $PSScriptRoot
 
-. ".\settings.ps1"
+. ".\monogame.rider.mgcb.settings.ps1"
 
 $UserProjectXmlFile = "$SourceBasePath\$PluginId\$PluginId.csproj.user"
 

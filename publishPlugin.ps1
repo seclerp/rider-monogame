@@ -11,7 +11,7 @@ $ErrorActionPreference = "Stop"
 $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
 Set-Location $PSScriptRoot
 
-. ".\settings.ps1"
+. ".\monogame.rider.mgcb.settings.ps1"
 
 $ChangelogText = ([Regex]::Matches([System.IO.File]::ReadAllText("CHANGELOG.md"), '(?s)(##.+?.+?)(?=##|$)').Captures | Select -First 10) -Join ''
 

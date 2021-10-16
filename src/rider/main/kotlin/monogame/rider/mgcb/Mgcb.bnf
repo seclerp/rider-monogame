@@ -1,0 +1,20 @@
+{
+  parserClass="monogame.rider.mgcb.parser.MgcbParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Mgcb"
+  psiImplClassSuffix="Impl"
+  psiPackage="monogame.rider.mgcb.psi"
+  psiImplPackage="monogame.rider.mgcb.psi"
+
+  elementTypeHolderClass="monogame.rider.mgcb.psi.MgcbTypes"
+  elementTypeClass="monogame.rider.mgcb.psi.MgcbElementType"
+  tokenTypeClass="monogame.rider.mgcb.psi.MgcbTokenType"
+}
+
+mgcbFile ::= item_*
+
+private item_ ::= (property|COMMENT|CRLF)
+
+property ::= (KEY SEPARATOR VALUE|KEY SEPARATOR|KEY)
