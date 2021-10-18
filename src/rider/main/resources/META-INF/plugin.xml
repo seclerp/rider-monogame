@@ -21,6 +21,8 @@
     <lang.syntaxHighlighterFactory language="MGCB"
                                    implementationClass="monogame.rider.mgcb.MgcbSyntaxHighlighterFactory"/>
     <colorSettingsPage implementation="monogame.rider.mgcb.settings.MgcbColorSettingsPage"/>
+    <completion.contributor language="MGCB"
+                            implementationClass="monogame.rider.mgcb.MgcbCompletionContributor"/>
   </extensions>
 
   <actions>
