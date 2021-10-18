@@ -15,6 +15,20 @@
 
 mgcbFile ::= item_*
 
-private item_ ::= (property|COMMENT|CRLF)
+private item_ ::= (
+    option
+    | set_instruction
+    | COMMENT
+    | CRLF
+)
 
-property ::= (KEY SEPARATOR VALUE|KEY SEPARATOR|KEY)
+option ::= (
+    OPTION_KEY OPTION_SEPARATOR OPTION_VALUE
+    | OPTION_KEY OPTION_SEPARATOR
+    | OPTION_KEY
+)
+
+set_instruction ::= (
+    SET_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER EQ PREPROCESSOR_VALUE
+    | SET_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER
+)

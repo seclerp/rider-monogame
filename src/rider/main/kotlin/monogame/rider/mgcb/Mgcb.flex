@@ -17,21 +17,42 @@ import com.intellij.psi.TokenType;
 
 CRLF=\R
 EOL=[\r\n]
+SPACES=[\ \t\f]
 WHITE_SPACE=[\ \n\t\f]
 COMMENT="#"[^\r\n]*
-OPTION_KEY="/"[^:\r\n]*
+
+OPTION_KEY="/"[^\ \t:\r\n]+
 OPTION_SEPARATOR=":"
 OPTION_VALUE=[^\r\n]+
 
-%state WAITING_VALUE
+PREPROCESSOR_IDENTIFIER=[^\ \t:=\r\n]+
+PREPROCESSOR_VALUE=[^\ \t:=\r\n]+
+EQ="="
+
+SET_KEYWORD="$set"
+IF_KEYWORD="$if"
+ENDIF_KEYWORD="$endif"
+
+%state WAITING_OPTION_KEY
+%state WAITING_OPTION_VALUE
+%state WAITING_SET_KEY
+%state WAITING_SET_VALUE
+%state WAITING_WHITESPACE
 
 %%
 
 <YYINITIAL> {COMMENT}                                       { yybegin(YYINITIAL); return MgcbTypes.COMMENT; }
-<YYINITIAL> {OPTION_KEY}                                    { yybegin(YYINITIAL); return MgcbTypes.KEY; }
-<YYINITIAL> {OPTION_SEPARATOR}                              { yybegin(WAITING_VALUE); return MgcbTypes.SEPARATOR; }
-<WAITING_VALUE> {WHITE_SPACE}*{EOL}                         { yybegin(YYINITIAL); return MgcbTypes.VALUE; }
-<WAITING_VALUE> {OPTION_VALUE}                              { yybegin(YYINITIAL); return MgcbTypes.VALUE; }
-({CRLF}|{WHITE_SPACE})+                                     { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+<YYINITIAL> {OPTION_KEY}                                    { yybegin(WAITING_OPTION_KEY); return MgcbTypes.OPTION_KEY; }
+<WAITING_OPTION_KEY> {OPTION_SEPARATOR}                     { yybegin(WAITING_OPTION_VALUE); return MgcbTypes.OPTION_SEPARATOR; }
+<WAITING_OPTION_VALUE> {WHITE_SPACE}*{EOL}                  { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
+<WAITING_OPTION_VALUE> {OPTION_VALUE}                       { yybegin(WAITING_WHITESPACE); return MgcbTypes.OPTION_VALUE; }
+
+<YYINITIAL> {SET_KEYWORD}                                   { yybegin(WAITING_SET_KEY); return MgcbTypes.SET_KEYWORD; }
+<WAITING_SET_KEY> {SPACES}+                                 { yybegin(WAITING_SET_KEY); return TokenType.WHITE_SPACE; }
+<WAITING_SET_KEY> {PREPROCESSOR_IDENTIFIER}                 { yybegin(WAITING_SET_KEY); return MgcbTypes.PREPROCESSOR_IDENTIFIER; }
+<WAITING_SET_KEY> {EQ}                                      { yybegin(WAITING_SET_VALUE); return MgcbTypes.EQ; }
+<WAITING_SET_VALUE> {PREPROCESSOR_VALUE}                    { yybegin(WAITING_WHITESPACE); return MgcbTypes.PREPROCESSOR_VALUE; }
+
+<WAITING_WHITESPACE> ({CRLF}|{WHITE_SPACE})+                { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
 
 [^]                                                         { return TokenType.BAD_CHARACTER; }

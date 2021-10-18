@@ -25,6 +25,8 @@ class MgcbColorSettingsPage : ColorSettingsPage {
 
 /rebuild
 
+${'$'}set BuildEffects=Yes
+
 # Build a texture
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -37,10 +39,14 @@ class MgcbColorSettingsPage : ColorSettingsPage {
 
     companion object {
         private val DESCRIPTORS = arrayOf(
-            AttributesDescriptor("Key", MgcbSyntaxHighlighter.KEY),
-            AttributesDescriptor("Separator", MgcbSyntaxHighlighter.SEPARATOR),
-            AttributesDescriptor("Value", MgcbSyntaxHighlighter.VALUE),
-            AttributesDescriptor("Bad value", MgcbSyntaxHighlighter.BAD_CHARACTER)
+            AttributesDescriptor("Option name", MgcbSyntaxHighlighter.OPTION_KEY),
+            AttributesDescriptor("Option separator", MgcbSyntaxHighlighter.OPTION_SEPARATOR),
+            AttributesDescriptor("Option value", MgcbSyntaxHighlighter.OPTION_VALUE),
+            AttributesDescriptor("Preprocessor keywords", MgcbSyntaxHighlighter.PREPROCESSOR_KEYWORD),
+            AttributesDescriptor("Preprocessor identifier", MgcbSyntaxHighlighter.PREPROCESSOR_IDENTIFIER),
+            AttributesDescriptor("Preprocessor separator", MgcbSyntaxHighlighter.PREPROCESSOR_SEPARATOR),
+            AttributesDescriptor("Preprocessor value", MgcbSyntaxHighlighter.PREPROCESSOR_VALUE),
+//            AttributesDescriptor("Bad value", MgcbSyntaxHighlighter.BAD_CHARACTER)
         )
     }
 }
