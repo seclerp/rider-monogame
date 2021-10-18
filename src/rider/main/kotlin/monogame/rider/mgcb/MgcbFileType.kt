@@ -1,6 +1,7 @@
 package monogame.rider.mgcb
 
 import com.intellij.openapi.fileTypes.LanguageFileType
+import monogame.rider.MonoGameIcons
 import javax.swing.Icon
 
 class MgcbFileType : LanguageFileType(MgcbLanguage.Instance) {
@@ -10,7 +11,7 @@ class MgcbFileType : LanguageFileType(MgcbLanguage.Instance) {
 
     override fun getDefaultExtension(): String = "mgcb"
 
-    override fun getIcon(): Icon? = null
+    override fun getIcon(): Icon = MonoGameIcons.MgcbFile
 
     companion object {
         val Instance = MgcbFileType()

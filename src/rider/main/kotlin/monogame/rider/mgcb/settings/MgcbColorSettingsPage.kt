@@ -5,6 +5,7 @@ import com.intellij.openapi.fileTypes.SyntaxHighlighter
 import com.intellij.openapi.options.colors.AttributesDescriptor
 import com.intellij.openapi.options.colors.ColorDescriptor
 import com.intellij.openapi.options.colors.ColorSettingsPage
+import monogame.rider.MonoGameIcons
 import monogame.rider.mgcb.MgcbSyntaxHighlighter
 import javax.swing.Icon
 
@@ -15,7 +16,7 @@ class MgcbColorSettingsPage : ColorSettingsPage {
 
     override fun getDisplayName(): String = "MGCB"
 
-    override fun getIcon(): Icon? = null
+    override fun getIcon(): Icon = MonoGameIcons.MgcbFile
 
     override fun getHighlighter(): SyntaxHighlighter = MgcbSyntaxHighlighter()
 

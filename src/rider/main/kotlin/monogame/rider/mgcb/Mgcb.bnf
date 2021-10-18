@@ -18,8 +18,9 @@ mgcbFile ::= item_*
 private item_ ::= (
     option
     | set_instruction
+    | if_instruction
     | COMMENT
-    | CRLF
+    | WHITE_SPACE
 )
 
 option ::= (
@@ -31,4 +32,9 @@ option ::= (
 set_instruction ::= (
     SET_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER EQ PREPROCESSOR_VALUE
     | SET_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER
+)
+
+if_instruction ::= (
+    IF_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER EQ PREPROCESSOR_VALUE WHITE_SPACE item_* ENDIF_KEYWORD
+    | IF_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER WHITE_SPACE item_* ENDIF_KEYWORD
 )
