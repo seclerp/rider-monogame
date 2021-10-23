@@ -23,6 +23,8 @@
     <colorSettingsPage implementation="monogame.rider.mgcb.settings.MgcbColorSettingsPage"/>
     <completion.contributor language="MGCB"
                             implementationClass="monogame.rider.mgcb.MgcbCompletionContributor"/>
+
+    <fileEditorProvider implementation="monogame.rider.mgcb.previewer.MgcbPreviewerEditorProvider" />
   </extensions>
 
   <actions>
