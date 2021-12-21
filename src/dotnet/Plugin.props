@@ -1,13 +1,13 @@
 ﻿<Project>
 
   <PropertyGroup>
-    <SdkVersion>2021.2.0</SdkVersion>
+    <SdkVersion Condition=" '$(SdkVersion)' == '' ">2021.3.0</SdkVersion>
 
-    <Title>MonoGameRider</Title>
-    <Description>Description</Description>
+    <Title>MonoGame</Title>
+    <Description>JetBrains Rider plugin for MonoGame</Description>
 
-    <Authors>Author</Authors>
-    <Copyright>Copyright $([System.DateTime]::Now.Year) Maintainers of MonoGameRider</Copyright>
+    <Authors>Andrew Rublyov</Authors>
+    <Copyright>Copyright $([System.DateTime]::Now.Year) Andrew Rublyov</Copyright>
     <PackageTags>resharper plugin</PackageTags>
 
     <PackageProjectUrl></PackageProjectUrl>

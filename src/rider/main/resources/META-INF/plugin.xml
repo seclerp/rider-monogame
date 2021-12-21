@@ -13,24 +13,17 @@
   </description>
 
   <extensions defaultExtensionNs="com.intellij">
-    <applicationConfigurable groupId="language" instance="monogame.rider.SampleOptionsPage" id="SampleOptionsPage" />
-    <fileType name="MonoGame Content Pipeline File" implementationClass="monogame.rider.mgcb.MgcbFileType"
+    <fileType name="MonoGame Content Pipeline File" implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbFileType"
               fieldName="Instance" language="MGCB" extensions="mgcb"/>
     <lang.parserDefinition language="MGCB"
-                           implementationClass="monogame.rider.mgcb.MgcbParserDefinition"/>
+                           implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbParserDefinition"/>
     <lang.syntaxHighlighterFactory language="MGCB"
-                                   implementationClass="monogame.rider.mgcb.MgcbSyntaxHighlighterFactory"/>
-    <colorSettingsPage implementation="monogame.rider.mgcb.settings.MgcbColorSettingsPage"/>
+                                   implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbSyntaxHighlighterFactory"/>
+    <colorSettingsPage implementation="me.seclerp.rider.plugins.monogame.mgcb.settings.MgcbColorSettingsPage"/>
     <completion.contributor language="MGCB"
-                            implementationClass="monogame.rider.mgcb.MgcbCompletionContributor"/>
+                            implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbCompletionContributor"/>
 
-    <fileEditorProvider implementation="monogame.rider.mgcb.previewer.MgcbPreviewerEditorProvider" />
+    <fileEditorProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbPreviewerEditorProvider" />
   </extensions>
-
-  <actions>
-    <action id="SampleAction" class="monogame.rider.SampleAction"
-            text="Do Something" description="Do Something Description">
-    </action>
-  </actions>
 
 </idea-plugin>

@@ -1,0 +1,40 @@
+{
+  parserClass="me.seclerp.rider.plugins.monogame.mgcb.parser.MgcbParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Mgcb"
+  psiImplClassSuffix="Impl"
+  psiPackage="me.seclerp.rider.plugins.monogame.mgcb.psi"
+  psiImplPackage="me.seclerp.rider.plugins.monogame.mgcb.psi"
+
+  elementTypeHolderClass="me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbTypes"
+  elementTypeClass="me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbElementType"
+  tokenTypeClass="me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbTokenType"
+}
+
+mgcbFile ::= item_*
+
+private item_ ::= (
+    option
+    | set_instruction
+    | if_instruction
+    | COMMENT
+    | WHITE_SPACE
+)
+
+option ::= (
+    OPTION_KEY OPTION_SEPARATOR OPTION_VALUE
+    | OPTION_KEY OPTION_SEPARATOR
+    | OPTION_KEY
+)
+
+set_instruction ::= (
+    SET_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER EQ PREPROCESSOR_VALUE
+    | SET_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER
+)
+
+if_instruction ::= (
+    IF_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER EQ PREPROCESSOR_VALUE WHITE_SPACE item_* ENDIF_KEYWORD
+    | IF_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER WHITE_SPACE item_* ENDIF_KEYWORD
+)
