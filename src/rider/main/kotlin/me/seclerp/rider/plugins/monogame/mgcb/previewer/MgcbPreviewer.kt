@@ -6,10 +6,19 @@ import com.intellij.openapi.fileEditor.FileEditorState
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.psi.PsiManager
+import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.ui.JBSplitter
+import com.intellij.ui.treeStructure.Tree
+import me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbFile
+import me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbOption
+import me.seclerp.rider.plugins.monogame.mgcb.psi.getKey
+import me.seclerp.rider.plugins.monogame.mgcb.psi.getValue
+import me.seclerp.rider.plugins.monogame.substringAfterLast
+import me.seclerp.rider.plugins.monogame.substringBeforeLast
 import java.beans.PropertyChangeListener
 import javax.swing.JPanel
-
+import javax.swing.JTree
 
 class MgcbPreviewer(
     private val project: Project,
@@ -20,89 +29,115 @@ class MgcbPreviewer(
 
     private val previewerPanel = lazy {
         val root = JBSplitter(false, 0.5f)
-        root.firstComponent = JPanel()//getBuildEntriesTree()
+        root.firstComponent = getBuildEntriesTree()
         root.secondComponent = JPanel()
         root.dividerWidth = 3
         root
     }
-//
-//    private fun getBuildEntriesTree(): JTree {
-//        val mgcbFile = PsiManager.getInstance(project).findFile(currentFile) as MgcbFile
-//
-//        val nodeCache = mutableMapOf<String, MgcbTreeNode>()
-//        val rootDirectoryNode = MgcbFolderNode("Content")
-//        val buildOptionValues =
-//            PsiTreeUtil.getChildrenOfType(mgcbFile, MgcbOption::class.java)
-//                ?.filter { it.getKey() == "/build" }
-//                ?.mapNotNull { it.getValue() }
-//                ?: emptyList()
-//
-//        for (option in buildOptionValues) {
-//            process(rootDirectoryNode, option, nodeCache)
-//        }
-//
-//        val tree = Tree(rootDirectoryNode)
-//        tree.cellRenderer = MgcbNodeRenderer()
-//        tree.isRootVisible = false
-//        return tree
-//    }
-//
-//    private fun process(parent: MgcbTreeNode, childPath: String, nodeCache: MutableMap<String, MgcbTreeNode>) {
-//        val headNode = createChildNodeIfNeeded(parent, childPath, nodeCache)
-//
-//        if (headNode.parent != parent) {
-//            parent.add(headNode)
-//        }
-//
-//        if (!childPath.contains(delimiterRegex)) {
-//            return
-//        }
-//
-//        val tail = childPath.substringAfter(delimiterRegex, childPath)
-//
-//        process(headNode, tail, nodeCache)
-//    }
-//
-//    private fun createChildNodeIfNeeded(parent: MgcbTreeNode, parentPath: String, childPath: String, nodeCache: MutableMap<String, MgcbTreeNode>): MgcbTreeNode {
-//        val fullPath = "${parent.path}$childPath"
-//        return if (nodeCache.containsKey(fullPath)) {
-//            nodeCache[fullPath]!!
-//        } else {
-//            val headName = childPath.substringBefore(delimiterRegex, childPath)
-//            val headNodeInTree = parent.children().takeIf { name == headName } as MgcbTreeNode?
-//
-//            if (headNodeInTree == null) {
-//                val newNode = if (childPath.contains(delimiterRegex)) MgcbFolderNode(headName) else MgcbBuildEntryNode(headName)
-//                nodeCache[fullPath] = newNode
-//                newNode
-//            } else {
-//                nodeCache[fullPath] = headNodeInTree
-//                headNodeInTree
-//            }
-//        }
-//    }
-////
-//    private fun findNode(model: DefaultTreeModel, path: String): DefaultMutableTreeNode? {
-//        val node = model.root as DefaultMutableTreeNode
-//        val parts = path.split("/".toRegex()).toTypedArray()
-//        return if (node.userObject.toString() == parts[0]) {
-//            findNode(node, parts.copyOfRange(1, parts.size))
-//        } else null
-//    }
-//
-//    private fun findNode(node: DefaultMutableTreeNode, path: Array<String>): DefaultMutableTreeNode? {
-//        if (path.isEmpty()) {
-//            return node
-//        }
-//        val children: Enumeration<TreeNode> = node.children()
-//        while (children.hasMoreElements()) {
-//            val child = children.nextElement() as DefaultMutableTreeNode
-//            if (child.userObject.toString() == path[0]) {
-//                return findNode(child, path.copyOfRange(1, path.size))
-//            }
-//        }
-//        return null
-//    }
+
+    private fun getBuildEntriesTree(): JTree {
+        val mgcbFile = PsiManager.getInstance(project).findFile(currentFile) as MgcbFile
+
+        val rootDirectoryNode = MgcbFolderNode("Content")
+        val buildOptionValues =
+            PsiTreeUtil.getChildrenOfType(mgcbFile, MgcbOption::class.java)
+                ?.filter { it.getKey() == "/build" }
+                ?.mapNotNull { it.getValue() }
+                ?: emptyList()
+
+        // 1. Get all parent folders per each path
+        val parentsPerPath = buildOptionValues.map { getParentsHierarchy(it) }
+
+        // 2. Merge + distinct
+        val flatten = parentsPerPath.flatten().distinct()
+
+        // 3. Get full parent paths
+        val pathsWithParents = flatten.map { Pair(getParentPath(it), it) }
+
+        // 4. Add each item to the corresponding parent in dict
+        val nodeCache = buildNodeCache(pathsWithParents)
+
+        // 5. Process every tree node and create corresponding tree
+        val topLevelNodes = pathsWithParents
+            .filter { it.first == "" }
+            .map { createNodeFrom(it.second, nodeCache) }
+
+        for (node in topLevelNodes) {
+            rootDirectoryNode.add(node)
+        }
+
+        val tree = Tree(rootDirectoryNode)
+        tree.cellRenderer = MgcbNodeRenderer()
+        tree.isRootVisible = false
+        return tree
+    }
+
+    // Will transform
+    // a/b/c
+    //
+    // To
+    // a
+    // a/b
+    // a/b/c
+    private fun getParentsHierarchy(path: String) : List<String> {
+        val normalizedPath = path.trim { it.toString().matches(delimiterRegex) }
+        val pathParts = normalizedPath.split(delimiterRegex).toTypedArray()
+
+        return mutableListOf<String>().apply {
+            val aggregatedPath: StringBuilder = StringBuilder(normalizedPath.length)
+            for (i in 0 until pathParts.count()) {
+                val part = pathParts[i]
+                if (i > 0) {
+                    aggregatedPath.append("/")
+                }
+                val newParent = aggregatedPath.append(part).toString()
+                add(newParent)
+            }
+        }
+    }
+
+    // Will transform
+    // a/b/c
+    //
+    // To
+    //
+    // a/b
+    private fun getParentPath(path: String): String {
+        return path.substringBeforeLast(delimiterRegex, "")
+    }
+
+    private fun buildNodeCache(pathsWithParents: List<Pair<String, String>>): Map<String, List<String>> {
+        val nodeCache = mutableMapOf<String, MutableList<String>>()
+        for ((parent, path) in pathsWithParents) {
+            if (!nodeCache.containsKey(parent)) {
+                nodeCache[parent] = mutableListOf()
+            }
+
+            nodeCache[path] = mutableListOf()
+            nodeCache[parent]!!.add(path)
+        }
+
+        return nodeCache
+    }
+
+    private fun createNodeFrom(path: String, cache: Map<String, List<String>>): MgcbTreeNode {
+        if (cache[path] == null) {
+            // TODO
+            throw Exception()
+        }
+
+        if (cache[path]!!.isEmpty()) {
+            return MgcbBuildEntryNode(path.substringAfterLast(delimiterRegex))
+        }
+
+        val children = cache[path]!!.map { createNodeFrom(it, cache) }
+        val folderNode = MgcbFolderNode(path.substringAfterLast(delimiterRegex))
+        for (child in children) {
+            folderNode.add(child)
+        }
+
+        return folderNode
+    }
 
     override fun getComponent() = previewerPanel.value
 
