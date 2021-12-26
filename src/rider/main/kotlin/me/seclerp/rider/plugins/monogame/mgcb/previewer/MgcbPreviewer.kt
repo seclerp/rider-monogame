@@ -6,19 +6,25 @@ import com.intellij.openapi.fileEditor.FileEditorState
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.wm.impl.ToolWindowHeader
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.ui.JBSplitter
+import com.intellij.ui.components.JBLabel
+import com.intellij.ui.components.JBScrollPane
+import com.intellij.ui.table.JBTable
 import com.intellij.ui.treeStructure.Tree
+import com.intellij.util.ui.UIUtil
 import me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbFile
 import me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbOption
 import me.seclerp.rider.plugins.monogame.mgcb.psi.getKey
 import me.seclerp.rider.plugins.monogame.mgcb.psi.getValue
 import me.seclerp.rider.plugins.monogame.substringAfterLast
 import me.seclerp.rider.plugins.monogame.substringBeforeLast
+import java.awt.BorderLayout
 import java.beans.PropertyChangeListener
 import javax.swing.JPanel
-import javax.swing.JTree
+import javax.swing.table.JTableHeader
 
 class MgcbPreviewer(
     private val project: Project,
@@ -29,13 +35,16 @@ class MgcbPreviewer(
 
     private val previewerPanel = lazy {
         val root = JBSplitter(false, 0.5f)
-        root.firstComponent = getBuildEntriesTree()
-        root.secondComponent = JPanel()
+        val entriesTree = getBuildEntriesTreePanel()
+        val propertiesPanel = getPropertiesPanel()
+
+        root.firstComponent = entriesTree
+        root.secondComponent = propertiesPanel
         root.dividerWidth = 3
         root
     }
 
-    private fun getBuildEntriesTree(): JTree {
+    private fun getBuildEntriesTreePanel(): JPanel {
         val mgcbFile = PsiManager.getInstance(project).findFile(currentFile) as MgcbFile
 
         val rootDirectoryNode = MgcbFolderNode("Content")
@@ -69,7 +78,10 @@ class MgcbPreviewer(
         val tree = Tree(rootDirectoryNode)
         tree.cellRenderer = MgcbNodeRenderer()
         tree.isRootVisible = false
-        return tree
+
+        val container = JPanel(BorderLayout())
+        container.add(tree, BorderLayout.CENTER)
+        return container
     }
 
     // Will transform
@@ -137,6 +149,41 @@ class MgcbPreviewer(
         }
 
         return folderNode
+    }
+
+    private fun getPropertiesPanel(): JPanel {
+        val splitter = JBSplitter(true, 0.75f)
+
+        val propertiesModel = KeyValueModel(mutableListOf(
+            Pair("Name", "wood.png"),
+            Pair("Content Path", "Textures/wood"),
+            Pair("Build Path", "Textures/wood.png"),
+            Pair("Importer", "TextureImporter"),
+            Pair("Processor", "TextureProcessor")
+        ))
+
+        val propertiesTable = JBTable(propertiesModel)
+        propertiesTable.tableHeader = JTableHeader(propertiesTable.columnModel)
+        propertiesTable.tableHeader.reorderingAllowed = false;
+        val propertiesScrollPane = JBScrollPane(propertiesTable)
+        val propertiesPanel = JPanel(BorderLayout())
+        propertiesPanel.add(JBLabel("Properties"), BorderLayout.NORTH)
+        propertiesPanel.add(propertiesScrollPane, BorderLayout.CENTER)
+
+        val processorParamsModel = KeyValueModel(mutableListOf(Pair("ColorKeyEnabled", "false")))
+        val processorParamsTable = JBTable(processorParamsModel)
+        processorParamsTable.tableHeader = JTableHeader(processorParamsTable.columnModel)
+        processorParamsTable.tableHeader.reorderingAllowed = false;
+        val processorParamsScrollPane = JBScrollPane(processorParamsTable)
+        val processorParamsPanel = JPanel(BorderLayout())
+        processorParamsPanel.add(JBLabel("Processor parameters"), BorderLayout.NORTH)
+        processorParamsPanel.add(processorParamsScrollPane, BorderLayout.CENTER)
+
+        splitter.firstComponent = propertiesPanel
+        splitter.secondComponent = processorParamsPanel
+        splitter.dividerWidth = 3
+
+        return splitter
     }
 
     override fun getComponent() = previewerPanel.value
