@@ -1,5 +1,7 @@
 package me.seclerp.rider.plugins.monogame
 
+import com.intellij.util.ui.ListTableModel
+
 fun String.substringAfter(regex: Regex, missingDelimiterValue: String = this): String {
     val firstMatch = regex.find(this) ?: return missingDelimiterValue
 
@@ -30,4 +32,10 @@ fun String.substringAfterLast(regex: Regex, missingDelimiterValue: String = this
     }
 
     return substring(matches.last().range.last + 1)
+}
+
+fun <T> ListTableModel<T>.removeAllRows() {
+    val cachedRowCount = rowCount
+    for (row in 0 until cachedRowCount)
+        removeRow(0)
 }

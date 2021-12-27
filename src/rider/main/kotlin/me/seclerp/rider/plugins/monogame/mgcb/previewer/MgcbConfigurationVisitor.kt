@@ -1,44 +1,41 @@
 package me.seclerp.rider.plugins.monogame.mgcb.previewer
 
-import me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbOption
-import me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbVisitor
-import me.seclerp.rider.plugins.monogame.mgcb.psi.getKey
-import me.seclerp.rider.plugins.monogame.mgcb.psi.getValue
+import me.seclerp.rider.plugins.monogame.mgcb.psi.*
 
 class MgcbConfigurationVisitor : MgcbVisitor() {
     val configuration = MgcbConfiguration()
-    val currentProcessorParams = mutableMapOf<String, String>()
+    private val currentProcessorParams = mutableMapOf<String, String>()
 
-    var currentBuildEntry = BuildEntry()
+    private var currentBuildEntry = BuildEntry()
 
     override fun visitOption(option: MgcbOption) {
         super.visitOption(option)
         val optionValue = option.getValue()
 
         when (option.getKey()) {
-            "outputDir" -> configuration.outputDir = optionValue
-            "intermediateDir" -> configuration.intermediateDir = optionValue
-            "rebuild" -> configuration.rebuild = true
-            "clean" -> configuration.clean = true
-            "incremental" -> configuration.incremental = true
-            "reference" -> configuration.references.add(optionValue!!)
-            "platform" -> configuration.platform = optionValue
-            "profile" -> configuration.profile = optionValue
-            "config" -> configuration.config = optionValue
-            "compress" -> configuration.compress = true
+            "/outputDir" -> configuration.outputDir = optionValue
+            "/intermediateDir" -> configuration.intermediateDir = optionValue
+            "/rebuild" -> configuration.rebuild = true
+            "/clean" -> configuration.clean = true
+            "/incremental" -> configuration.incremental = true
+            "/reference" -> configuration.references.add(optionValue!!)
+            "/platform" -> configuration.platform = optionValue
+            "/profile" -> configuration.profile = optionValue
+            "/config" -> configuration.config = optionValue
+            "/compress" -> configuration.compress = true
 
-            "importer" -> currentBuildEntry.importer = optionValue
-            "processor" -> {
+            "/importer" -> currentBuildEntry.importer = optionValue
+            "/processor" -> {
                 currentProcessorParams.clear()
                 currentBuildEntry.processor = optionValue
             }
-            "processorParam" -> {
+            "/processorParam" -> {
                 val paramKey = optionValue!!.substringBefore("=")
                 val paramValue = optionValue.substringAfter("=")
 
                 currentProcessorParams[paramKey] = paramValue
             }
-            "build" -> {
+            "/build" -> {
                 val sourcePath = optionValue!!.substringBefore(";")
                 val destinationPath = optionValue.substringAfter(";", "")
 
@@ -48,9 +45,12 @@ class MgcbConfigurationVisitor : MgcbVisitor() {
                 }
                 currentBuildEntry.processorParams = currentProcessorParams.toMap()
                 configuration.buildEntries.add(currentBuildEntry)
-                currentBuildEntry = BuildEntry()
+                currentBuildEntry = BuildEntry(
+                    importer = currentBuildEntry.importer,
+                    processor = currentBuildEntry.processor
+                )
             }
-            "launchdebugger" -> configuration.launchDebugger = true
+            "/launchdebugger" -> configuration.launchDebugger = true
         }
     }
 }

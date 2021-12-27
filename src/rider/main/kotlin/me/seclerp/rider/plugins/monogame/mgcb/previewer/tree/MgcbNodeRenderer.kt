@@ -1,4 +1,4 @@
-package me.seclerp.rider.plugins.monogame.mgcb.previewer
+package me.seclerp.rider.plugins.monogame.mgcb.previewer.tree
 
 import com.intellij.ide.util.treeView.NodeRenderer
 import javax.swing.JTree

@@ -6,7 +6,6 @@ import com.intellij.openapi.fileEditor.FileEditorState
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.wm.impl.ToolWindowHeader
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.ui.JBSplitter
@@ -14,11 +13,14 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.table.JBTable
 import com.intellij.ui.treeStructure.Tree
-import com.intellij.util.ui.UIUtil
+import me.seclerp.rider.plugins.monogame.mgcb.previewer.properties.KeyValueModel
+import me.seclerp.rider.plugins.monogame.mgcb.previewer.tree.MgcbBuildEntryNode
+import me.seclerp.rider.plugins.monogame.mgcb.previewer.tree.MgcbFolderNode
+import me.seclerp.rider.plugins.monogame.mgcb.previewer.tree.MgcbNodeRenderer
+import me.seclerp.rider.plugins.monogame.mgcb.previewer.tree.MgcbTreeNode
 import me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbFile
 import me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbOption
-import me.seclerp.rider.plugins.monogame.mgcb.psi.getKey
-import me.seclerp.rider.plugins.monogame.mgcb.psi.getValue
+import me.seclerp.rider.plugins.monogame.removeAllRows
 import me.seclerp.rider.plugins.monogame.substringAfterLast
 import me.seclerp.rider.plugins.monogame.substringBeforeLast
 import java.awt.BorderLayout
@@ -33,8 +35,17 @@ class MgcbPreviewer(
 
     private val delimiterRegex = Regex("[/\\\\]")
 
+    private var configuration: MgcbConfiguration? = null
+    private val propertiesModel = KeyValueModel()
+    private val processorParamsModel = KeyValueModel()
+
     private val previewerPanel = lazy {
         val root = JBSplitter(false, 0.5f)
+
+        val mgcbFile = PsiManager.getInstance(project).findFile(currentFile) as MgcbFile
+        val mgcbOptions = PsiTreeUtil.getChildrenOfType(mgcbFile, MgcbOption::class.java)
+        configuration = getMgcbConfiguration(mgcbOptions)
+
         val entriesTree = getBuildEntriesTreePanel()
         val propertiesPanel = getPropertiesPanel()
 
@@ -44,24 +55,27 @@ class MgcbPreviewer(
         root
     }
 
-    private fun getBuildEntriesTreePanel(): JPanel {
-        val mgcbFile = PsiManager.getInstance(project).findFile(currentFile) as MgcbFile
+    private fun getMgcbConfiguration(mgcbOptions: Array<MgcbOption>?): MgcbConfiguration {
+        val visitor = MgcbConfigurationVisitor()
+        mgcbOptions?.forEach { it.accept(visitor) }
 
+        return visitor.configuration
+    }
+
+    private fun getBuildEntriesTreePanel(): JPanel {
         val rootDirectoryNode = MgcbFolderNode("Content")
-        val buildOptionValues =
-            PsiTreeUtil.getChildrenOfType(mgcbFile, MgcbOption::class.java)
-                ?.filter { it.getKey() == "/build" }
-                ?.mapNotNull { it.getValue() }
+        val buildPaths =
+            configuration?.buildEntries
                 ?: emptyList()
 
         // 1. Get all parent folders per each path
-        val parentsPerPath = buildOptionValues.map { getParentsHierarchy(it) }
+        val parentsPerPath = buildPaths.map { getParentsHierarchy(it) }
 
         // 2. Merge + distinct
-        val flatten = parentsPerPath.flatten().distinct()
+        val flatten = parentsPerPath.flatten().distinctBy { it.first }
 
         // 3. Get full parent paths
-        val pathsWithParents = flatten.map { Pair(getParentPath(it), it) }
+        val pathsWithParents = flatten.map { Triple(getParentPath(it.first), it.first, it.second) }
 
         // 4. Add each item to the corresponding parent in dict
         val nodeCache = buildNodeCache(pathsWithParents)
@@ -78,6 +92,7 @@ class MgcbPreviewer(
         val tree = Tree(rootDirectoryNode)
         tree.cellRenderer = MgcbNodeRenderer()
         tree.isRootVisible = false
+        tree.addTreeSelectionListener { selectedNodeChanged(tree.lastSelectedPathComponent as MgcbTreeNode) }
 
         val container = JPanel(BorderLayout())
         container.add(tree, BorderLayout.CENTER)
@@ -91,11 +106,11 @@ class MgcbPreviewer(
     // a
     // a/b
     // a/b/c
-    private fun getParentsHierarchy(path: String) : List<String> {
-        val normalizedPath = path.trim { it.toString().matches(delimiterRegex) }
+    private fun getParentsHierarchy(entry: BuildEntry) : List<Pair<String, BuildEntry>> {
+        val normalizedPath = entry.contentFilepath!!.trim { it.toString().matches(delimiterRegex) }
         val pathParts = normalizedPath.split(delimiterRegex).toTypedArray()
 
-        return mutableListOf<String>().apply {
+        return mutableListOf<Pair<String, BuildEntry>>().apply {
             val aggregatedPath: StringBuilder = StringBuilder(normalizedPath.length)
             for (i in 0 until pathParts.count()) {
                 val part = pathParts[i]
@@ -103,7 +118,7 @@ class MgcbPreviewer(
                     aggregatedPath.append("/")
                 }
                 val newParent = aggregatedPath.append(part).toString()
-                add(newParent)
+                add(Pair(newParent, entry))
             }
         }
     }
@@ -118,31 +133,32 @@ class MgcbPreviewer(
         return path.substringBeforeLast(delimiterRegex, "")
     }
 
-    private fun buildNodeCache(pathsWithParents: List<Pair<String, String>>): Map<String, List<String>> {
-        val nodeCache = mutableMapOf<String, MutableList<String>>()
-        for ((parent, path) in pathsWithParents) {
+    private fun buildNodeCache(pathsWithParents: List<Triple<String, String, BuildEntry>>): Map<String, Pair<BuildEntry?, List<String>>> {
+        val nodeCache = mutableMapOf<String, Pair<BuildEntry?, MutableList<String>>>()
+        for ((parent, path, entry) in pathsWithParents) {
             if (!nodeCache.containsKey(parent)) {
-                nodeCache[parent] = mutableListOf()
+                nodeCache[parent] = Pair(null, mutableListOf())
             }
 
-            nodeCache[path] = mutableListOf()
-            nodeCache[parent]!!.add(path)
+            nodeCache[path] = Pair(entry, mutableListOf())
+            nodeCache[parent]!!.second.add(path)
         }
 
         return nodeCache
     }
 
-    private fun createNodeFrom(path: String, cache: Map<String, List<String>>): MgcbTreeNode {
+    private fun createNodeFrom(path: String, cache: Map<String, Pair<BuildEntry?, List<String>>>): MgcbTreeNode {
         if (cache[path] == null) {
             // TODO
             throw Exception()
         }
 
-        if (cache[path]!!.isEmpty()) {
-            return MgcbBuildEntryNode(path.substringAfterLast(delimiterRegex))
+        val cachedValue = cache[path]!!
+        if (cachedValue.second.isEmpty()) {
+            return MgcbBuildEntryNode(path.substringAfterLast(delimiterRegex), cachedValue.first!!)
         }
 
-        val children = cache[path]!!.map { createNodeFrom(it, cache) }
+        val children = cachedValue.second.map { createNodeFrom(it, cache) }
         val folderNode = MgcbFolderNode(path.substringAfterLast(delimiterRegex))
         for (child in children) {
             folderNode.add(child)
@@ -154,14 +170,6 @@ class MgcbPreviewer(
     private fun getPropertiesPanel(): JPanel {
         val splitter = JBSplitter(true, 0.75f)
 
-        val propertiesModel = KeyValueModel(mutableListOf(
-            Pair("Name", "wood.png"),
-            Pair("Content Path", "Textures/wood"),
-            Pair("Build Path", "Textures/wood.png"),
-            Pair("Importer", "TextureImporter"),
-            Pair("Processor", "TextureProcessor")
-        ))
-
         val propertiesTable = JBTable(propertiesModel)
         propertiesTable.tableHeader = JTableHeader(propertiesTable.columnModel)
         propertiesTable.tableHeader.reorderingAllowed = false;
@@ -170,7 +178,6 @@ class MgcbPreviewer(
         propertiesPanel.add(JBLabel("Properties"), BorderLayout.NORTH)
         propertiesPanel.add(propertiesScrollPane, BorderLayout.CENTER)
 
-        val processorParamsModel = KeyValueModel(mutableListOf(Pair("ColorKeyEnabled", "false")))
         val processorParamsTable = JBTable(processorParamsModel)
         processorParamsTable.tableHeader = JTableHeader(processorParamsTable.columnModel)
         processorParamsTable.tableHeader.reorderingAllowed = false;
@@ -184,6 +191,25 @@ class MgcbPreviewer(
         splitter.dividerWidth = 3
 
         return splitter
+    }
+
+    private fun selectedNodeChanged(node: MgcbTreeNode) {
+        propertiesModel.removeAllRows()
+        processorParamsModel.removeAllRows()
+
+        when(node) {
+            is MgcbBuildEntryNode -> {
+                propertiesModel.addRow(Pair("Name", node.userObject.toString()))
+                propertiesModel.addRow(Pair("Source Path", node.buildEntry.contentFilepath!!))
+                propertiesModel.addRow(Pair("Destination Path", node.buildEntry.destinationFilepath ?: node.buildEntry.contentFilepath!!))
+                propertiesModel.addRow(Pair("Importer", node.buildEntry.importer!!))
+                propertiesModel.addRow(Pair("Processor", node.buildEntry.processor!!))
+
+                node.buildEntry.processorParams.forEach {
+                    processorParamsModel.addRow(Pair(it.key, it.value))
+                }
+            }
+        }
     }
 
     override fun getComponent() = previewerPanel.value

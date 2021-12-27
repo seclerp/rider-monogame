@@ -1,4 +1,4 @@
-package me.seclerp.rider.plugins.monogame.mgcb.previewer
+package me.seclerp.rider.plugins.monogame.mgcb.previewer.properties
 
 import com.intellij.util.ui.ColumnInfo
 
