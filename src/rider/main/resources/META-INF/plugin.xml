@@ -24,6 +24,8 @@
                             implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbCompletionContributor"/>
 
     <fileEditorProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbPreviewerEditorProvider" />
+
+    <internalFileTemplate name="MonoGame Content Builder File" />
   </extensions>
 
 </idea-plugin>
