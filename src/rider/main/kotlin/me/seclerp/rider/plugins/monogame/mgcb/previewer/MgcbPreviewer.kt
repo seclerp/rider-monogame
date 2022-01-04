@@ -6,6 +6,8 @@ import com.intellij.openapi.fileEditor.FileEditorState
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.VirtualFileManager
+import com.intellij.openapi.editor.Document
 import com.intellij.psi.PsiManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.ui.JBSplitter
@@ -13,6 +15,8 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.table.JBTable
 import com.intellij.ui.treeStructure.Tree
+import me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbDocumentListener
+import me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbFileListener
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.properties.KeyValueModel
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.tree.MgcbBuildEntryNode
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.tree.MgcbFolderNode
@@ -30,7 +34,8 @@ import javax.swing.table.JTableHeader
 
 class MgcbPreviewer(
     private val project: Project,
-    private val currentFile: VirtualFile
+    private val currentFile: VirtualFile,
+    private val document: Document
 ) : UserDataHolderBase(), FileEditor {
 
     private val delimiterRegex = Regex("[/\\\\]")
@@ -48,6 +53,9 @@ class MgcbPreviewer(
 
         val entriesTree = getBuildEntriesTreePanel()
         val propertiesPanel = getPropertiesPanel()
+
+        project.messageBus.connect().subscribe(VirtualFileManager.VFS_CHANGES, MgcbFileListener(project, currentFile))
+        document.addDocumentListener(MgcbDocumentListener(project))
 
         root.firstComponent = entriesTree
         root.secondComponent = propertiesPanel

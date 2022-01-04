@@ -26,6 +26,8 @@
     <fileEditorProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbPreviewerEditorProvider" />
 
     <internalFileTemplate name="MonoGame Content Builder File" />
+
+    <notificationGroup id="MgcbFileChanges" displayType="BALLOON"/>
   </extensions>
 
 </idea-plugin>

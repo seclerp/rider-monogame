@@ -19,7 +19,7 @@ class MgcbPreviewerEditorProvider : FileEditorProvider, DumbAware {
 
     override fun createEditor(project: Project, file: VirtualFile): FileEditor {
         val textEditor = TextEditorProvider.getInstance().createEditor(project, file) as TextEditor
-        val previewEditor = MgcbPreviewer(project, file)
+        val previewEditor = MgcbPreviewer(project, file, textEditor.editor.document)
 
         return MgcbPreviewerEditor(textEditor, previewEditor)
     }
