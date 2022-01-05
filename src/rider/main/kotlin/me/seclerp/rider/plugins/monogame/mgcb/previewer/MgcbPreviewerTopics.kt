@@ -1,12 +1,15 @@
 package me.seclerp.rider.plugins.monogame.mgcb.previewer
 
-import com.intellij.codeInsight.lookup.Lookup
-import com.intellij.codeInsight.lookup.LookupManagerListener
 import com.intellij.util.messages.Topic
-import me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbUpdateListener
+import me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbPendingUpdateListener
+import me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbProcessedUpdateListener
 
 object MgcbPreviewerTopics {
     @JvmField
     @Topic.ProjectLevel
-    val MGCB_PENDING_UPDATE_TOPIC = Topic.create("MgcbPendingUpdateTopic", MgcbUpdateListener::class.java)
+    val MGCB_PENDING_UPDATE_TOPIC = Topic.create("MgcbPendingUpdateTopic", MgcbPendingUpdateListener::class.java)
+
+    @JvmField
+    @Topic.ProjectLevel
+    val MGCB_PROCESSED_UPDATE_TOPIC = Topic.create("MgcbProcessedUpdateTopic", MgcbProcessedUpdateListener::class.java)
 }

@@ -23,7 +23,7 @@
     <completion.contributor language="MGCB"
                             implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbCompletionContributor"/>
 
-    <fileEditorProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbPreviewerEditorProvider" />
+    <fileEditorProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbEditorProvider" />
 
     <internalFileTemplate name="MonoGame Content Builder File" />
 
@@ -33,8 +33,8 @@
   <projectListeners>
     <listener class="me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbFileListener"
               topic="com.intellij.openapi.vfs.newvfs.BulkFileListener" />
-    <listener class="me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbUpdateListenerImpl"
-              topic="me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbUpdateListener" />
+    <listener class="me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbPendingUpdateListenerImpl"
+              topic="me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbPendingUpdateListener" />
   </projectListeners>
 
 </idea-plugin>

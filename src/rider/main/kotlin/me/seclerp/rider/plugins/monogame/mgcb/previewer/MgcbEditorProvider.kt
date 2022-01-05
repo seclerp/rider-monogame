@@ -10,7 +10,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import me.seclerp.rider.plugins.monogame.mgcb.MgcbFileType
 
-class MgcbPreviewerEditorProvider : FileEditorProvider, DumbAware {
+class MgcbEditorProvider : FileEditorProvider, DumbAware {
     override fun getEditorTypeId() = "MgcbEditorWithPreviewer"
     override fun getPolicy() = FileEditorPolicy.HIDE_DEFAULT_EDITOR
 
@@ -19,8 +19,8 @@ class MgcbPreviewerEditorProvider : FileEditorProvider, DumbAware {
 
     override fun createEditor(project: Project, file: VirtualFile): FileEditor {
         val textEditor = TextEditorProvider.getInstance().createEditor(project, file) as TextEditor
-        val previewEditor = MgcbPreviewer(project, file, textEditor.editor.document)
+        val previewerEditor = MgcbEditorPreviewer(project, file)
 
-        return MgcbPreviewerEditor(textEditor, previewEditor)
+        return MgcbEditorWithPreview(project, file, textEditor, previewerEditor)
     }
 }

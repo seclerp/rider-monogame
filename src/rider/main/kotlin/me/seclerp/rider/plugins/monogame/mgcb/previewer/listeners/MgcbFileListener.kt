@@ -16,7 +16,7 @@ class MgcbFileListener(
             .mapNotNull { it.file }
 
         for (file in mgcbFiles) {
-            publisher.afterUpdate(file)
+            publisher.handle(file)
         }
     }
 }

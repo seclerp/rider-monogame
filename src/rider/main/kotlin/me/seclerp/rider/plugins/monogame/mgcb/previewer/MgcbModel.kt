@@ -1,6 +1,6 @@
 package me.seclerp.rider.plugins.monogame.mgcb.previewer
 
-data class MgcbConfiguration(
+data class MgcbModel(
     // Specifies the directory where all content is written.
     // Defaults to the current working directory.
     var outputDir: String? = null,

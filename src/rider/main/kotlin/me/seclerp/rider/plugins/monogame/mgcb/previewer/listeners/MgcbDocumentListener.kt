@@ -12,7 +12,7 @@ class MgcbDocumentListener(
     private val file: VirtualFile
 ) : DocumentListener {
     private val publisher = project.messageBus.syncPublisher(MgcbPreviewerTopics.MGCB_PENDING_UPDATE_TOPIC)
-    private val timer = Timer(1000) { publisher.afterUpdate(file) }
+    private val timer = Timer(1000) { publisher.handle(file) }
 
     init {
         timer.isRepeats = false
