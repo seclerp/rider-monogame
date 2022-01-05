@@ -30,4 +30,11 @@
     <notificationGroup id="MgcbFileChanges" displayType="BALLOON"/>
   </extensions>
 
+  <projectListeners>
+    <listener class="me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbFileListener"
+              topic="com.intellij.openapi.vfs.newvfs.BulkFileListener" />
+    <listener class="me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbUpdateListenerImpl"
+              topic="me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbUpdateListener" />
+  </projectListeners>
+
 </idea-plugin>

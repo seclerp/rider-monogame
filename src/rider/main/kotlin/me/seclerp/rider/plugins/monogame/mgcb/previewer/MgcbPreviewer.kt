@@ -54,8 +54,7 @@ class MgcbPreviewer(
         val entriesTree = getBuildEntriesTreePanel()
         val propertiesPanel = getPropertiesPanel()
 
-        project.messageBus.connect().subscribe(VirtualFileManager.VFS_CHANGES, MgcbFileListener(project, currentFile))
-        document.addDocumentListener(MgcbDocumentListener(project))
+        document.addDocumentListener(MgcbDocumentListener(project, currentFile))
 
         root.firstComponent = entriesTree
         root.secondComponent = propertiesPanel

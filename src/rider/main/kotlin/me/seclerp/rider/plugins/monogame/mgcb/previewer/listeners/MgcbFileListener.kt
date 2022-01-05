@@ -1,28 +1,22 @@
 package me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners
 
-import com.intellij.notification.NotificationGroupManager
-import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.vfs.newvfs.BulkFileListener
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent
-import me.seclerp.rider.plugins.monogame.KnownNotificationGroups
+import me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbPreviewerTopics
 
 class MgcbFileListener(
-    private val project: Project,
-    private val file: VirtualFile
+    project: Project,
 ) : BulkFileListener {
+    private val publisher = project.messageBus.syncPublisher(MgcbPreviewerTopics.MGCB_PENDING_UPDATE_TOPIC)
+
     override fun after(events: MutableList<out VFileEvent>) {
-        val currentFileEvents = events.filter { it.file == file }
+        val mgcbFiles = events
+            .filter { it.file?.extension == "mgcb" }
+            .mapNotNull { it.file }
 
-        val eventsCount = currentFileEvents.count()
-
-        if (eventsCount > 0) {
-            NotificationGroupManager
-                .getInstance()
-                .getNotificationGroup(KnownNotificationGroups.mgcbFileChanges)
-                .createNotification("[VFS] MGCB file changed", "${currentFileEvents.count()} events fired", NotificationType.INFORMATION)
-                .notify(project)
+        for (file in mgcbFiles) {
+            publisher.afterUpdate(file)
         }
     }
 }
