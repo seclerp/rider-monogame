@@ -1,25 +1,23 @@
 package me.seclerp.rider.plugins.monogame.mgcb.previewer.services
 
 import com.intellij.openapi.components.Service
-import com.intellij.ui.treeStructure.Tree
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.BuildEntry
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbModel
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.tree.*
 import me.seclerp.rider.plugins.monogame.substringAfterLast
 import me.seclerp.rider.plugins.monogame.substringBeforeLast
-import javax.swing.tree.DefaultTreeModel
 
 @Service
 class MgcbBuildTreeManager {
     fun createEmpty(): MgcbTree {
         val tree = MgcbTree()
         tree.cellRenderer = MgcbNodeRenderer()
-        tree.isRootVisible = false
+        tree.isRootVisible = true
 
         return tree
     }
 
-    fun populateEmpty(model: MgcbModel, emptyTree: MgcbTree) {
+    fun updateTree(model: MgcbModel, tree: MgcbTree) {
         val buildPaths = model.buildEntries
 
         // 1. Get all parent folders per each path
@@ -39,15 +37,19 @@ class MgcbBuildTreeManager {
             .filter { it.first == "" }
             .map { createNodeFrom(it.second, nodeCache) }
 
+        val currentSelection = tree.selectionPath
+        val currentExpanded = tree.getExpandedPaths()
+
+        tree.clear()
+
         for (node in topLevelNodes) {
-            emptyTree.root.add(node)
+            tree.root.add(node)
         }
 
-        emptyTree.reload()
-    }
+        tree.reload()
 
-    fun updateExisting(newModel: MgcbModel, existingTree: Tree) {
-        // TODO
+        tree.expandNodes(currentExpanded)
+        tree.selectionPath = currentSelection
     }
 
     // Will transform

@@ -1,7 +1,5 @@
 package me.seclerp.rider.plugins.monogame.mgcb.previewer
 
-import com.intellij.notification.NotificationGroupManager
-import com.intellij.notification.NotificationType
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorLocation
 import com.intellij.openapi.fileEditor.FileEditorState
@@ -57,13 +55,6 @@ class MgcbEditorPreviewer(
             override fun handle(file: VirtualFile, mgcbModel: MgcbModel) {
                 if (file == currentFile) {
                     applyMgcbModel(mgcbModel)
-
-                    NotificationGroupManager.getInstance()
-                        .getNotificationGroup(KnownNotificationGroups.mgcbFileChanges)
-                        .createNotification("[Update Processed] MGCB previewer updated", file.path,
-                            NotificationType.INFORMATION
-                        )
-                        .notify(project)
                 }
             }
         })
@@ -75,11 +66,12 @@ class MgcbEditorPreviewer(
     }
 
     private fun applyMgcbModel(mgcbModel: MgcbModel) {
-        mgcbTreeService.updateExisting(mgcbModel, tree)
+        mgcbTreeService.updateTree(mgcbModel, tree)
     }
 
     private fun getBuildEntriesTreePanel(): JPanel {
-        mgcbTreeService.populateEmpty(model!!, tree)
+        mgcbTreeService.updateTree(model!!, tree)
+
         tree.addTreeSelectionListener {
             val mgcbTreeNode = tree.lastSelectedPathComponent as? MgcbTreeNode
             if (mgcbTreeNode != null) {
