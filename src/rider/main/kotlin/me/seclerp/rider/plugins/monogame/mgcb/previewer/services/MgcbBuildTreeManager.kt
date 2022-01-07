@@ -37,8 +37,8 @@ class MgcbBuildTreeManager {
             .filter { it.first == "" }
             .map { createNodeFrom(it.second, nodeCache) }
 
-        val currentSelection = tree.selectionPath
-        val currentExpanded = tree.getExpandedPaths()
+        val currentSelection = tree.getSelectedUrl()
+        val currentExpanded = tree.getExpandedUrls()
 
         tree.clear()
 
@@ -47,9 +47,11 @@ class MgcbBuildTreeManager {
         }
 
         tree.reload()
+        tree.restoreExpandedUrl(currentExpanded)
 
-        tree.expandNodes(currentExpanded)
-        tree.selectionPath = currentSelection
+        if (currentSelection != null) {
+            tree.restoreSelectedUrl(currentSelection)
+        }
     }
 
     // Will transform
@@ -119,6 +121,61 @@ class MgcbBuildTreeManager {
 
         return folderNode
     }
+
+    // Nodes to remove - exist in old but not in new
+//    private fun getNodesToRemove(oldModel: MgcbModel, newModel: MgcbModel): List<BuildEntry> {
+//        val result = mutableListOf<BuildEntry>()
+//
+//        val oldCount = oldModel.buildEntries.count()
+//
+//        var oldCounter = 0
+//        var newCounter = 0
+//
+//        while (oldCounter != oldCount) {
+//            val oldNode = oldModel.buildEntries[oldCounter]
+//            val newNode = newModel.buildEntries.getOrNull(newCounter)
+//
+//            if (oldNode.contentFilepath == newNode?.contentFilepath) {
+//                oldCounter++
+//                newCounter++
+//            } else {
+//                // At that point newNode always != oldNode
+//                result.add(oldNode)
+//                oldCounter++
+//            }
+//        }
+//
+//        return result
+//    }
+//
+//    private fun getNodesToAdd(oldModel: MgcbModel, newModel: MgcbModel): List<Pair<BuildEntry?, BuildEntry>> {
+//        val result = mutableListOf<Pair<BuildEntry?, BuildEntry>>()
+//
+//        val newCount = newModel.buildEntries.count()
+//
+//        var oldCounter = 0
+//        var newCounter = 0
+//
+//        var previousNewNode: BuildEntry? = null
+//
+//        while (newCounter != newCount) {
+//            val oldNode = oldModel.buildEntries.getOrNull(oldCounter)
+//            val newNode = newModel.buildEntries[newCounter]
+//
+//            if (oldNode?.contentFilepath == newNode.contentFilepath) {
+//                oldCounter++
+//                newCounter++
+//            } else {
+//                // At that point newNode always != oldNode
+//                result.add(Pair(previousNewNode, newNode))
+//                newCounter++
+//            }
+//
+//            previousNewNode = newNode
+//        }
+//
+//        return result
+//    }
 
     companion object {
         private val delimiterRegex = Regex("[/\\\\]")

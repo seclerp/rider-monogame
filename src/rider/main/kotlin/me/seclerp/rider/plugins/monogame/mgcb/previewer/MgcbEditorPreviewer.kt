@@ -73,10 +73,7 @@ class MgcbEditorPreviewer(
         mgcbTreeService.updateTree(model!!, tree)
 
         tree.addTreeSelectionListener {
-            val mgcbTreeNode = tree.lastSelectedPathComponent as? MgcbTreeNode
-            if (mgcbTreeNode != null) {
-                selectedNodeChanged(mgcbTreeNode)
-            }
+            selectedNodeChanged(tree.lastSelectedPathComponent as? MgcbTreeNode)
         }
 
         val container = JPanel(BorderLayout())
@@ -110,7 +107,7 @@ class MgcbEditorPreviewer(
         return splitter
     }
 
-    private fun selectedNodeChanged(node: MgcbTreeNode) {
+    private fun selectedNodeChanged(node: MgcbTreeNode?) {
         propertiesModel.removeAllRows()
         processorParamsModel.removeAllRows()
 
