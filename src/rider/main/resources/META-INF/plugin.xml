@@ -28,6 +28,8 @@
     <internalFileTemplate name="MonoGame Content Builder File" />
 
     <notificationGroup id="MgcbFileChanges" displayType="BALLOON"/>
+
+    <postStartupActivity implementation="me.seclerp.rider.plugins.monogame.mgcb.startup.CheckMgcbEditorInstalledActivity" />
   </extensions>
 
   <projectListeners>
