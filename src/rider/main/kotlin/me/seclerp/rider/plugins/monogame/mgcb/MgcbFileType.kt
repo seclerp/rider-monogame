@@ -7,7 +7,7 @@ import javax.swing.Icon
 class MgcbFileType : LanguageFileType(MgcbLanguage.Instance) {
     override fun getName(): String = "MonoGame Content Pipeline File"
 
-    override fun getDescription(): String = "MonoGame Content Pipeline File"
+    override fun getDescription(): String = "Content Pipeline file used by MonoGame"
 
     override fun getDefaultExtension(): String = "mgcb"
 

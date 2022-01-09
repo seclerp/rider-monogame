@@ -15,6 +15,13 @@
   <extensions defaultExtensionNs="com.intellij">
     <fileType name="MonoGame Content Pipeline File" implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbFileType"
               fieldName="Instance" language="MGCB" extensions="mgcb"/>
+
+    <fileType name="MonoGame Effect File" implementationClass="me.seclerp.rider.plugins.monogame.effect.EffectFileType"
+              fieldName="Instance" language="TEXT" extensions="fx"/>
+
+    <fileType name="MonoGame SpriteFont File" implementationClass="me.seclerp.rider.plugins.monogame.spritefont.SpriteFontFileType"
+              fieldName="Instance" language="XML" extensions="spritefont"/>
+
     <lang.parserDefinition language="MGCB"
                            implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbParserDefinition"/>
     <lang.syntaxHighlighterFactory language="MGCB"
@@ -25,7 +32,11 @@
 
     <fileEditorProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbEditorProvider" />
 
-    <internalFileTemplate name="MonoGame Content Builder File" />
+    <internalFileTemplate name="Content Builder File" />
+    <internalFileTemplate name="Effect File" />
+    <internalFileTemplate name="Sprite Effect File" />
+    <internalFileTemplate name="SpriteFont File" />
+    <internalFileTemplate name="Localized SpriteFont File" />
 
     <notificationGroup id="MgcbFileChanges" displayType="BALLOON"/>
 
