@@ -1,14 +1,14 @@
-<p align="center">
-  <h1 id="monogame-plugin-for-jetbrains-rider">MonoGame plugin for JetBrains Rider</h1>
+<div align="center">
+  <h1>MonoGame plugin for JetBrains Rider</h1>
   <img src="img/rider-monogame-cover.png" alt="Logo">
-
+  <br /><br />
+  This plugin improves MonoGame usage experience inside JetBrains Rider.
+  <br /><br />
   <a href="https://github.com/seclerp/rider-monogame/actions/workflows/build-stable.yml"><img src="https://github.com/seclerp/rider-monogame/actions/workflows/build-stable.yml/badge.svg" alt="Build (Stable)"></a>
   <!-- <a href="https://github.com/seclerp/rider-monogame/actions/workflows/build-eap.yml"><img src="https://github.com/seclerp/rider-monogame/actions/workflows/build-eap.yml/badge.svg" alt="Build (EAP)"></a> -->
-</p>
+</div>
 
 ---
-
-This plugin improves MonoGame usage experience inside JetBrains Rider.
 
 ### Features
 
