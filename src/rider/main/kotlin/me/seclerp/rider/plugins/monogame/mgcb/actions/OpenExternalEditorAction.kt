@@ -8,7 +8,7 @@ import com.jetbrains.rider.util.idea.getService
 import me.seclerp.rider.plugins.monogame.MonoGameIcons
 import me.seclerp.rider.plugins.monogame.mgcb.actions.commands.MgcbEditorCommand
 import me.seclerp.rider.plugins.monogame.mgcb.actions.commands.executeCommandUnderProgress
-import me.seclerp.rider.plugins.monogame.mgcb.actions.services.MgcbEditorCheckService
+import me.seclerp.rider.plugins.monogame.mgcb.services.MgcbEditorCheckService
 
 @Suppress("DialogTitleCapitalization")
 class OpenExternalEditorAction(
@@ -28,10 +28,11 @@ class OpenExternalEditorAction(
     }
 
     override fun update(actionEvent: AnActionEvent) {
+        val mgcbEditorInstalled = mgcbEditorCheckService.isInstalled()
         actionEvent.presentation.isVisible = true
-        actionEvent.presentation.isEnabled = mgcbEditorCheckService.isInstalled()
+        actionEvent.presentation.isEnabled = mgcbEditorInstalled
         actionEvent.presentation.text =
-            if (mgcbEditorCheckService.isInstalled())
+            if (mgcbEditorInstalled)
                 "Open in external MGCB editor"
             else
                 "mgcb-editor global tool is not installed"

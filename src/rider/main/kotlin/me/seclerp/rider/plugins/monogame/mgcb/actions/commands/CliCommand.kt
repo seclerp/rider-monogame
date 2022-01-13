@@ -21,8 +21,6 @@ open class CliCommand(private val fullCommand: String, private val executeDetach
                 CliCommandResult(fullCommand, 0, "", true)
             }
         } catch(e: IOException) {
-            e.printStackTrace()
-
             CliCommandResult(fullCommand, -1, e.toString(), false)
         }
     }

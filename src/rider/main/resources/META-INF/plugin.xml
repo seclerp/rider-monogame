@@ -38,7 +38,7 @@
     <internalFileTemplate name="SpriteFont File" />
     <internalFileTemplate name="Localized SpriteFont File" />
 
-    <notificationGroup id="MgcbFileChanges" displayType="BALLOON"/>
+    <notificationGroup id="MonoGameRider" displayType="BALLOON"/>
 
     <postStartupActivity implementation="me.seclerp.rider.plugins.monogame.mgcb.startup.CheckMgcbEditorInstalledActivity" />
   </extensions>
