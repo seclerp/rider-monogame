@@ -10,12 +10,52 @@
 
 ---
 
-### Features
+<div align="center">
+  <h3>MGCB file editing</h3>
+</div>
 
-Main features are related to MonoGame Content Pipeline files (`.mgcb`):
-- Syntax highlighting
-- Build options autocomplete
-- Previewer with build items tree view and properties table panel
+<p>
+  <img align="left" src="img/how-to-use-1.png"  alt="How to use 1"/>
+  <h3>Autocomplete and syntax highlighting</h3>
+
+All supported MGCB options properly highlighted and could be autocompleted
+</p>
+<br /><br />
+<p>
+  <img align="left" src="img/how-to-use-2.png"  alt="How to use 1"/>
+
+<h3>Build entries previewer</h3>
+
+See all your assets in a realtime tree view according to their declarations
+</p>
+<br /><br />
+<p>
+  <img align="left" src="img/how-to-use-3.png"  alt="How to use 1"/>
+  <h3>Table view for a build entry properties</h3>
+
+Review build entry properties and processor parameters in a table representation
+</p>
+<br /><br />
+<p>
+  <img align="left" src="img/how-to-use-4.png"  alt="How to use 1"/>
+  <h3>Open in external MGCB editor action</h3>
+
+Jump to external MGCB editor GUI in one click
+</p>
+<br />
+<div align="center">
+  <h3>Other</h3>
+</div>
+
+<p>
+  <img align="left" src="img/how-to-use-5.png"  alt="How to use 1"/>
+  <h3>Additional file templates</h3>
+
+Easily create MonoGame related assets using file templates under Add menu
+</p>
+<br />
+
+---
 
 ### How to install
 
