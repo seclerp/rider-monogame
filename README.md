@@ -1,8 +1,10 @@
-# MonoGame plugin for JetBrains Rider
-![Logo](img/rider-plus-monogame-128.png)
+<p align="center">
+  <h1 id="monogame-plugin-for-jetbrains-rider">MonoGame plugin for JetBrains Rider</h1>
+  <img src="img/rider-monogame-cover.png" alt="Logo">
 
-[![Build (Stable)](https://github.com/seclerp/rider-monogame/actions/workflows/build-stable.yml/badge.svg)](https://github.com/seclerp/rider-monogame/actions/workflows/build-stable.yml)
-<!-- [![Build (EAP)](https://github.com/seclerp/rider-monogame/actions/workflows/build-eap.yml/badge.svg)](https://github.com/seclerp/rider-monogame/actions/workflows/build-eap.yml) -->
+  <a href="https://github.com/seclerp/rider-monogame/actions/workflows/build-stable.yml"><img src="https://github.com/seclerp/rider-monogame/actions/workflows/build-stable.yml/badge.svg" alt="Build (Stable)"></a>
+  <!-- <a href="https://github.com/seclerp/rider-monogame/actions/workflows/build-eap.yml"><img src="https://github.com/seclerp/rider-monogame/actions/workflows/build-eap.yml/badge.svg" alt="Build (EAP)"></a> -->
+</p>
 
 ---
 
