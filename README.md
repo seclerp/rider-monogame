@@ -76,7 +76,7 @@ Easily create MonoGame related assets using file templates under Add menu
 
 ### How to use
 
-Just open .mgcb file for editing. Previewer will be on the left side of the editor.
+Just open .mgcb file for editing. Previewer will be on the right side of the editor.
 
 Additional file templates are located under <kbd>Add</kbd> section of a folder or project context menu.
 
