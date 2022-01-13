@@ -7,24 +7,17 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.jetbrains.rider.util.idea.getService
 import me.seclerp.rider.plugins.monogame.MonoGameIcons
 import me.seclerp.rider.plugins.monogame.mgcb.actions.commands.MgcbEditorCommand
-import me.seclerp.rider.plugins.monogame.mgcb.actions.commands.executeCommandUnderProgress
 import me.seclerp.rider.plugins.monogame.mgcb.services.MgcbEditorCheckService
 
 @Suppress("DialogTitleCapitalization")
 class OpenExternalEditorAction(
-    project: Project,
+    private val project: Project,
     private val mgcbFile: VirtualFile
 ) : AnAction("Open in external MGCB editor", "Open in external MGCB editor", MonoGameIcons.MgcbFile) {
     private val mgcbEditorCheckService = project.getService<MgcbEditorCheckService>()
 
     override fun actionPerformed(actionEvent: AnActionEvent) {
-        executeCommandUnderProgress(
-            actionEvent.project!!,
-            "Opening external editor...",
-        ) {
-            val command = MgcbEditorCommand(mgcbFile.path)
-            command.execute()
-        }
+        MgcbEditorCommand(mgcbFile.path, project).executeLater()
     }
 
     override fun update(actionEvent: AnActionEvent) {

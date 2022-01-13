@@ -18,6 +18,6 @@ class CheckMgcbEditorInstalledActivity : StartupActivity, DumbAware {
 
     private fun check(project: Project) {
         val checkService = project.getService<MgcbEditorCheckService>()
-        checkService.checkInstalled()
+        checkService.checkLater()
     }
 }
