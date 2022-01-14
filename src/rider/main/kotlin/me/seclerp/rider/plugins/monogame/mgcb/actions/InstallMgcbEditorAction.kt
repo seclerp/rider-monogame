@@ -22,22 +22,22 @@ class InstallMgcbEditorAction : AnAction() {
     private fun install(project: Project) {
         val installCommand = InstallMgcbEditorCommand()
         installCommand.executeUnderProgress(project, "Installing mgcb-editor...") {
-            processResult(it) { register(project) }
+            processResult(project, it) { register(project) }
         }
     }
 
     private fun register(project: Project) {
         val registerCommand = RegisterMgcbEditorCommand()
         registerCommand.executeUnderProgress(project, "Registering mgcb-editor...") {
-            processResult(it) { notifySuccess(project) }
+            processResult(project, it) { notifySuccess(project) }
         }
     }
 
-    private fun processResult(result: CliCommandResult, onSuccess: () -> Unit) {
+    private fun processResult(project: Project, result: CliCommandResult, onSuccess: () -> Unit) {
         if (result.succeeded) {
             onSuccess()
         } else {
-            notifyError(result.error ?: "")
+            notifyError(project, result.error ?: "")
         }
     }
 
@@ -50,13 +50,15 @@ class InstallMgcbEditorAction : AnAction() {
             .getInstance()
             .getNotificationGroup(KnownNotificationGroups.monoGameRider)
             .createNotification("MGCB Editor has beed successfully installed", NotificationType.INFORMATION)
+            .notify(project)
     }
 
-    private fun notifyError(message: String) {
+    private fun notifyError(project: Project, message: String) {
         NotificationGroupManager
             .getInstance()
             .getNotificationGroup(KnownNotificationGroups.monoGameRider)
             .createNotification("MGCB Editor install failed", NotificationType.ERROR)
             .setContent(message)
+            .notify(project)
     }
 }
