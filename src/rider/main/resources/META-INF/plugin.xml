@@ -9,6 +9,30 @@
   <description>
 <![CDATA[
 <p>This plugin improves MonoGame usage experience inside JetBrains Rider</p>
+<p>
+<strong>MGCB file editing</strong>
+<ul>
+<li>Autocomplete and syntax highlighting</li>
+<li>Build entries tree previewer</li>
+<li>Table view for a build entry properties</li>
+<li>Open in external MGCB editor action</li>
+</ul>
+<strong>File templates for</strong>
+<ul>
+<li>MGCB</li>
+<li>Effect/li>
+<li>Sprite Effect/li>
+<li>SpriteFont/li>
+<li>Localized SpriteFont/li>
+</ul>
+</p>
+<p>
+<strong>Links</strong>
+<ul>
+  <li><a href="https://github.com/seclerp/rider-monogame">GitHub</a>
+  <li><a href="https://github.com/seclerp/rider-monogame/issues">Issues</a>
+</ul>
+</p>
 ]]>
   </description>
 
