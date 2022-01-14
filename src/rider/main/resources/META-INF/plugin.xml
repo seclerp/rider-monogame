@@ -1,14 +1,14 @@
 <idea-plugin require-restart="true">
-  <id>monogame.rider</id>
-  <name>MonoGameRider</name>
+  <id>me.seclerp.rider.plugins.monogame</id>
+  <name>MonoGame</name>
   <version>_PLACEHOLDER_</version>
-  <vendor url="https://project-url">Author</vendor>
+  <vendor url="https://github.com/seclerp">Andrew Rublyov</vendor>
   <idea-version since-build="_PLACEHOLDER_" until-build="_PLACEHOLDER_" />
   <depends>com.intellij.modules.rider</depends>
 
   <description>
 <![CDATA[
-<p>Sample description</p>
+<p>This plugin improves MonoGame usage experience inside JetBrains Rider</p>
 ]]>
   </description>
 
