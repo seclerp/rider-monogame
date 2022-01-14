@@ -41,7 +41,15 @@
     <notificationGroup id="MonoGameRider" displayType="BALLOON"/>
 
     <postStartupActivity implementation="me.seclerp.rider.plugins.monogame.mgcb.startup.CheckMgcbEditorInstalledActivity" />
+
+    <editorNotificationProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbEditorNotificationProvider" />
+
   </extensions>
+
+  <actions>
+    <action id="InstallMgcbEditorAction"
+            class="me.seclerp.rider.plugins.monogame.mgcb.actions.InstallMgcbEditorAction" />
+  </actions>
 
   <projectListeners>
     <listener class="me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbFileListener"

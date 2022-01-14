@@ -9,7 +9,7 @@ import javax.swing.Timer
 
 class CheckMgcbEditorInstalledActivity : StartupActivity, DumbAware {
     override fun runActivity(project: Project) {
-        val timer = Timer(10000) { check(project) }
+        val timer = Timer(5000) { check(project) }
 
         timer.isRepeats = true
         timer.start()
@@ -18,6 +18,6 @@ class CheckMgcbEditorInstalledActivity : StartupActivity, DumbAware {
 
     private fun check(project: Project) {
         val checkService = project.getService<MgcbEditorCheckService>()
-        checkService.checkLater()
+        checkService.startCheck()
     }
 }
