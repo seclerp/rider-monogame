@@ -136,5 +136,5 @@ This project uses modified version of **trunk-based git strategy**.
 
 ### See also
 
-- [**Marketplace page**](https://plugins.jetbrains.com/plugin/TODO)
+- [**Marketplace page**](https://plugins.jetbrains.com/plugin/18415-monogame)
 - [**Changelog**](CHANGELOG.md)
