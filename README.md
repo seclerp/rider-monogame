@@ -5,7 +5,7 @@
   This plugin improves MonoGame usage experience inside JetBrains Rider.
   <br /><br />
   <a href="https://github.com/seclerp/rider-monogame/actions/workflows/build-stable.yml"><img src="https://github.com/seclerp/rider-monogame/actions/workflows/build-stable.yml/badge.svg" alt="Build (Stable)"></a>
-  <!-- <a href="https://github.com/seclerp/rider-monogame/actions/workflows/build-eap.yml"><img src="https://github.com/seclerp/rider-monogame/actions/workflows/build-eap.yml/badge.svg" alt="Build (EAP)"></a> -->
+  <a href="https://github.com/seclerp/rider-monogame/actions/workflows/build-eap.yml"><img src="https://github.com/seclerp/rider-monogame/actions/workflows/build-eap.yml/badge.svg" alt="Build (EAP)"></a>
 </div>
 
 ---
@@ -63,7 +63,7 @@ Easily create MonoGame related assets using file templates under Add menu
 ### How to install
 
 #### Using marketplace:
-<!-- > **For EAP users**: you should add `https://plugins.jetbrains.com/plugins/eap/list` to your plugin repositories list before installing -->
+> **For EAP users**: you should add `https://plugins.jetbrains.com/plugins/eap/list` to your plugin repositories list before installing
 
 1. Go to `Settings` / `Plugins` / `Marketplace`
 1. Search for "MonoGame"
