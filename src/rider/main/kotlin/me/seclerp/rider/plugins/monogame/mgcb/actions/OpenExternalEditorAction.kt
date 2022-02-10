@@ -2,9 +2,9 @@ package me.seclerp.rider.plugins.monogame.mgcb.actions
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.jetbrains.rider.util.idea.getService
 import me.seclerp.rider.plugins.monogame.MonoGameIcons
 import me.seclerp.rider.plugins.monogame.mgcb.actions.commands.MgcbEditorCommand
 import me.seclerp.rider.plugins.monogame.mgcb.services.MgcbEditorCheckService
@@ -14,7 +14,7 @@ class OpenExternalEditorAction(
     private val project: Project,
     private val mgcbFile: VirtualFile
 ) : AnAction("Open in external MGCB editor", "Open in external MGCB editor", MonoGameIcons.MgcbFile) {
-    private val mgcbEditorCheckService = project.getService<MgcbEditorCheckService>()
+    private val mgcbEditorCheckService = service<MgcbEditorCheckService>()
 
     override fun actionPerformed(actionEvent: AnActionEvent) {
         MgcbEditorCommand(mgcbFile.path, project).executeLater()

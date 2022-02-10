@@ -1,5 +1,6 @@
 package me.seclerp.rider.plugins.monogame.mgcb.previewer
 
+import com.intellij.openapi.components.service
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.project.DumbAware
@@ -13,6 +14,8 @@ import me.seclerp.rider.plugins.monogame.mgcb.services.MgcbEditorCheckService
 import me.seclerp.rider.plugins.monogame.mgcb.state.MgcbEditorGlobalStateService
 
 class MgcbEditorNotificationProvider : EditorNotifications.Provider<MgcbEditorNotificationPanel>(), DumbAware {
+    private val mgcbEditorCheckService = service<MgcbEditorCheckService>()
+
     override fun getKey(): Key<MgcbEditorNotificationPanel> = KEY
 
     override fun createNotificationPanel(
@@ -33,7 +36,6 @@ class MgcbEditorNotificationProvider : EditorNotifications.Provider<MgcbEditorNo
             return null
         };
 
-        val mgcbEditorCheckService = project.getService<MgcbEditorCheckService>()
         if (mgcbEditorCheckService.isInstalled()) {
             return null
         }
