@@ -1,8 +1,17 @@
-# Changelog
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
-
-## 2021.2.0
-- Initial version
+<h2>1.0.1</h2>
+<p>
+  <ul>
+    <li>Fix: Exception Thrown when switching solutions</li>
+    <li>Upgrade Rider SDK to 2022.1</li>
+  </ul>
+</p>
+<h2>1.0.0</h2>
+<p>
+  <ul>
+    <li>Autocomplete and syntax highlighting</li>
+    <li>Build entries provider</li>
+    <li>Table view for a build entry properties</li>
+    <li>Open in external MGCB editor action</li>
+    <li>Additional file templates</li>
+  </ul>
+</p>
