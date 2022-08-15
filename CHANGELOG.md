@@ -1,3 +1,10 @@
+<h2>222.0.0</h2>
+<p>
+  <ul>
+    <li>Add support for Rider 2022.2</li>
+    <li>Change version numbering to reflect Rider version in it</li>
+  </ul>
+</p>
 <h2>1.0.1</h2>
 <p>
   <ul>
