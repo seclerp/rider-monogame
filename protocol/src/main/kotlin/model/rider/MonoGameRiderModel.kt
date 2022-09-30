@@ -6,7 +6,15 @@ import com.jetbrains.rd.generator.nova.csharp.CSharp50Generator
 import com.jetbrains.rd.generator.nova.kotlin.Kotlin11Generator
 
 @Suppress("unused")
-object MonoGameRiderModel : Ext(SolutionModel.Solution) {
+object MonoGameRiderModel : Ext(SolutionModel.) {
+    private val MgcbToolDefinition = structdef {
+        field("version", PredefinedType.string)
+        field("toolKind", enum {
+            +"None"
+            +"Local"
+            +"Global"
+        })
+    }
 
     init {
         setting(CSharp50Generator.Namespace, "Rider.Plugins.MonoGame")
