@@ -85,9 +85,7 @@ Additional file templates are located under <kbd>Add</kbd> section of a folder o
 
 ### Requirements
 
-- JetBrains Rider **2022.2+**
-
-  or JetBrains Rider **2022.2 EAP**
+- JetBrains Rider **2022.3+**
 
 - Project with MonoGame installed (**3.8+ is recommended**)  
 
@@ -110,7 +108,7 @@ Additional file templates are located under <kbd>Add</kbd> section of a folder o
 
 - for EAP version of Rider:
 
-  `./gradlew buildPlugin -PRiderSdkVersion=2022.2.0-eap01 -PProductVersion=2022.2-EAP1-SNAPSHOT`
+  `./gradlew buildPlugin -PRiderSdkVersion=2022.3.0-eap01 -PProductVersion=2022.3-EAP1-SNAPSHOT`
 
 It will build both frontend and backend parts.
 
