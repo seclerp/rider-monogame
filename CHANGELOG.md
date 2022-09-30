@@ -1,24 +1,31 @@
-<h2>222.0.0</h2>
-<p>
-  <ul>
-    <li>Add support for Rider 2022.2</li>
-    <li>Change version numbering to reflect Rider version in it</li>
-  </ul>
-</p>
-<h2>1.0.1</h2>
-<p>
-  <ul>
-    <li>Fix: Exception Thrown when switching solutions</li>
-    <li>Upgrade Rider SDK to 2022.1</li>
-  </ul>
-</p>
-<h2>1.0.0</h2>
-<p>
-  <ul>
-    <li>Autocomplete and syntax highlighting</li>
-    <li>Build entries provider</li>
-    <li>Table view for a build entry properties</li>
-    <li>Open in external MGCB editor action</li>
-    <li>Additional file templates</li>
-  </ul>
-</p>
+# Changelog
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [222.0.0] - 2022-08-15
+### Added
+- Add support for Rider 2022.2
+### Changed
+- Change version numbering to reflect Rider version in it
+
+## [1.0.1] - 2022-04-27
+### Changed
+- Upgrade Rider SDK to 2022.1
+### Fixed
+- Fix: Exception Thrown when switching solutions
+
+## [1.0.0] - 2022-01-15
+### Added
+- Autocomplete and syntax highlighting
+- Build entries provider
+- Table view for a build entry properties
+- Open in external MGCB editor action
+- Additional file templates
+
+[Unreleased]: https://github.com/seclerp/rider-monogame/compare/v222.0.0...HEAD
+[222.0.0]: https://github.com/seclerp/rider-monogame/compare/v1.0.1...v222.0.0
+[1.0.1]: https://github.com/seclerp/rider-monogame/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/seclerp/rider-monogame/releases/tag/v1.0.0

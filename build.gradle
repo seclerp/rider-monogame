@@ -4,9 +4,10 @@ import org.apache.tools.ant.taskdefs.condition.Os
 plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.6.21'
-    id 'org.jetbrains.intellij' version '1.8.0'     // https://github.com/JetBrains/gradle-intellij-plugin/releases
+    id 'org.jetbrains.intellij' version '1.9.0'     // https://github.com/JetBrains/gradle-intellij-plugin/releases
     id 'com.jetbrains.rdgen' version '2022.1.3'    // https://www.myget.org/feed/rd-snapshots/package/maven/com.jetbrains.rd/rd-gen
     id "org.jetbrains.grammarkit" version '2021.2.2'
+    id 'org.jetbrains.changelog' version '1.3.1'
 }
 
 ext {
@@ -51,6 +52,7 @@ apply plugin: 'org.jetbrains.grammarkit'
 
 import org.jetbrains.grammarkit.tasks.GenerateLexerTask
 import org.jetbrains.grammarkit.tasks.GenerateParserTask
+import java.text.SimpleDateFormat
 
 task generateMgcbLexer(type: GenerateLexerTask) {
     outputs.upToDateWhen { false }
@@ -80,7 +82,7 @@ compileJava {
 compileKotlin {
     dependsOn generateMgcbLexer
     dependsOn generateMgcbParser
-    kotlinOptions { jvmTarget = 11 }
+    kotlinOptions { jvmTarget = javaVersion }
 }
 
 task setBuildTool {
@@ -116,17 +118,9 @@ buildPlugin {
             into "${rootDir}/output"
         }
 
-        // TODO: See also org.jetbrains.changelog: https://github.com/JetBrains/gradle-changelog-plugin
-        def changelogText = file("${rootDir}/CHANGELOG.md").text
-        def changelogMatches = changelogText =~ /(?s)(-.+?)(?=##|$)/
-        def changeNotes = changelogMatches.collect {
-            it[1].replaceAll(/(?s)- /, "\u2022 ").replaceAll(/`/, "").replaceAll(/,/, "%2C").replaceAll(/;/, "%3B")
-        }.take(1).join("")
-
         def arguments = setBuildTool.args.clone()
         arguments << "/t:Pack"
         arguments << "/p:PackageOutputPath=${rootDir}/output"
-        arguments << "/p:PackageReleaseNotes=${changeNotes}"
         arguments << "/p:PackageVersion=${version}"
         exec {
             executable setBuildTool.executable
@@ -136,6 +130,8 @@ buildPlugin {
     }
 }
 
+apply plugin: 'org.jetbrains.changelog'
+
 intellij {
     type = 'RD'
     version = "${ProductVersion}"
@@ -143,6 +139,20 @@ intellij {
     instrumentCode = false
     // TODO: add plugins
     // plugins = ["uml", "com.jetbrains.ChooseRuntime:1.0.9"]
+
+    patchPluginXml {
+        changeNotes = changelog.get(PluginVersion).toHTML()
+    }
+}
+
+changelog {
+    version = "${PluginVersion}"
+    path = "${project.projectDir}/CHANGELOG.md"
+    header = "[${-> version.get()}] - ${new SimpleDateFormat("yyyy-MM-dd").format(new Date())}"
+    itemPrefix = "-"
+    keepUnreleasedSection = true
+    unreleasedTerm = "[Unreleased]"
+    groups = ["Added", "Changed", "Deprecated", "Removed", "Fixed", "Security"]
 }
 
 runIde {
