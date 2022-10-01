@@ -233,6 +233,7 @@ prepareSandbox {
 publishPlugin {
     dependsOn buildPlugin
     token = "${PublishToken}"
+    channels = [ "${PublishChannel}" ]
 }
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
