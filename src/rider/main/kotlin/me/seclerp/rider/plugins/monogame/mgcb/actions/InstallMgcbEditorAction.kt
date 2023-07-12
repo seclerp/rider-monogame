@@ -13,8 +13,6 @@ import me.seclerp.rider.plugins.monogame.mgcb.actions.commands.RegisterMgcbEdito
 import me.seclerp.rider.plugins.monogame.mgcb.services.MgcbEditorCheckService
 
 class InstallMgcbEditorAction : AnAction() {
-    private val checkService = service<MgcbEditorCheckService>()
-
     override fun actionPerformed(actionEvent: AnActionEvent) {
         if (actionEvent.project != null) {
             install(actionEvent.project!!)
@@ -45,7 +43,7 @@ class InstallMgcbEditorAction : AnAction() {
 
     private fun notifySuccess(project: Project) {
         // Force re-check to re-enable buttons
-        checkService.startCheck()
+        MgcbEditorCheckService.getInstance(project).startCheck()
 
         NotificationGroupManager
             .getInstance()

@@ -14,8 +14,6 @@ import me.seclerp.rider.plugins.monogame.mgcb.services.MgcbEditorCheckService
 import me.seclerp.rider.plugins.monogame.mgcb.state.MgcbEditorGlobalStateService
 
 class MgcbEditorNotificationProvider : EditorNotifications.Provider<MgcbEditorNotificationPanel>(), DumbAware {
-    private val mgcbEditorCheckService = service<MgcbEditorCheckService>()
-
     override fun getKey(): Key<MgcbEditorNotificationPanel> = KEY
 
     override fun createNotificationPanel(
@@ -36,7 +34,7 @@ class MgcbEditorNotificationProvider : EditorNotifications.Provider<MgcbEditorNo
             return null
         };
 
-        if (mgcbEditorCheckService.isInstalled()) {
+        if (MgcbEditorCheckService.getInstance(project).isInstalled()) {
             return null
         }
 

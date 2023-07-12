@@ -64,9 +64,9 @@
 
     <notificationGroup id="MonoGameRider" displayType="BALLOON"/>
 
-    <postStartupActivity implementation="me.seclerp.rider.plugins.monogame.mgcb.startup.CheckMgcbEditorInstalledActivity" />
+<!--    <postStartupActivity implementation="me.seclerp.rider.plugins.monogame.mgcb.startup.CheckMgcbEditorInstalledActivity" />-->
 
-    <editorNotificationProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbEditorNotificationProvider" />
+<!--    <editorNotificationProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbEditorNotificationProvider" />-->
 
   </extensions>
 
