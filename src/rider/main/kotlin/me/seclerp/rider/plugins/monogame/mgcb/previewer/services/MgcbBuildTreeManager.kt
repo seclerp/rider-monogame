@@ -1,6 +1,7 @@
 package me.seclerp.rider.plugins.monogame.mgcb.previewer.services
 
 import com.intellij.openapi.components.Service
+import com.intellij.openapi.util.IconLoader
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.BuildEntry
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbModel
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.tree.*
@@ -110,7 +111,9 @@ class MgcbBuildTreeManager {
 
         val cachedValue = cache[path]!!
         if (cachedValue.second.isEmpty()) {
-            return MgcbBuildEntryNode(path.substringAfterLast(delimiterRegex), cachedValue.first!!)
+            val name = path.substringAfterLast(delimiterRegex)
+            val icon = IconLoader.findIcon(name, javaClass)
+            return MgcbBuildEntryNode(path.substringAfterLast(delimiterRegex), icon, cachedValue.first!!)
         }
 
         val children = cachedValue.second.map { createNodeFrom(it, cache) }
