@@ -3,7 +3,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 
-namespace MonoGame.Rider
+namespace Rider.Plugins.MonoGame
 {
     [ZoneDefinition]
     // [ZoneDefinitionConfigurableFeature("Title", "Description", IsInProductSection: false)]

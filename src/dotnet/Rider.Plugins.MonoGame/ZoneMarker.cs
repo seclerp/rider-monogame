@@ -1,6 +1,6 @@
 using JetBrains.Application.BuildScript.Application.Zones;
 
-namespace MonoGame.Rider
+namespace Rider.Plugins.MonoGame
 {
     [ZoneMarker]
     public class ZoneMarker : IRequire<IMonoGameRiderZone>
