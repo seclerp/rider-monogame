@@ -1,11 +1,9 @@
 package me.seclerp.rider.plugins.monogame.mgcb.previewer
 
-import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.fileEditor.TextEditor
 import com.intellij.openapi.fileEditor.TextEditorWithPreview
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import me.seclerp.rider.plugins.monogame.mgcb.actions.OpenExternalEditorAction
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbDocumentListener
 
 class MgcbEditorWithPreview(
@@ -19,9 +17,6 @@ class MgcbEditorWithPreview(
     init {
         textEditor.editor.document.addDocumentListener(documentListener)
     }
-
-    override fun createLeftToolbarActionGroup() =
-        DefaultActionGroup(OpenExternalEditorAction(project, file))
 
     override fun isShowFloatingToolbar(): Boolean = false
 

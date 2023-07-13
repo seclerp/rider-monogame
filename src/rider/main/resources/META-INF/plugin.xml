@@ -64,6 +64,8 @@
 
     <notificationGroup id="MonoGameRider" displayType="BALLOON"/>
 
+    <editorFloatingToolbarProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbEditorFloatingToolbarProvider"/>
+
 <!--    <postStartupActivity implementation="me.seclerp.rider.plugins.monogame.mgcb.startup.CheckMgcbEditorInstalledActivity" />-->
 
 <!--    <editorNotificationProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbEditorNotificationProvider" />-->
