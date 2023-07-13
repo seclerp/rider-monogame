@@ -9,6 +9,7 @@ import com.jetbrains.rd.generator.nova.kotlin.Kotlin11Generator
 object MonoGameRiderModel : Ext(SolutionModel.Solution) {
 
     private val ToolDefinition = structdef {
+        field("packageId", PredefinedType.string)
         field("version", PredefinedType.string)
         field("toolKind", enum {
             +"None"
@@ -17,16 +18,21 @@ object MonoGameRiderModel : Ext(SolutionModel.Solution) {
         })
     }
 
+    private val MgcbEditorToolset = aggregatedef("MgcbEditorToolset") {
+        property("editor", ToolDefinition)
+        property("editorWindows", ToolDefinition)
+        property("editorLinux", ToolDefinition)
+        property("editorMac", ToolDefinition)
+    }
+
     private val projectId = PredefinedType.guid
 
     init {
         setting(CSharp50Generator.Namespace, "Rider.Plugins.MonoGame")
         setting(Kotlin11Generator.Namespace, "me.seclerp.rider.plugins.monogame")
 
-        property("mgcbEditorToolGlobal", ToolDefinition)
-        property("mgcbEditorToolSolution", ToolDefinition)
-        map("mgcbEditorToolProjects", projectId, classdef("ToolDefinitionRx") {
-            property("value", ToolDefinition)
-        })
+        field("mgcbEditorGlobalToolset", MgcbEditorToolset)
+        field("mgcbEditorSolutionToolset", MgcbEditorToolset)
+        map("mgcbEditorProjectsToolsets", projectId, MgcbEditorToolset)
     }
 }
