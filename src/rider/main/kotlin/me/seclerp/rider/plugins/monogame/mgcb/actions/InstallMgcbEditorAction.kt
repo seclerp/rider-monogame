@@ -4,13 +4,12 @@ import com.intellij.notification.NotificationGroupManager
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import me.seclerp.rider.plugins.monogame.KnownNotificationGroups
 import me.seclerp.rider.plugins.monogame.mgcb.actions.commands.CliCommandResult
 import me.seclerp.rider.plugins.monogame.mgcb.actions.commands.InstallMgcbEditorCommand
 import me.seclerp.rider.plugins.monogame.mgcb.actions.commands.RegisterMgcbEditorCommand
-import me.seclerp.rider.plugins.monogame.mgcb.services.MgcbEditorCheckService
+import me.seclerp.rider.plugins.monogame.mgcb.toolset.MgcbToolsetHost
 
 class InstallMgcbEditorAction : AnAction() {
     override fun actionPerformed(actionEvent: AnActionEvent) {
@@ -43,7 +42,7 @@ class InstallMgcbEditorAction : AnAction() {
 
     private fun notifySuccess(project: Project) {
         // Force re-check to re-enable buttons
-        MgcbEditorCheckService.getInstance(project).startCheck()
+        MgcbToolsetHost.getInstance(project).startCheck()
 
         NotificationGroupManager
             .getInstance()

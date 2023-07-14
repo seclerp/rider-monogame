@@ -19,10 +19,10 @@ object MonoGameRiderModel : Ext(SolutionModel.Solution) {
     }
 
     private val MgcbEditorToolset = aggregatedef("MgcbEditorToolset") {
-        property("editor", ToolDefinition)
-        property("editorWindows", ToolDefinition)
-        property("editorLinux", ToolDefinition)
-        property("editorMac", ToolDefinition)
+        property("editor", ToolDefinition.nullable)
+        property("editorWindows", ToolDefinition.nullable)
+        property("editorLinux", ToolDefinition.nullable)
+        property("editorMac", ToolDefinition.nullable)
     }
 
     private val projectId = PredefinedType.guid
