@@ -85,11 +85,6 @@
 
   </extensions>
 
-  <actions>
-    <action id="InstallMgcbEditorAction"
-            class="me.seclerp.rider.plugins.monogame.mgcb.actions.InstallMgcbEditorAction" />
-  </actions>
-
   <projectListeners>
     <listener class="me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbFileListener"
               topic="com.intellij.openapi.vfs.newvfs.BulkFileListener" />

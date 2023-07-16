@@ -14,24 +14,20 @@ class MgcbToolsetHost(private val intellijProject: Project) {
         fun getInstance(project: Project) = project.service<MgcbToolsetHost>()
     }
 
-    private val hostModel = intellijProject.solution.monoGameRiderModel
-    val globalToolset = hostModel.mgcbGlobalToolset
-    val solutionToolset = hostModel.mgcbSolutionToolset
-    val editorTool = hostModel.mgcbGlobalToolset.editor
-        .compose(hostModel.mgcbSolutionToolset.editor) { globalToolset, solutionToolset ->
-            // Solution (local) toolset always has priority over global
-            when (solutionToolset) {
-                null -> globalToolset
-                else -> solutionToolset
+    private val hostModel by lazy { intellijProject.solution.monoGameRiderModel }
+    val globalToolset by lazy { hostModel.mgcbGlobalToolset }
+    val solutionToolset by lazy { hostModel.mgcbSolutionToolset }
+    val editorTool by lazy {
+        hostModel.mgcbGlobalToolset.editor
+            .compose(hostModel.mgcbSolutionToolset.editor) { globalToolset, solutionToolset ->
+                // Solution (local) toolset always has priority over global
+                when (solutionToolset) {
+                    null -> globalToolset
+                    else -> solutionToolset
+                }
             }
-        }
+    }
 
-    private val areGlobalEditorToolsInstalled =
-        globalToolset.editor.map { it != null }
-
-    private val areSolutionEditorToolsInstalled =
-        solutionToolset.editor.map { it != null }
-
-    fun areToolsAvailable() = areSolutionEditorToolsInstalled.value || areGlobalEditorToolsInstalled.value
+    fun areToolsAvailable() = editorTool.value != null
 }
 

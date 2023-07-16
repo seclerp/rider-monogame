@@ -18,17 +18,19 @@ class MgcbToolsetConfigurableProvider(private val project: Project) : Configurab
 
     class MgcbToolsetConfigurable(project: Project) : SearchableConfigurable {
         private val lifetime = project.lifetime.createNested()
-        private val mgcbToolsetHost = MgcbToolsetHost.getInstance(project)
+        private val mgcbToolsetHost by lazy { MgcbToolsetHost.getInstance(project) }
 
-        private val globalToolsetInfo =
+        private val globalToolsetInfo by lazy {
             mgcbToolsetHost.globalToolset.editor
                 .map(::getPresentableToolsetInfo)
                 .let { RdObservableProperty(it, lifetime) }
+        }
 
-        private val solutionToolsetInfo =
+        private val solutionToolsetInfo by lazy {
             mgcbToolsetHost.solutionToolset.editor
                 .map(::getPresentableToolsetInfo)
                 .let { RdObservableProperty(it, lifetime) }
+        }
 
         @Suppress("DialogTitleCapitalization")
         override fun createComponent() = panel {
