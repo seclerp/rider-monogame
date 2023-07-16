@@ -1,29 +1,16 @@
 package me.seclerp.rider.plugins.monogame.mgcb.toolset
 
-import com.intellij.openapi.Disposable
-import com.intellij.openapi.observable.properties.ObservableProperty
 import com.intellij.openapi.options.ConfigurableProvider
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.rd.createLifetime
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
 import com.jetbrains.rd.platform.util.lifetime
-import com.jetbrains.rd.util.lifetime.Lifetime
-import com.jetbrains.rd.util.reactive.IPropertyView
 import com.jetbrains.rd.util.reactive.compose
+import me.seclerp.rider.extensions.observables.RdObservableProperty
 import me.seclerp.rider.plugins.monogame.MonoGameUiBundle
 import me.seclerp.rider.plugins.monogame.ToolDefinition
 import me.seclerp.rider.plugins.monogame.ToolKind
-
-class RdObservableProperty<T>(private val property: IPropertyView<T>, private val propertyLifetime: Lifetime) : ObservableProperty<T> {
-    override fun get() = property.value
-
-    override fun afterChange(parentDisposable: Disposable?, listener: (T) -> Unit) {
-        val lifetime = parentDisposable?.createLifetime() ?: propertyLifetime
-        property.change.advise(lifetime, listener)
-    }
-}
 
 class MgcbToolsetConfigurableProvider(private val project: Project) : ConfigurableProvider() {
     override fun createConfigurable() = MgcbToolsetConfigurable(project)
@@ -42,15 +29,22 @@ class MgcbToolsetConfigurableProvider(private val project: Project) : Configurab
                 .compose(mgcbToolsetHost.solutionToolset.editorPlatform, ::getPresentableToolsetInfo)
                 .let { RdObservableProperty(it, lifetime) }
 
+        @Suppress("DialogTitleCapitalization")
         override fun createComponent() = panel {
-            row("Global tools") {
-                label("")
-                    .bindText(globalToolsetInfo)
+            group(MonoGameUiBundle.message("settings.mgcb.editor.group")) {
+                row(MonoGameUiBundle.message("settings.mgcb.editor.group.global")) {
+                    label("")
+                        .bindText(globalToolsetInfo)
+                }
+                row(MonoGameUiBundle.message("settings.mgcb.editor.group.solution")) {
+                    label("")
+                        .bindText(solutionToolsetInfo)
+                }
             }
-            row("Solution-level tools") {
-                label("")
-                    .bindText(solutionToolsetInfo)
-            }
+        }
+
+        override fun disposeUIResources() {
+            lifetime.terminate()
         }
 
         override fun isModified(): Boolean {
@@ -61,18 +55,24 @@ class MgcbToolsetConfigurableProvider(private val project: Project) : Configurab
             // TODO
         }
 
-        override fun getDisplayName() = MonoGameUiBundle.message("configurable.group.tools.monogame.mgcb.display.name")
+        override fun getDisplayName() = MonoGameUiBundle.message("settings.mgcb.display.name")
         override fun getId() = "monogame.tools.mgcb"
 
         private fun getPresentableToolsetInfo(editorLauncher: ToolDefinition?, platformDefinition: ToolDefinition?) = buildString {
+            append("<html>")
             append(getPresentableToolInfo("mgcb-editor", editorLauncher))
-            if (editorLauncher != null && editorLauncher.toolKind == ToolKind.None && platformDefinition != null) {
-                append(", ")
-                append(getPresentableToolInfo(platformDefinition.packageId, editorLauncher))
+            if (editorLauncher != null) {
+                val version = DotNetToolsVersion.parse(editorLauncher.version)
+                if (version != null && version >= KnownMgcbVersions.`3_8_1` && platformDefinition != null) {
+                    append("<br>")
+                    append(getPresentableToolInfo(platformDefinition.packageId, platformDefinition))
+                }
             }
+            append("</html>")
         }
 
-        private fun getPresentableToolInfo(name: String, tool: ToolDefinition?) = buildString {
+        private fun getPresentableToolInfo(fallbackName: String, tool: ToolDefinition?) = buildString {
+            val name = tool?.packageId ?: fallbackName
             append("$name: ")
             if (tool == null || tool.toolKind == ToolKind.None) {
                 append("Not found")

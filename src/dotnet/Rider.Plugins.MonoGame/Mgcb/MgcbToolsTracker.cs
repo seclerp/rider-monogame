@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using JetBrains.Application.FileSystemTracker;
 using JetBrains.Application.Threading;
 using JetBrains.Collections.Viewable;
@@ -37,6 +39,7 @@ public class MgcbToolsTracker
         ILogger logger,
         ISolutionToolset toolset)
     {
+        // while (!Debugger.IsAttached) Thread.Sleep(1000);
         MgcbEditorGlobalToolset = CreateGlobalToolset(solutionToolsTracker, lifetime);
         MgcbEditorSolutionToolset = CreateSolutionToolset(solutionToolsTracker, lifetime);
         MgcbEditorProjectsToolset = new ViewableMap<IProject, MgcbToolset<LocalTool>>();

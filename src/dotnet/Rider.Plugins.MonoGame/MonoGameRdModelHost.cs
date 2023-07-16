@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Collections.Viewable;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
@@ -19,33 +20,21 @@ public class MonoGameRdModelHost
         ILogger logger)
     {
         var model = solution.GetProtocolSolution().GetMonoGameRiderModel();
+
         BindGlobalToolset(toolsTracker.MgcbEditorGlobalToolset, model.MgcbEditorGlobalToolset, lifetime);
-        toolsTracker.MgcbEditorProjectsToolset.View(lifetime, (projectLifetime, project, toolProperty) =>
-        {
-            projectLifetime.Bracket(
-                () =>
-                {
-                    var projectToolset = new MgcbEditorToolset();
-                    BindLocalToolset(toolProperty, projectToolset, projectLifetime);
-                    model.MgcbEditorProjectsToolsets.Add(project.Guid, projectToolset);
-                },
-                () =>
-                {
-                    Unset(model.MgcbEditorProjectsToolsets[project.Guid]);
-                    model.MgcbEditorProjectsToolsets.Remove(project.Guid);
-                });
-        });
+        BindLocalToolset(toolsTracker.MgcbEditorSolutionToolset, model.MgcbEditorSolutionToolset, lifetime);
+        BindProjectsToolsets(toolsTracker.MgcbEditorProjectsToolset, model.MgcbEditorProjectsToolsets, lifetime);
     }
 
     private void BindGlobalToolset(MgcbToolset<GlobalToolCacheEntry> source, MgcbEditorToolset target, Lifetime lifetime)
     {
         source.MgcbEditor.FlowInto(lifetime, target.Editor, cacheEntry =>
             MapGlobalTool(KnownDotNetTools.MgcbEditor, cacheEntry));
-        source.MgcbEditorWindows.FlowInto(lifetime, target.Editor, cacheEntry =>
+        source.MgcbEditorWindows.FlowInto(lifetime, target.EditorWindows, cacheEntry =>
             MapGlobalTool(KnownDotNetTools.MgcbEditorWin, cacheEntry));
-        source.MgcbEditorLinux.FlowInto(lifetime, target.Editor, cacheEntry =>
+        source.MgcbEditorLinux.FlowInto(lifetime, target.EditorLinux, cacheEntry =>
             MapGlobalTool(KnownDotNetTools.MgcbEditorLinux, cacheEntry));
-        source.MgcbEditorMac.FlowInto(lifetime, target.Editor, cacheEntry =>
+        source.MgcbEditorMac.FlowInto(lifetime, target.EditorMac , cacheEntry =>
             MapGlobalTool(KnownDotNetTools.MgcbEditorMac, cacheEntry));
     }
 
@@ -53,12 +42,31 @@ public class MonoGameRdModelHost
     {
         source.MgcbEditor.FlowInto(lifetime, target.Editor, cacheEntry =>
             MapLocalTool(KnownDotNetTools.MgcbEditor, cacheEntry));
-        source.MgcbEditorWindows.FlowInto(lifetime, target.Editor, cacheEntry =>
+        source.MgcbEditorWindows.FlowInto(lifetime, target.EditorWindows, cacheEntry =>
             MapLocalTool(KnownDotNetTools.MgcbEditorWin, cacheEntry));
-        source.MgcbEditorLinux.FlowInto(lifetime, target.Editor, cacheEntry =>
+        source.MgcbEditorLinux.FlowInto(lifetime, target.EditorLinux, cacheEntry =>
             MapLocalTool(KnownDotNetTools.MgcbEditorLinux, cacheEntry));
-        source.MgcbEditorMac.FlowInto(lifetime, target.Editor, cacheEntry =>
+        source.MgcbEditorMac.FlowInto(lifetime, target.EditorMac, cacheEntry =>
             MapLocalTool(KnownDotNetTools.MgcbEditorMac, cacheEntry));
+    }
+
+    private void BindProjectsToolsets(IViewableMap<IProject,MgcbToolset<LocalTool>> source, IViewableMap<Guid,MgcbEditorToolset> target, Lifetime lifetime)
+    {
+        source.View(lifetime, (projectLifetime, project, toolProperty) =>
+        {
+            projectLifetime.Bracket(
+                () =>
+                {
+                    var projectToolset = new MgcbEditorToolset();
+                    BindLocalToolset(toolProperty, projectToolset, projectLifetime);
+                    target.Add(project.Guid, projectToolset);
+                },
+                () =>
+                {
+                    Unset(target[project.Guid]);
+                    target.Remove(project.Guid);
+                });
+        });
     }
 
     private static ToolDefinition MapGlobalTool(string expectedId, GlobalToolCacheEntry tool) => tool switch
