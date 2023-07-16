@@ -1,45 +1,48 @@
 name: Deploy
-
 on:
-  workflow_dispatch:
-    inputs:
-      channel:
-        type: choice
-        description: Release channel
-        options:
-          - default
-          - eap
-        required: true
-
+  workflow_run:
+    workflows: [Build & Text]
+    types: [completed]
+    branches: [ release/* ]
 jobs:
-  deploy:
+  on-success-build:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    environment: production
     steps:
       - name: 📝 Fetch Sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: 🛠 Prepare Build Environment
-        uses: ./.github/workflows/prepare-build-env
+      - name: 🛠 Import environment
+        uses: ./.github/workflows/environment
 
-      - name: 🔍 Extract Version
-        id: version
-        run: |
-          echo "PLUGIN_VERSION=$(./gradlew properties | grep -oP '(?<=PluginVersion: ).*')" >> $GITHUB_ENV
-
-      - name: 🏗 Build Plugin
-        uses: gradle/gradle-build-action@v2
+      - name: 🛠 Setup JDK
+        uses: actions/setup-java@v3
         with:
-          arguments: buildPlugin
+          java-version: 17
+          distribution: corretto
 
-      - name: 🏗 Get current changelog
-        id: changelog_step
+      - name: 📦 Download artifacts
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          name: plugin-artifacts-ubuntu-latest
+          path: ${{ env.ARTIFACTS_FOLDER }}
+          run_id: ${{ github.event.workflow_run.id }}
+          if_no_artifact_found: fail
+
+      - name: 📦 Tree artifacts
+        shell: pwsh
         run: |
-          CHANGELOG=$(./gradlew getChangelog --console=plain -q --no-header)
-          echo $CHANGELOG
-          CHANGELOG="${CHANGELOG//'%'/'%25'}"
-          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
-          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
-          echo "::set-output name=CHANGELOG_ALL::$CHANGELOG"
+          tree ${{ env.ARTIFACTS_FOLDER }}
+
+      - name: 📦 Extract metadata
+        shell: pwsh
+        run: |
+          $PLUGIN_VERSION = (cat "${{ env.ARTIFACTS_FOLDER }}/${{ env.ARTIFACTS_VERSION }}")
+          echo "PLUGIN_VERSION=$PLUGIN_VERSION" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+
+          $PLUGIN_ID = (cat "${{ env.ARTIFACTS_FOLDER }}/${{ env.ARTIFACTS_PLUGIN_ID }}")
+          echo "PLUGIN_ID=$PLUGIN_ID" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: 🚀 Create Release
         uses: ncipollo/release-action@v1
@@ -48,11 +51,46 @@ jobs:
           commit: ${{ github.sha }} # Commit SHA
           tag: v${{ env.PLUGIN_VERSION }} # 'v' + version from gradle.properties
           draft: true
-          body: ${{ steps.changelog_step.outputs.CHANGELOG_ALL }}
-          artifacts: "output/*.zip"
+          bodyFile: ${{ env.ARTIFACTS_FOLDER }}/${{ env.ARTIFACTS_CHANGELOG }}
+          artifacts: "${{ env.ARTIFACTS_FOLDER }}/${{ env.PLUGIN_NAME }}-${{ env.PLUGIN_VERSION }}.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🚀 Publish Plugin
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: publishPlugin -PPublishToken=${{ secrets.JB_PUBLISH_TOKEN }} -PPublishChannel=${{ github.event.inputs.channel }}
+        shell: pwsh
+        run: |
+          $uploadUrl = '${{ env.PLUGINS_REPOSITORY }}/api/updates/upload'
+          $token = '${{ secrets.JB_PUBLISH_TOKEN }}'
+          Write-Host "Upload URL: $uploadUrl"
+
+          $pluginXmlId = Get-Content -Raw -Path '${{ env.ARTIFACTS_FOLDER }}/${{ env.ARTIFACTS_PLUGIN_ID }}'
+          Write-Host "Plugin ID to upload: $pluginXmlId"
+          $channel = 'stable'
+          Write-Host "Channel: $channel"
+          $pluginPath = '${{ env.ARTIFACTS_FOLDER }}/${{ env.PLUGIN_NAME }}-${{ env.PLUGIN_VERSION }}.zip'
+          Write-Host "Plugin archive location: $pluginPath"
+
+          $content = [System.Net.Http.MultipartFormDataContent]::new()
+          $content.Add((New-Object System.Net.Http.StringContent $pluginXmlId.Trim()), 'xmlId')
+          $content.Add((New-Object System.Net.Http.StringContent $channel), 'channel')
+          $filePart = [System.Net.Http.StreamContent]::new([System.IO.File]::OpenRead($pluginPath))
+          $filePart.Headers.ContentDisposition = 'form-data; name="file"; filename="{0}"' -f (Split-Path -Leaf $pluginPath)
+          $content.Add($filePart, 'file')
+          Write-Host "Multipart form data created"
+
+          Write-Host "Requesting POST $uploadUrl..."
+          $client = [System.Net.Http.HttpClient]::new()
+          $client.DefaultRequestHeaders.Authorization = New-Object System.Net.Http.Headers.AuthenticationHeaderValue('Bearer', $token)
+          $result = $client.PostAsync($uploadUrl, $content).Result
+
+          $status = $result.StatusCode
+          $isSuccess = $result.IsSuccessStatusCode
+          Write-Host "Status Code: $status"
+          Write-Host "Is Success: $isSuccess"
+
+          $responseContent = $result.Content.ReadAsStringAsync().Result
+          echo "Response: $responseContent"
+
+          if (-not $isSuccess) {
+              Write-Host "Request failed. Exiting."
+              exit 1
+          }

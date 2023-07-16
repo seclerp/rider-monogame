@@ -1,4 +1,4 @@
-name: Build
+name: Build & Text
 on:
   push:
     branches: [ release/* ]
@@ -7,16 +7,91 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-ubuntu:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-latest, macos-latest, ubuntu-latest ]
     steps:
       - name: 📝 Fetch Sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: 🛠 Prepare Build Environment
-        uses: ./.github/workflows/prepare-build-env
+      - name: 🛠 Import environment
+        uses: ./.github/workflows/environment
+
+      - name: 🧐 Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: 🛠 Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'corretto'
+
+      - name: 🛠 Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.200'
+
+      - name: 🔧 Prepare build devenv
+        uses: gradle/gradle-build-action@v2
+        with:
+          cache-disabled: true
+          arguments: prepare
 
       - name: 🏗 Build Plugin (Stable)
         uses: gradle/gradle-build-action@v2
         with:
           arguments: buildPlugin
+
+      - name: 📦 Prepare artifacts folder
+        shell: pwsh
+        run: |
+          mkdir artifacts
+
+      - name: 📦 Emit metadata artifacts
+        shell: pwsh
+        run: |
+          $PROPERTIES = ./gradlew properties
+          
+          $VERSION_ROW = $PROPERTIES | Select-String "pluginVersion"
+          $VERSION = ($VERSION_ROW -split ':')[1].Trim()
+          
+          $PLUGIN_ID_ROW = $PROPERTIES | Select-String "riderPluginId"
+          $PLUGIN_ID = ($PLUGIN_ID_ROW -split ':')[1].Trim()
+          
+          echo "PLUGIN_VERSION=$VERSION" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+          echo $VERSION > ${{ env.ARTIFACTS_FOLDER }}/${{ env.ARTIFACTS_VERSION }}
+
+          echo "PLUGIN_ID=$PLUGIN_ID" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+          echo $PLUGIN_ID > ${{ env.ARTIFACTS_FOLDER }}/${{ env.ARTIFACTS_PLUGIN_ID }}
+
+      - name: 📦 Emit plugin archive artifact
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path "build\distributions\*.zip" |
+          Move-Item -Destination "${{ env.ARTIFACTS_FOLDER }}\${{ env.PLUGIN_NAME }}-${{ env.PLUGIN_VERSION }}.zip" -Force
+
+      - name: 📦 Emit changelog artifact
+        shell: pwsh
+        run: |
+          $CHANGELOG = (./gradlew getChangelog --console=plain -q --no-header)
+          # We need to escape CHANGELOG because it will be transferred over HTTP for GitHub Release creation
+          $CHANGELOG = $CHANGELOG -replace '%', '%25'
+          $CHANGELOG = $CHANGELOG -replace "`n", '%0A'
+          $CHANGELOG = $CHANGELOG -replace "`r", '%0D'
+          echo $CHANGELOG
+          echo $CHANGELOG > ${{ env.ARTIFACTS_FOLDER }}/${{ env.ARTIFACTS_CHANGELOG }}
+
+      - name: 📦 Tree artifacts
+        shell: pwsh
+        run: |
+          tree ${{ env.ARTIFACTS_FOLDER }}
+
+      - name: 📦 Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: plugin-artifacts-${{ matrix.os }}
+          path: ${{ env.ARTIFACTS_FOLDER }}/
+          if-no-files-found: error

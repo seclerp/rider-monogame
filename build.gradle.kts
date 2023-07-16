@@ -40,6 +40,7 @@ val pluginVersion: String by project
 val buildConfiguration = ext.properties["buildConfiguration"] ?: "Debug"
 
 val publishToken: String by project
+val publishDistributionFile: String by project
 val publishChannel: String by project
 
 val rdLibDirectory: () -> File = { file("${tasks.setupDependencies.get().idea.get().classes}/lib/rd") }
@@ -310,6 +311,7 @@ tasks {
 
     publishPlugin {
         token.set(publishToken)
+        distributionFile.set(File(publishDistributionFile))
         channels.set(listOf(publishChannel))
     }
 }

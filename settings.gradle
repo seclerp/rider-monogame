@@ -17,6 +17,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'monogamerider'
+rootProject.name = 'rider-monogame'
 
 include ':protocol'

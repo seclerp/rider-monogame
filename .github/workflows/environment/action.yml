@@ -1,0 +1,12 @@
+name: Import environment variables
+description: Import environment variables from a file
+inputs:
+  envfile:
+    description: '.env file to import'
+    required: true
+    default: .github/variables/.env
+runs:
+  using: "composite"
+  steps:
+    - shell: pwsh
+      run: Get-Content ${{ inputs.envfile }} | Add-Content -Path $env:GITHUB_ENV
