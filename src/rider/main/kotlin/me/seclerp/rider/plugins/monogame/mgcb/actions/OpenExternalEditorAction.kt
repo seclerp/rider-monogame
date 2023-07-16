@@ -11,7 +11,6 @@ import me.seclerp.rider.extensions.commandLine.buildDotnetCommand
 import me.seclerp.rider.extensions.workspaceModel.containingProjectDirectory
 import me.seclerp.rider.plugins.monogame.MonoGameIcons
 import me.seclerp.rider.plugins.monogame.MonoGameUiBundle
-import me.seclerp.rider.plugins.monogame.mgcb.actions.commands.MgcbEditorCommand
 import me.seclerp.rider.plugins.monogame.mgcb.toolset.MgcbToolsetHost
 
 @Suppress("DialogTitleCapitalization", "UnstableApiUsage")
@@ -20,7 +19,11 @@ class OpenExternalEditorAction : AnAction(MonoGameIcons.MgcbFile) {
         val intellijProject = actionEvent.project ?: return
         val file = actionEvent.dataContext.getData(CommonDataKeys.VIRTUAL_FILE) ?: return
         val dotnetProjectDirectory = intellijProject.workspaceModel.containingProjectDirectory(file, intellijProject) ?: return
-        val command = getCommand(intellijProject, dotnetProjectDirectory.path)
+        val editorCommand = MgcbToolsetHost.getInstance(intellijProject).editorTool.value?.commandName ?: return
+        val command = buildDotnetCommand(intellijProject, editorCommand) {
+            workingDirectory(dotnetProjectDirectory.path)
+            param(file.path)
+        }
         DefaultCommandExecutor.getInstance(intellijProject).execute(command)
     }
 
@@ -37,9 +40,4 @@ class OpenExternalEditorAction : AnAction(MonoGameIcons.MgcbFile) {
             else
                 MonoGameUiBundle.message("command.mgcb.open.missing.editor.title")
     }
-
-    private fun getCommand(intellijProject: Project, dotnetProjectDirectory: String) =
-        buildDotnetCommand(intellijProject, "mgcb-editor") {
-            workingDirectory(dotnetProjectDirectory)
-        }
 }

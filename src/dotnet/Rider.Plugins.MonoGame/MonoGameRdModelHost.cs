@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using JetBrains.Collections.Viewable;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
@@ -16,38 +17,26 @@ public class MonoGameRdModelHost
     public MonoGameRdModelHost(
         Lifetime lifetime,
         ISolution solution,
-        MgcbToolsTracker toolsTracker,
+        MgcbToolsetTracker toolsetTracker,
         ILogger logger)
     {
         var model = solution.GetProtocolSolution().GetMonoGameRiderModel();
 
-        BindGlobalToolset(toolsTracker.MgcbEditorGlobalToolset, model.MgcbEditorGlobalToolset, lifetime);
-        BindLocalToolset(toolsTracker.MgcbEditorSolutionToolset, model.MgcbEditorSolutionToolset, lifetime);
-        BindProjectsToolsets(toolsTracker.MgcbEditorProjectsToolset, model.MgcbEditorProjectsToolsets, lifetime);
+        BindGlobalToolset(toolsetTracker.MgcbGlobalToolset, model.MgcbGlobalToolset, lifetime);
+        BindLocalToolset(toolsetTracker.MgcbSolutionToolset, model.MgcbSolutionToolset, lifetime);
+        BindProjectsToolsets(toolsetTracker.MgcbProjectsToolset, model.MgcbProjectsToolsets, lifetime);
     }
 
     private void BindGlobalToolset(MgcbToolset<GlobalToolCacheEntry> source, MgcbEditorToolset target, Lifetime lifetime)
     {
-        source.MgcbEditor.FlowInto(lifetime, target.Editor, cacheEntry =>
+        source.Editor.FlowInto(lifetime, target.Editor, cacheEntry =>
             MapGlobalTool(KnownDotNetTools.MgcbEditor, cacheEntry));
-        source.MgcbEditorWindows.FlowInto(lifetime, target.EditorWindows, cacheEntry =>
-            MapGlobalTool(KnownDotNetTools.MgcbEditorWin, cacheEntry));
-        source.MgcbEditorLinux.FlowInto(lifetime, target.EditorLinux, cacheEntry =>
-            MapGlobalTool(KnownDotNetTools.MgcbEditorLinux, cacheEntry));
-        source.MgcbEditorMac.FlowInto(lifetime, target.EditorMac , cacheEntry =>
-            MapGlobalTool(KnownDotNetTools.MgcbEditorMac, cacheEntry));
     }
 
     private void BindLocalToolset(MgcbToolset<LocalTool> source, MgcbEditorToolset target, Lifetime lifetime)
     {
-        source.MgcbEditor.FlowInto(lifetime, target.Editor, cacheEntry =>
+        source.Editor.FlowInto(lifetime, target.Editor, cacheEntry =>
             MapLocalTool(KnownDotNetTools.MgcbEditor, cacheEntry));
-        source.MgcbEditorWindows.FlowInto(lifetime, target.EditorWindows, cacheEntry =>
-            MapLocalTool(KnownDotNetTools.MgcbEditorWin, cacheEntry));
-        source.MgcbEditorLinux.FlowInto(lifetime, target.EditorLinux, cacheEntry =>
-            MapLocalTool(KnownDotNetTools.MgcbEditorLinux, cacheEntry));
-        source.MgcbEditorMac.FlowInto(lifetime, target.EditorMac, cacheEntry =>
-            MapLocalTool(KnownDotNetTools.MgcbEditorMac, cacheEntry));
     }
 
     private void BindProjectsToolsets(IViewableMap<IProject,MgcbToolset<LocalTool>> source, IViewableMap<Guid,MgcbEditorToolset> target, Lifetime lifetime)
@@ -71,21 +60,18 @@ public class MonoGameRdModelHost
 
     private static ToolDefinition MapGlobalTool(string expectedId, GlobalToolCacheEntry tool) => tool switch
     {
-        null => new ToolDefinition(expectedId, string.Empty, ToolKind.None),
-        var other => new ToolDefinition(other.ToolName, other.Version.ToString(), ToolKind.Global)
+        null => new ToolDefinition(expectedId, string.Empty, string.Empty),
+        var other => new ToolDefinition(other.ToolName, MgcbEditorCommandNameResolver.Resolve(other), other.Version.ToString())
     };
 
     private static ToolDefinition MapLocalTool(string expectedId, LocalTool tool) => tool switch
     {
-        null => new ToolDefinition(expectedId, string.Empty, ToolKind.None),
-        var other => new ToolDefinition(other.PackageId, other.Version, ToolKind.Local)
+        null => new ToolDefinition(expectedId, string.Empty, string.Empty),
+        var other => new ToolDefinition(other.PackageId, MgcbEditorCommandNameResolver.Resolve(other), other.Version)
     };
 
     private static void Unset(MgcbEditorToolset toolset)
     {
-        toolset.Editor.SetValue(new ToolDefinition(KnownDotNetTools.MgcbEditor, string.Empty, ToolKind.None));
-        toolset.EditorWindows.SetValue(new ToolDefinition(KnownDotNetTools.MgcbEditorWin, string.Empty, ToolKind.None));
-        toolset.EditorLinux.SetValue(new ToolDefinition(KnownDotNetTools.MgcbEditorLinux, string.Empty, ToolKind.None));
-        toolset.EditorMac.SetValue(new ToolDefinition(KnownDotNetTools.MgcbEditorMac, string.Empty, ToolKind.None));
+        toolset.Editor.SetValue(new ToolDefinition(KnownDotNetTools.MgcbEditor, string.Empty, string.Empty));
     }
 }

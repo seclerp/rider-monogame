@@ -1,4 +1,4 @@
-package me.seclerp.rider.plugins.monogame.mgcb.toolset
+package me.seclerp.rider.plugins.monogame.settings
 
 import com.intellij.openapi.options.ConfigurableProvider
 import com.intellij.openapi.options.SearchableConfigurable
@@ -7,10 +7,11 @@ import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
 import com.jetbrains.rd.platform.util.lifetime
 import com.jetbrains.rd.util.reactive.compose
+import com.jetbrains.rd.util.reactive.map
 import me.seclerp.rider.extensions.observables.RdObservableProperty
 import me.seclerp.rider.plugins.monogame.MonoGameUiBundle
 import me.seclerp.rider.plugins.monogame.ToolDefinition
-import me.seclerp.rider.plugins.monogame.ToolKind
+import me.seclerp.rider.plugins.monogame.mgcb.toolset.MgcbToolsetHost
 
 class MgcbToolsetConfigurableProvider(private val project: Project) : ConfigurableProvider() {
     override fun createConfigurable() = MgcbToolsetConfigurable(project)
@@ -20,13 +21,13 @@ class MgcbToolsetConfigurableProvider(private val project: Project) : Configurab
         private val mgcbToolsetHost = MgcbToolsetHost.getInstance(project)
 
         private val globalToolsetInfo =
-            mgcbToolsetHost.globalToolset.editorLauncher
-                .compose(mgcbToolsetHost.globalToolset.editorPlatform, ::getPresentableToolsetInfo)
+            mgcbToolsetHost.globalToolset.editor
+                .map(::getPresentableToolsetInfo)
                 .let { RdObservableProperty(it, lifetime) }
 
         private val solutionToolsetInfo =
-            mgcbToolsetHost.solutionToolset.editorLauncher
-                .compose(mgcbToolsetHost.solutionToolset.editorPlatform, ::getPresentableToolsetInfo)
+            mgcbToolsetHost.solutionToolset.editor
+                .map(::getPresentableToolsetInfo)
                 .let { RdObservableProperty(it, lifetime) }
 
         @Suppress("DialogTitleCapitalization")
@@ -58,23 +59,14 @@ class MgcbToolsetConfigurableProvider(private val project: Project) : Configurab
         override fun getDisplayName() = MonoGameUiBundle.message("settings.mgcb.display.name")
         override fun getId() = "monogame.tools.mgcb"
 
-        private fun getPresentableToolsetInfo(editorLauncher: ToolDefinition?, platformDefinition: ToolDefinition?) = buildString {
-            append("<html>")
-            append(getPresentableToolInfo("mgcb-editor", editorLauncher))
-            if (editorLauncher != null) {
-                val version = DotNetToolsVersion.parse(editorLauncher.version)
-                if (version != null && version >= KnownMgcbVersions.`3_8_1` && platformDefinition != null) {
-                    append("<br>")
-                    append(getPresentableToolInfo(platformDefinition.packageId, platformDefinition))
-                }
-            }
-            append("</html>")
+        private fun getPresentableToolsetInfo(editor: ToolDefinition?) = buildString {
+            append(getPresentableToolInfo("mgcb-editor", editor))
         }
 
         private fun getPresentableToolInfo(fallbackName: String, tool: ToolDefinition?) = buildString {
             val name = tool?.packageId ?: fallbackName
             append("$name: ")
-            if (tool == null || tool.toolKind == ToolKind.None) {
+            if (tool == null) {
                 append("Not found")
             } else {
                 append(tool.version)

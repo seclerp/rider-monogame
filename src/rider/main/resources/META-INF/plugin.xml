@@ -80,7 +80,7 @@
     <projectConfigurable id="monogame.tools.mgcb"
                          parentId="monogame.tools"
                          bundle="messages.MonoGameUiBundle"
-                         provider="me.seclerp.rider.plugins.monogame.mgcb.toolset.MgcbToolsetConfigurableProvider"
+                         provider="me.seclerp.rider.plugins.monogame.settings.MgcbToolsetConfigurableProvider"
                          key="settings.mgcb.display.name"/>
 
   </extensions>

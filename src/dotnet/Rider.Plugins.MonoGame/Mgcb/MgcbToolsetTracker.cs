@@ -22,15 +22,15 @@ namespace Rider.Plugins.MonoGame.Mgcb;
 /// So we need to track all these places.
 /// </summary>
 [SolutionComponent]
-public class MgcbToolsTracker
+public class MgcbToolsetTracker
 {
-    public MgcbToolset<GlobalToolCacheEntry> MgcbEditorGlobalToolset;
-    public MgcbToolset<LocalTool> MgcbEditorSolutionToolset;
-    public IViewableMap<IProject, MgcbToolset<LocalTool>> MgcbEditorProjectsToolset;
+    public MgcbToolset<GlobalToolCacheEntry> MgcbGlobalToolset;
+    public MgcbToolset<LocalTool> MgcbSolutionToolset;
+    public IViewableMap<IProject, MgcbToolset<LocalTool>> MgcbProjectsToolset;
 
     private IDictionary<IProject, ProjectDotnetToolsTracker> _projectToolsTrackers = new Dictionary<IProject, ProjectDotnetToolsTracker>();
 
-    public MgcbToolsTracker(
+    public MgcbToolsetTracker(
         IViewableProjectsCollection projectsCollection,
         Lifetime lifetime,
         SolutionDotnetToolsTracker solutionToolsTracker,
@@ -40,9 +40,9 @@ public class MgcbToolsTracker
         ISolutionToolset toolset)
     {
         // while (!Debugger.IsAttached) Thread.Sleep(1000);
-        MgcbEditorGlobalToolset = CreateGlobalToolset(solutionToolsTracker, lifetime);
-        MgcbEditorSolutionToolset = CreateSolutionToolset(solutionToolsTracker, lifetime);
-        MgcbEditorProjectsToolset = new ViewableMap<IProject, MgcbToolset<LocalTool>>();
+        MgcbGlobalToolset = CreateGlobalToolset(solutionToolsTracker, lifetime);
+        MgcbSolutionToolset = CreateSolutionToolset(solutionToolsTracker, lifetime);
+        MgcbProjectsToolset = new ViewableMap<IProject, MgcbToolset<LocalTool>>();
 
         projectsCollection.Projects.View(
             lifetime,
@@ -55,13 +55,13 @@ public class MgcbToolsTracker
                             fileSystemTracker, locks,
                             logger, toolset);
                         _projectToolsTrackers.Add(project, tracker);
-                        MgcbEditorProjectsToolset.Add(project, CreateProjectToolset(tracker, projectLifetime));
+                        MgcbProjectsToolset.Add(project, CreateProjectToolset(tracker, projectLifetime));
                     },
                     () =>
                     {
                         _projectToolsTrackers.Remove(project);
-                        MgcbEditorProjectsToolset[project].Unset();
-                        MgcbEditorProjectsToolset.Remove(project);
+                        MgcbProjectsToolset[project].Unset();
+                        MgcbProjectsToolset.Remove(project);
                     });
             });
     }
@@ -70,10 +70,7 @@ public class MgcbToolsTracker
     {
         return new MgcbToolset<GlobalToolCacheEntry>
         {
-            MgcbEditor = ObserveGlobalTool(KnownDotNetTools.MgcbEditor, solutionToolsTracker, solutionLifetime),
-            MgcbEditorWindows = ObserveGlobalTool(KnownDotNetTools.MgcbEditorWin, solutionToolsTracker, solutionLifetime),
-            MgcbEditorLinux = ObserveGlobalTool(KnownDotNetTools.MgcbEditorLinux, solutionToolsTracker, solutionLifetime),
-            MgcbEditorMac = ObserveGlobalTool(KnownDotNetTools.MgcbEditorMac, solutionToolsTracker, solutionLifetime)
+            Editor = ObserveGlobalTool(solutionToolsTracker, solutionLifetime),
         };
     }
 
@@ -81,10 +78,7 @@ public class MgcbToolsTracker
     {
         return new MgcbToolset<LocalTool>
         {
-            MgcbEditor = ObserveLocalTool(KnownDotNetTools.MgcbEditor, solutionToolsTracker, solutionLifetime),
-            MgcbEditorWindows = ObserveLocalTool(KnownDotNetTools.MgcbEditorWin, solutionToolsTracker, solutionLifetime),
-            MgcbEditorLinux = ObserveLocalTool(KnownDotNetTools.MgcbEditorLinux, solutionToolsTracker, solutionLifetime),
-            MgcbEditorMac = ObserveLocalTool(KnownDotNetTools.MgcbEditorMac, solutionToolsTracker, solutionLifetime)
+            Editor = ObserveLocalTool(solutionToolsTracker, solutionLifetime),
         };
     }
 
@@ -92,26 +86,23 @@ public class MgcbToolsTracker
     {
         return new MgcbToolset<LocalTool>
         {
-            MgcbEditor = ObserveLocalTool(KnownDotNetTools.MgcbEditor, projectToolsTracker, projectLifetime),
-            MgcbEditorWindows = ObserveLocalTool(KnownDotNetTools.MgcbEditorWin, projectToolsTracker, projectLifetime),
-            MgcbEditorLinux = ObserveLocalTool(KnownDotNetTools.MgcbEditorLinux, projectToolsTracker, projectLifetime),
-            MgcbEditorMac = ObserveLocalTool(KnownDotNetTools.MgcbEditorMac, projectToolsTracker, projectLifetime)
+            Editor = ObserveLocalTool(projectToolsTracker, projectLifetime),
         };
     }
 
-    private IProperty<GlobalToolCacheEntry> ObserveGlobalTool(string packageId, NuGetDotnetToolsTrackerBase toolsTracker, Lifetime solutionLifetime)
+    private IProperty<GlobalToolCacheEntry> ObserveGlobalTool(NuGetDotnetToolsTrackerBase toolsTracker, Lifetime solutionLifetime)
     {
         return toolsTracker.DotNetToolCache.Select(
             solutionLifetime,
-            nameof(MgcbToolsTracker),
-            cache => cache?.ToolGlobalCache?.GetGlobalTool(packageId)?.FirstOrDefault());
+            nameof(MgcbToolsetTracker),
+            cache => cache?.ToolGlobalCache?.Let(MgcbEditorToolResolver.Resolve));
     }
 
-    private IProperty<LocalTool> ObserveLocalTool(string packageId, NuGetDotnetToolsTrackerBase toolsTracker, Lifetime solutionLifetime)
+    private IProperty<LocalTool> ObserveLocalTool(NuGetDotnetToolsTrackerBase toolsTracker, Lifetime solutionLifetime)
     {
         return toolsTracker.DotNetToolCache.Select(
             solutionLifetime,
-            nameof(MgcbToolsTracker),
-            cache => cache?.ToolLocalCache?.GetLocalTool(packageId));
+            nameof(MgcbToolsetTracker),
+            cache => cache?.ToolLocalCache?.Let(MgcbEditorToolResolver.Resolve));
     }
 }

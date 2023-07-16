@@ -22,7 +22,7 @@ open class DotnetCommandBuilder(private val intellijProject: Project, vararg bas
             .withRawParameters(baseCommands.joinToString(" "))
             .withCharset(Charset.forName("UTF-8"))
             .withWorkDirectory(solutionDirectory)
-            .withEnvironment("DOTNET_ROOT", getDotnetRootPath())
+//            .withEnvironment("DOTNET_ROOT", getDotnetRootPath())
             .withEnvironment("DOTNET_SKIP_FIRST_TIME_EXPERIENCE", "true")
             .withEnvironment("DOTNET_NOLOGO", "true")
 //            .withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.SYSTEM)

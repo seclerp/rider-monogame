@@ -2,9 +2,9 @@ namespace Rider.Plugins.MonoGame.Mgcb;
 
 public class KnownDotNetTools
 {
-    public static readonly string MgcbEditor = "dotnet-mgcb-editor";
-    public static readonly string MgcbEditorWin = "dotnet-mgcb-editor-windows";
-    public static readonly string MgcbEditorLinux = "dotnet-mgcb-editor-linux";
-    public static readonly string MgcbEditorMac = "dotnet-mgcb-editor-mac";
-    public static readonly string Mgcb = "dotnet-mgcb";
+    public const string MgcbEditor = "dotnet-mgcb-editor";
+    public const string MgcbEditorWindows = "dotnet-mgcb-editor-windows";
+    public const string MgcbEditorLinux = "dotnet-mgcb-editor-linux";
+    public const string MgcbEditorMac = "dotnet-mgcb-editor-mac";
+    public const string Mgcb = "dotnet-mgcb";
 }
