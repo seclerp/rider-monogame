@@ -1,5 +1,7 @@
 package me.seclerp.rider.plugins.monogame.mgcb.previewer
 
+import com.intellij.openapi.editor.colors.EditorColors
+import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorLocation
 import com.intellij.openapi.fileEditor.FileEditorState
@@ -7,24 +9,25 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.UserDataHolderBase
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
+import com.intellij.ui.JBColor
 import com.intellij.ui.JBSplitter
 import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBScrollPane
-import com.intellij.ui.table.JBTable
+import com.intellij.ui.scale.JBUIScale
+import com.intellij.util.ui.JBUI
 import com.jetbrains.rider.util.idea.getService
-import me.seclerp.rider.plugins.monogame.KnownNotificationGroups
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbProcessedUpdateListener
-import me.seclerp.rider.plugins.monogame.mgcb.previewer.properties.KeyValueModel
+import me.seclerp.rider.plugins.monogame.mgcb.previewer.properties.MgcbProperty
+import me.seclerp.rider.plugins.monogame.mgcb.previewer.properties.MgcbPropertyTableModel
+import me.seclerp.rider.plugins.monogame.mgcb.previewer.properties.MgcbPropertyTable
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.services.MgcbAnalyzer
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.services.MgcbBuildTreeManager
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.tree.MgcbBuildEntryNode
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.tree.MgcbTreeNode
 import me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbFile
 import me.seclerp.rider.plugins.monogame.removeAllRows
-import java.awt.BorderLayout
 import java.beans.PropertyChangeListener
 import javax.swing.JPanel
-import javax.swing.table.JTableHeader
 
 class MgcbEditorPreviewer(
     private val project: Project,
@@ -37,13 +40,18 @@ class MgcbEditorPreviewer(
     private var model: MgcbModel? = null
     private val tree = mgcbTreeService.createEmpty()
 
-    private val propertiesModel = KeyValueModel()
-    private val processorParamsModel = KeyValueModel()
+    private val propertiesModel = MgcbPropertyTableModel()
+    private val processorParamsModel = MgcbPropertyTableModel()
 
     private val connection = project.messageBus.connect()
 
     private val previewerPanel = lazy {
-        val root = JBSplitter(false, 0.5f)
+        val root = JBSplitter(false, 0.5f).apply {
+            dividerWidth = 2
+            divider.background = JBColor.lazy {
+                EditorColorsManager.getInstance().globalScheme.getColor(EditorColors.PREVIEW_BORDER_COLOR)
+            }
+        }
 
         val mgcbFile = PsiManager.getInstance(project).findFile(currentFile) as MgcbFile
         model = analyzerService.analyzeFile(mgcbFile)
@@ -59,10 +67,10 @@ class MgcbEditorPreviewer(
             }
         })
 
-        root.firstComponent = entriesTree
-        root.secondComponent = propertiesPanel
-        root.dividerWidth = 3
-        root
+        root.apply {
+            firstComponent = entriesTree
+            secondComponent = propertiesPanel
+        }
     }
 
     private fun applyMgcbModel(mgcbModel: MgcbModel) {
@@ -76,35 +84,21 @@ class MgcbEditorPreviewer(
             selectedNodeChanged(tree.lastSelectedPathComponent as? MgcbTreeNode)
         }
 
-        val container = JPanel(BorderLayout())
-        container.add(tree, BorderLayout.CENTER)
-        return container
+        return JBUI.Panels.simplePanel(tree)
     }
 
     private fun getPropertiesPanel(): JPanel {
-        val splitter = JBSplitter(true, 0.75f)
+        val propertiesPanel = createKeyValueTable("Properties", propertiesModel)
+        val processorParamsPanel = createKeyValueTable("Processor parameters", processorParamsModel)
 
-        val propertiesTable = JBTable(propertiesModel)
-        propertiesTable.tableHeader = JTableHeader(propertiesTable.columnModel)
-        propertiesTable.tableHeader.reorderingAllowed = false;
-        val propertiesScrollPane = JBScrollPane(propertiesTable)
-        val propertiesPanel = JPanel(BorderLayout())
-        propertiesPanel.add(JBLabel("Properties"), BorderLayout.NORTH)
-        propertiesPanel.add(propertiesScrollPane, BorderLayout.CENTER)
-
-        val processorParamsTable = JBTable(processorParamsModel)
-        processorParamsTable.tableHeader = JTableHeader(processorParamsTable.columnModel)
-        processorParamsTable.tableHeader.reorderingAllowed = false;
-        val processorParamsScrollPane = JBScrollPane(processorParamsTable)
-        val processorParamsPanel = JPanel(BorderLayout())
-        processorParamsPanel.add(JBLabel("Processor parameters"), BorderLayout.NORTH)
-        processorParamsPanel.add(processorParamsScrollPane, BorderLayout.CENTER)
-
-        splitter.firstComponent = propertiesPanel
-        splitter.secondComponent = processorParamsPanel
-        splitter.dividerWidth = 3
-
-        return splitter
+        return JBSplitter(true, 0.75f).apply {
+            firstComponent = propertiesPanel
+            secondComponent = processorParamsPanel
+            dividerWidth = 2
+            divider.background = JBColor.lazy {
+                EditorColorsManager.getInstance().globalScheme.getColor(EditorColors.PREVIEW_BORDER_COLOR)
+            }
+        }
     }
 
     private fun selectedNodeChanged(node: MgcbTreeNode?) {
@@ -113,17 +107,33 @@ class MgcbEditorPreviewer(
 
         when(node) {
             is MgcbBuildEntryNode -> {
-                propertiesModel.addRow(Pair("Name", node.userObject.toString()))
-                propertiesModel.addRow(Pair("Source Path", node.buildEntry.contentFilepath!!))
-                propertiesModel.addRow(Pair("Destination Path", node.buildEntry.destinationFilepath ?: node.buildEntry.contentFilepath!!))
-                propertiesModel.addRow(Pair("Importer", node.buildEntry.importer!!))
-                propertiesModel.addRow(Pair("Processor", node.buildEntry.processor!!))
+                propertiesModel.apply {
+                    addRow(MgcbProperty("Name", node.userObject.toString()))
+                    addRow(MgcbProperty("Source Path", node.buildEntry.contentFilepath ?: ""))
+                    addRow(MgcbProperty("Destination Path", node.buildEntry.destinationFilepath ?: node.buildEntry.contentFilepath ?: ""))
+                    addRow(MgcbProperty("Importer", node.buildEntry.importer ?: ""))
+                    addRow(MgcbProperty("Processor", node.buildEntry.processor ?: ""))
+                }
 
-                node.buildEntry.processorParams.forEach {
-                    processorParamsModel.addRow(Pair(it.key, it.value))
+                processorParamsModel.apply {
+                    node.buildEntry.processorParams.forEach {
+                        addRow(MgcbProperty(it.key, it.value))
+                    }
                 }
             }
         }
+    }
+
+    private fun createKeyValueTable(label: String, model: MgcbPropertyTableModel): JPanel {
+        val propertiesTable = MgcbPropertyTable(model).apply {
+            border = JBUI.Borders.empty(JBUI.insets(JBUIScale.scale(8)))
+        }
+        val title = JBLabel(label).apply {
+            border = JBUI.Borders.empty(JBUI.insets(JBUIScale.scale(8)))
+        }
+
+        return JBUI.Panels.simplePanel(JBScrollPane(propertiesTable))
+            .addToTop(title)
     }
 
     override fun getComponent() = previewerPanel.value
