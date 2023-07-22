@@ -41,7 +41,7 @@ public static class MgcbEditorToolResolver
         [CanBeNull] VersionedTool<TTool> platformSpecificVersionedTool,
         [CanBeNull] VersionedTool<TTool> platformAgnosticVersionedTool)
     {
-        switch (platformSpecificTool: platformSpecificVersionedTool, platformAgnosticTool: platformAgnosticVersionedTool)
+        switch (platformSpecificVersionedTool, platformAgnosticVersionedTool)
         {
             // If we have only platform-specific (i.e. mgcb-editor-mac) tool, use it
             case (not null, null):
@@ -103,5 +103,4 @@ public static class MgcbEditorToolResolver
         public static VersionedTool<LocalTool> Create(LocalTool tool) =>
             new(NuGetVersion.Parse(tool.Version), tool);
     }
-
 }

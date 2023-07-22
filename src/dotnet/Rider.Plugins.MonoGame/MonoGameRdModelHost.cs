@@ -1,5 +1,8 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using JetBrains.Annotations;
 using JetBrains.Collections.Viewable;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
@@ -30,13 +33,13 @@ public class MonoGameRdModelHost
     private void BindGlobalToolset(MgcbToolset<GlobalToolCacheEntry> source, MgcbEditorToolset target, Lifetime lifetime)
     {
         source.Editor.FlowInto(lifetime, target.Editor, cacheEntry =>
-            MapGlobalTool(KnownDotNetTools.MgcbEditor, cacheEntry));
+            cacheEntry is not null ? MapGlobalTool(cacheEntry) : null);
     }
 
     private void BindLocalToolset(MgcbToolset<LocalTool> source, MgcbEditorToolset target, Lifetime lifetime)
     {
         source.Editor.FlowInto(lifetime, target.Editor, cacheEntry =>
-            MapLocalTool(KnownDotNetTools.MgcbEditor, cacheEntry));
+            cacheEntry is not null ? MapLocalTool(cacheEntry) : null);
     }
 
     private void BindProjectsToolsets(IViewableMap<IProject,MgcbToolset<LocalTool>> source, IViewableMap<Guid,MgcbEditorToolset> target, Lifetime lifetime)
@@ -58,20 +61,16 @@ public class MonoGameRdModelHost
         });
     }
 
-    private static ToolDefinition MapGlobalTool(string expectedId, GlobalToolCacheEntry tool) => tool switch
-    {
-        null => new ToolDefinition(expectedId, string.Empty, string.Empty),
-        var other => new ToolDefinition(other.ToolName, MgcbEditorCommandNameResolver.Resolve(other), other.Version.ToString())
-    };
+    [NotNull]
+    private static ToolDefinition MapGlobalTool([NotNull] GlobalToolCacheEntry tool) =>
+        new (tool.ToolName, MgcbEditorCommandNameResolver.Resolve(tool), tool.Version.ToString());
 
-    private static ToolDefinition MapLocalTool(string expectedId, LocalTool tool) => tool switch
-    {
-        null => new ToolDefinition(expectedId, string.Empty, string.Empty),
-        var other => new ToolDefinition(other.PackageId, MgcbEditorCommandNameResolver.Resolve(other), other.Version)
-    };
+    [NotNull]
+    private static ToolDefinition MapLocalTool([NotNull] LocalTool tool) =>
+        new (tool.PackageId, MgcbEditorCommandNameResolver.Resolve(tool), tool.Version);
 
     private static void Unset(MgcbEditorToolset toolset)
     {
-        toolset.Editor.SetValue(new ToolDefinition(KnownDotNetTools.MgcbEditor, string.Empty, string.Empty));
+        toolset.Editor.SetValue(null);
     }
 }
