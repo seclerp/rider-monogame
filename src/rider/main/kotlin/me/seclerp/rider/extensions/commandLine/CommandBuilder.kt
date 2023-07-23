@@ -8,24 +8,18 @@ import com.jetbrains.rider.projectView.solutionDirectoryPath
 import com.jetbrains.rider.run.FormatPreservingCommandLine
 import com.jetbrains.rider.run.withRawParameters
 import org.jetbrains.annotations.NonNls
-import java.io.File
 import java.nio.charset.Charset
 
-open class DotnetCommandBuilder(private val intellijProject: Project, vararg baseCommands: @NonNls String) {
-    private val activeRuntime by lazy { intellijProject.solution.dotNetActiveRuntimeModel.activeRuntime.valueOrNull }
-    private val solutionDirectory = intellijProject.solutionDirectoryPath.toString()
-
+open class CommandBuilder(vararg baseCommands: @NonNls String) {
     @NonNls
-    private var generalCommandLine =
+    protected var generalCommandLine =
         FormatPreservingCommandLine()
-            .withExePath(getDotnetExePath())
             .withRawParameters(baseCommands.joinToString(" "))
             .withCharset(Charset.forName("UTF-8"))
-            .withWorkDirectory(solutionDirectory)
-//            .withEnvironment("DOTNET_ROOT", getDotnetRootPath())
-            .withEnvironment("DOTNET_SKIP_FIRST_TIME_EXPERIENCE", "true")
-            .withEnvironment("DOTNET_NOLOGO", "true")
-//            .withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.SYSTEM)
+
+    fun executable(executable: String) {
+        generalCommandLine = generalCommandLine.withExePath(executable)
+    }
 
     fun workingDirectory(workingDirectory: String) {
         generalCommandLine = generalCommandLine.withWorkDirectory(workingDirectory)
@@ -60,14 +54,24 @@ open class DotnetCommandBuilder(private val intellijProject: Project, vararg bas
             generalCommandLine = generalCommandLine.withParameters(key)
     }
 
+    fun environment(key: String, value: String) {
+        generalCommandLine = generalCommandLine.withEnvironment(key, value)
+    }
+
     fun build(): GeneralCommandLine = generalCommandLine
-
-    private fun getDotnetExePath() =
-        activeRuntime?.dotNetCliExePath
-            ?: throw Exception(".NET / .NET Core is not configured, unable to run commands.")
-
-    private fun getDotnetRootPath() = File(getDotnetExePath()).parent
 }
 
-fun buildDotnetCommand(project: Project, vararg baseCommands: @NonNls String, builder: DotnetCommandBuilder.() -> Unit = {}) =
-    DotnetCommandBuilder(project, *baseCommands).apply(builder).build()
+fun buildDotnetCommand(project: Project, vararg baseCommands: @NonNls String, builder: CommandBuilder.() -> Unit = {}) =
+    CommandBuilder(*baseCommands)
+        .apply {
+            val activeToolset = project.solution.dotNetActiveRuntimeModel.activeRuntime.valueOrNull
+            executable(activeToolset?.dotNetCliExePath ?: throw Exception(".NET / .NET Core is not configured, unable to run commands."))
+            workingDirectory(project.solutionDirectoryPath.toString())
+            environment("DOTNET_SKIP_FIRST_TIME_EXPERIENCE", "true")
+            environment("DOTNET_NOLOGO", "true")
+        }
+        .apply(builder)
+        .build()
+
+fun buildCommand(vararg baseCommands: @NonNls String, builder: CommandBuilder.() -> Unit = {}) =
+    CommandBuilder(*baseCommands).apply(builder).build()

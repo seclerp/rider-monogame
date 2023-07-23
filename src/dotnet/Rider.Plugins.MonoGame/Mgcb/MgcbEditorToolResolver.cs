@@ -72,8 +72,6 @@ public static class MgcbEditorToolResolver
                 return null;
             }
         }
-
-        throw new ArgumentOutOfRangeException($"{nameof(platformSpecificVersionedTool)} and {nameof(platformAgnosticVersionedTool)}");
     }
 
     private static string ResolvePlatformSpecificToolName()

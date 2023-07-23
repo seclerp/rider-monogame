@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 
 namespace Rider.Plugins.MonoGame.Extensions;
 
@@ -10,7 +11,7 @@ public static class FlowExtensions
         return self;
     }
 
-    public static TTarget Let<TSource, TTarget>(this TSource self, Func<TSource, TTarget> mapping)
+    public static TTarget Let<TSource, TTarget>(this TSource self, [NotNull] Func<TSource, TTarget> mapping)
     {
         return mapping(self);
     }

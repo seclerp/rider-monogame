@@ -9,6 +9,7 @@ using JetBrains.DataFlow;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.NuGet.DotNetTools;
+using JetBrains.ReSharper.Psi.Impl.CodeStyle;
 using JetBrains.Util;
 using Rider.Plugins.MonoGame.Extensions;
 
@@ -48,6 +49,9 @@ public class MgcbToolsetTracker
             lifetime,
             (projectLifetime, project) =>
             {
+                if (project.Kind != ProjectItemKind.PROJECT || project.ProjectFile == null)
+                    return;
+
                 projectLifetime.Bracket(
                     () =>
                     {
