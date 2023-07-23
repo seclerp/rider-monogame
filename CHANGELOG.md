@@ -5,9 +5,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [231.0.0] - 2023-07-11
+## [231.1.0] - 2023-07-11
 ### Added
-- Enable support for Rider 2023.1
+- General: Support for Rider 2023.1 (#16)
+- MGCB: Support for new MGCB Editor tools layout of MonoGame 3.8.1 (#13)
+- MGCB Previewer: Minor style adjustments for parameters and preprocessor values tables
+### Changed
+- MGCB: Refactor of `mgcb-editor` tools detection logic (#14)
+### Fixed
+- MGCB: False-positive trigger of `Install` toolbar decorator even if tools are installed (#15)
+### Removed
+- MGCB: Temporary removed `Install` action due to broken behavior (#15)
 
 ## [223.0.0] - 2022-09-30
 ### Added
