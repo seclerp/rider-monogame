@@ -32,6 +32,15 @@ class MgcbToolsetConfigurableProvider(private val project: Project) : Configurab
                 .let { RdObservableProperty(it, lifetime) }
         }
 
+        private val projectsToolsetInfo by lazy {
+            mgcbToolsetHost.projectTools
+                .map { buildString {
+                    append(it.key)
+                    append(getPresentableToolsetInfo(it.newValueOpt))
+                } }
+                .let { RdObservableProperty(it, lifetime) }
+        }
+
         @Suppress("DialogTitleCapitalization")
         override fun createComponent() = panel {
             group(MonoGameUiBundle.message("settings.mgcb.editor.group")) {
@@ -42,6 +51,9 @@ class MgcbToolsetConfigurableProvider(private val project: Project) : Configurab
                 row(MonoGameUiBundle.message("settings.mgcb.editor.group.solution")) {
                     label("")
                         .bindText(solutionToolsetInfo)
+                }
+                group("Project-level tools") {
+
                 }
             }
         }
