@@ -19,19 +19,6 @@ class MgcbToolsetHost(private val intellijProject: Project) {
 
     private val hostModel by lazy { intellijProject.solution.monoGameRiderModel }
 
-    init {
-        hostModel.mgcbProjectsToolsets.view(intellijProject.lifetime) { toolsetRuntime, key, value ->
-            toolsetRuntime.bracketIfAlive({
-                value.editor.view(toolsetRuntime) { editorLifetime, editor ->
-                    projectsEditorTools[key] = when(editor) {
-                        null -> MgcbResolvedTool.None
-                        else -> MgcbResolvedTool.Local(editor)
-                    }
-                }
-            }, { projectsEditorTools.remove(key) })
-        }
-    }
-
     val globalToolset by lazy { hostModel.mgcbGlobalToolset }
     val solutionToolset by lazy { hostModel.mgcbSolutionToolset }
     val projectsToolset by lazy { hostModel.mgcbProjectsToolsets }
@@ -46,7 +33,21 @@ class MgcbToolsetHost(private val intellijProject: Project) {
                 }
             }
     }
-    private val projectsEditorTools = mutableMapOf<UUID, MgcbResolvedTool>()
+
+    private val projectsEditorTools by lazy {
+        val projectTools = mutableMapOf<UUID, MgcbResolvedTool>()
+        hostModel.mgcbProjectsToolsets.view(intellijProject.lifetime) { toolsetRuntime, key, value ->
+            toolsetRuntime.bracketIfAlive({
+                value.editor.view(toolsetRuntime) { editorLifetime, editor ->
+                    projectTools[key] = when(editor) {
+                        null -> MgcbResolvedTool.None
+                        else -> MgcbResolvedTool.Local(editor)
+                    }
+                }
+            }, { projectTools.remove(key) })
+        }
+        projectTools
+    }
 
     fun getEditorTool() = editorTool.value
 

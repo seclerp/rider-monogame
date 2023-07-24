@@ -4,6 +4,7 @@ import com.intellij.openapi.observable.properties.AtomicProperty
 import com.intellij.openapi.options.ConfigurableProvider
 import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.text.HtmlBuilder
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
@@ -25,58 +26,67 @@ class MgcbToolsetConfigurableProvider(private val project: Project) : Configurab
     @Suppress("UnstableApiUsage")
     class MgcbToolsetConfigurable(private val project: Project) : SearchableConfigurable {
         private val lifetime = project.lifetime.createNested()
+        private val fallbackProperty by lazy { AtomicProperty(MonoGameUiBundle.message("loading.title")) }
         private val mgcbToolsetHost by lazy { MgcbToolsetHost.getInstance(project) }
 
         private val globalToolsetInfo by lazy {
-            mgcbToolsetHost.globalToolset.editor
+            if (project.isDefault) fallbackProperty
+            else mgcbToolsetHost.globalToolset.editor
                 .map { HtmlBuilder().append(getPresentableToolsetInfo(it)).wrapWith("code").wrapWith("html").toString() }
                 .let { RdObservableProperty(it, lifetime) }
         }
 
         private val solutionToolsetInfo by lazy {
-            mgcbToolsetHost.solutionToolset.editor
+            if (project.isDefault) fallbackProperty
+            else mgcbToolsetHost.solutionToolset.editor
                 .map { HtmlBuilder().append(getPresentableToolsetInfo(it)).wrapWith("code").wrapWith("html").toString() }
                 .let { RdObservableProperty(it, lifetime) }
         }
 
-        private val projectsToolMap = mutableMapOf<UUID, RdObservableProperty<String>>()
-        private val projectsToolsetInfo = AtomicProperty("")
+        private val projectsToolsetInfo by lazy {
+            if (project.isDefault) fallbackProperty
+            else {
+                val toolMap = mutableMapOf<UUID, RdObservableProperty<String>>()
+                val property = AtomicProperty(MonoGameUiBundle.message("loading.title"))
+                mgcbToolsetHost.projectsToolset
+                    .adviseAddRemove(lifetime) { event, key, value ->
+                        when (event) {
+                            AddRemove.Add -> {
+                                value.editor.view(lifetime) { lifetime, editor ->
+                                    val toolsetInfo = RdObservableProperty(value.editor.map(::getPresentableToolsetInfo), lifetime)
+                                    toolMap[key] = toolsetInfo
+                                    property.set(getPresentableProjectsInfo(toolMap))
+                                    lifetime.onTermination { toolMap.remove(key) }
+                                }
+                            }
 
-        init {
-            mgcbToolsetHost.projectsToolset
-                .adviseAddRemove(lifetime) { event, key, value ->
-                    when (event) {
-                        AddRemove.Add -> {
-                            value.editor.view(lifetime) { lifetime, editor ->
-                                val property = RdObservableProperty(value.editor.map(::getPresentableToolsetInfo), lifetime)
-                                projectsToolMap[key] = property
-                                projectsToolsetInfo.set(getPresentableProjectsInfo())
-                                lifetime.onTermination { projectsToolMap.remove(key) }
+                            AddRemove.Remove -> {
+                                toolMap.remove(key)
                             }
                         }
-                        AddRemove.Remove -> {
-                            projectsToolMap.remove(key)
-                        }
-                    }
 
-                    projectsToolsetInfo.set(getPresentableProjectsInfo())
-                }
+                        property.set(getPresentableProjectsInfo(toolMap))
+                    }
+                property
+            }
         }
 
         @Suppress("DialogTitleCapitalization")
-        override fun createComponent() = panel {
-            group(MonoGameUiBundle.message("settings.mgcb.editor.group")) {
-                row(MonoGameUiBundle.message("settings.mgcb.editor.group.global")) {
-                    label("")
-                        .bindText(globalToolsetInfo)
-                }
-                row(MonoGameUiBundle.message("settings.mgcb.editor.group.solution")) {
-                    label("")
-                        .bindText(solutionToolsetInfo)
-                }
-                row(MonoGameUiBundle.message("settings.mgcb.editor.group.project")) {
-                    label("")
-                        .bindText(projectsToolsetInfo)
+        override fun createComponent(): DialogPanel {
+            return panel {
+                group(MonoGameUiBundle.message("settings.mgcb.editor.group")) {
+                    row(MonoGameUiBundle.message("settings.mgcb.editor.group.global")) {
+                        label(MonoGameUiBundle.message("loading.title"))
+                            .bindText(globalToolsetInfo)
+                    }
+                    row(MonoGameUiBundle.message("settings.mgcb.editor.group.solution")) {
+                        label(MonoGameUiBundle.message("loading.title"))
+                            .bindText(solutionToolsetInfo)
+                    }
+                    row(MonoGameUiBundle.message("settings.mgcb.editor.group.project")) {
+                        label(MonoGameUiBundle.message("loading.title"))
+                            .bindText(projectsToolsetInfo)
+                    }
                 }
             }
         }
@@ -115,7 +125,7 @@ class MgcbToolsetConfigurableProvider(private val project: Project) : Configurab
             .firstOrNull { it.originalGuid == id }
             ?.name ?: "Unknown"
 
-        private fun getPresentableProjectsInfo() = projectsToolMap
+        private fun getPresentableProjectsInfo(toolMap: MutableMap<UUID, RdObservableProperty<String>>): String = toolMap
             .map { "${getProjectName(it.key)}: ${it.value.get()}" }
             .joinToString("\n")
             .let { HtmlBuilder().append(it).wrapWith("code").wrapWith("html").toString() }
