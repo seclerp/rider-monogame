@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using JetBrains.Application.FileSystemTracker;
 using JetBrains.Application.Threading;
 using JetBrains.Collections.Viewable;
@@ -9,7 +6,6 @@ using JetBrains.DataFlow;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.NuGet.DotNetTools;
-using JetBrains.ReSharper.Psi.Impl.CodeStyle;
 using JetBrains.Util;
 using Rider.Plugins.MonoGame.Extensions;
 

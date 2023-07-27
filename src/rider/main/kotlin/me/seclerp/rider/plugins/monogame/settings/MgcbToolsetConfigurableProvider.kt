@@ -6,9 +6,9 @@ import com.intellij.openapi.options.SearchableConfigurable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.util.text.HtmlBuilder
+import com.intellij.platform.backend.workspace.workspaceModel
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.panel
-import com.intellij.workspaceModel.ide.workspaceModel
 import com.jetbrains.rd.platform.util.lifetime
 import com.jetbrains.rd.util.reactive.AddRemove
 import com.jetbrains.rd.util.reactive.map

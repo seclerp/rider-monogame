@@ -1,7 +1,4 @@
 using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using JetBrains.Annotations;
 using JetBrains.Collections.Viewable;
 using JetBrains.Lifetimes;
@@ -9,6 +6,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.NuGet.DotNetTools;
 using JetBrains.Rd.Base;
 using JetBrains.RdBackend.Common.Features;
+using JetBrains.ReSharper.Feature.Services.Protocol;
 using JetBrains.Util;
 using Rider.Plugins.MonoGame.Mgcb;
 

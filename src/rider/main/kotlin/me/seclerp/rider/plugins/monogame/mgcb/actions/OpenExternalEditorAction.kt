@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.workspaceModel.ide.workspaceModel
+import com.intellij.platform.backend.workspace.workspaceModel
 import com.jetbrains.rider.model.RdProjectDescriptor
 import me.seclerp.rider.extensions.commandLine.CommandBuilder
 import me.seclerp.rider.extensions.commandLine.DefaultCommandExecutor

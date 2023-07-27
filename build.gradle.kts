@@ -10,8 +10,13 @@ buildscript {
 
     // https://search.maven.org/artifact/com.jetbrains.rd/rd-gen
     dependencies {
-        classpath("com.jetbrains.rd:rd-gen:2023.1.2")
+        classpath("com.jetbrains.rd:rd-gen:2023.2.2")
     }
+}
+
+repositories {
+    maven("https://cache-redirector.jetbrains.com/intellij-repository/snapshots")
+    maven("https://cache-redirector.jetbrains.com/maven-central")
 }
 
 plugins {
@@ -246,7 +251,8 @@ tasks {
     }
 
     patchPluginXml {
-        untilBuild.set("231.*")
+        sinceBuild.set("232.0")
+        untilBuild.set("232.*")
         val latestChangelog = try {
             changelog.getUnreleased()
         } catch (_: MissingVersionException) {
