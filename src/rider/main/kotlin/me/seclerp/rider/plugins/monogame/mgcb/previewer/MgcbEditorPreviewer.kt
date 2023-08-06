@@ -24,7 +24,7 @@ import me.seclerp.rider.plugins.monogame.mgcb.previewer.services.MgcbAnalyzer
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.services.MgcbBuildTreeManager
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.tree.MgcbBuildEntryNode
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.tree.MgcbTreeNode
-import me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbFile
+import me.seclerp.rider.plugins.monogame.mgcb.psi.EffectPsiFile
 import me.seclerp.rider.plugins.monogame.removeAllRows
 import java.beans.PropertyChangeListener
 import javax.swing.JPanel
@@ -53,7 +53,7 @@ class MgcbEditorPreviewer(
             }
         }
 
-        val mgcbFile = PsiManager.getInstance(project).findFile(currentFile) as MgcbFile
+        val mgcbFile = PsiManager.getInstance(project).findFile(currentFile) as EffectPsiFile
         model = analyzerService.analyzeFile(mgcbFile)
 
         val entriesTree = getBuildEntriesTreePanel()

@@ -5,7 +5,7 @@ import com.intellij.openapi.fileTypes.LanguageFileType
 import me.seclerp.rider.plugins.monogame.MonoGameIcons
 import javax.swing.Icon
 
-class SpriteFontFileType : LanguageFileType(XMLLanguage.INSTANCE) {
+object SpriteFontFileType : LanguageFileType(XMLLanguage.INSTANCE) {
     override fun getName(): String = "MonoGame SpriteFont File"
 
     override fun getDescription(): String = "Description of a font used by MonoGame"
@@ -13,8 +13,4 @@ class SpriteFontFileType : LanguageFileType(XMLLanguage.INSTANCE) {
     override fun getDefaultExtension(): String = "spritefont"
 
     override fun getIcon(): Icon = MonoGameIcons.SpriteFontFile
-
-    companion object {
-        val Instance = SpriteFontFileType()
-    }
 }

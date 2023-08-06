@@ -9,6 +9,7 @@ namespace Rider.Plugins.MonoGame;
 // [ZoneDefinitionConfigurableFeature("Title", "Description", IsInProductSection: false)]
 public interface IMonoGameRiderZone : IPsiLanguageZone,
     IRequire<ILanguageCSharpZone>,
-    IRequire<DaemonZone>
+    IRequire<DaemonZone>,
+    IRequire<ILanguageCppZone>
 {
 }

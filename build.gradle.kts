@@ -1,6 +1,8 @@
 @file:Suppress("HardCodedStringLiteral")
 
 import org.jetbrains.changelog.exceptions.MissingVersionException
+import org.jetbrains.grammarkit.tasks.GenerateLexerTask
+import org.jetbrains.grammarkit.tasks.GenerateParserTask
 import kotlin.collections.*
 
 buildscript {
@@ -127,14 +129,15 @@ intellij {
 }
 
 tasks {
-    generateLexer {
+
+    val generateMgcbLexer by registering(GenerateLexerTask::class) {
         sourceFile.set(file("src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/mgcb/Mgcb.flex"))
         targetDir.set("src/rider/gen/me/seclerp/rider/plugins/monogame/mgcb")
         targetClass.set("MgcbLexer")
         purgeOldFiles.set(true)
     }
 
-    generateParser {
+    val generateMgcbParser by registering(GenerateParserTask::class) {
         sourceFile.set(file("src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/mgcb/Mgcb.bnf"))
         targetRoot.set("src/rider/gen")
         pathToParser.set("/parser/MgcbParser.java")
@@ -142,8 +145,31 @@ tasks {
         purgeOldFiles.set(true)
     }
 
+    val generateMgcbTooling by registering {
+        dependsOn(generateMgcbLexer, generateMgcbParser)
+    }
+
+    val generateEffectLexer by registering(GenerateLexerTask::class) {
+        sourceFile.set(file("src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/effect/Mgfx.flex"))
+        targetDir.set("src/rider/gen/me/seclerp/rider/plugins/monogame/effect")
+        targetClass.set("EffectLexer")
+        purgeOldFiles.set(true)
+    }
+
+    val generateEffectParser by registering(GenerateParserTask::class) {
+        sourceFile.set(file("src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/effect/Mgfx.bnf"))
+        targetRoot.set("src/rider/gen")
+        pathToParser.set("/parser/EffectParser.java")
+        pathToPsiRoot.set("/psi")
+        purgeOldFiles.set(true)
+    }
+
+    val generateEffectsTooling by registering {
+        dependsOn(generateEffectLexer, generateEffectParser)
+    }
+
     wrapper {
-        gradleVersion = "7.5.1"
+        gradleVersion = "8.2.1"
         distributionType = Wrapper.DistributionType.ALL
         distributionUrl = "https://cache-redirector.jetbrains.com/services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
     }
@@ -213,7 +239,7 @@ tasks {
     val rdgen by existing
 
     register("prepare") {
-        dependsOn(rdgen, generateLexer, generateParser, generateNuGetConfig, generateSdkPackagesVersionsLock)
+        dependsOn(rdgen, generateMgcbTooling, generateEffectsTooling, generateNuGetConfig, generateSdkPackagesVersionsLock)
     }
 
     val compileDotNet by registering {
@@ -243,7 +269,7 @@ tasks {
     }
 
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        dependsOn(rdgen, generateLexer, generateParser)
+        dependsOn(rdgen, generateMgcbTooling, generateEffectsTooling)
         kotlinOptions {
             jvmTarget = "17"
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"

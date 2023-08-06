@@ -38,15 +38,9 @@
   </description>
 
   <extensions defaultExtensionNs="com.intellij">
+    <!-- Begin MGCB support -->
     <fileType name="MonoGame Content Pipeline File" implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbFileType"
-              fieldName="Instance" language="MGCB" extensions="mgcb"/>
-
-    <fileType name="MonoGame Effect File" implementationClass="me.seclerp.rider.plugins.monogame.effect.EffectFileType"
-              fieldName="Instance" language="TEXT" extensions="fx"/>
-
-    <fileType name="MonoGame SpriteFont File" implementationClass="me.seclerp.rider.plugins.monogame.spritefont.SpriteFontFileType"
-              fieldName="Instance" language="XML" extensions="spritefont"/>
-
+              fieldName="INSTANCE" language="MGCB" extensions="mgcb"/>
     <lang.parserDefinition language="MGCB"
                            implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbParserDefinition"/>
     <lang.syntaxHighlighterFactory language="MGCB"
@@ -54,22 +48,7 @@
     <colorSettingsPage implementation="me.seclerp.rider.plugins.monogame.mgcb.settings.MgcbColorSettingsPage"/>
     <completion.contributor language="MGCB"
                             implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbCompletionContributor"/>
-
     <fileEditorProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbEditorProvider" />
-
-    <internalFileTemplate name="Content Builder File" />
-    <internalFileTemplate name="Effect File" />
-    <internalFileTemplate name="Sprite Effect File" />
-    <internalFileTemplate name="SpriteFont File" />
-    <internalFileTemplate name="Localized SpriteFont File" />
-
-    <notificationGroup id="MonoGameRider" displayType="BALLOON"/>
-
-    <editorFloatingToolbarProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbEditorFloatingToolbarProvider"/>
-
-<!--    <postStartupActivity implementation="me.seclerp.rider.plugins.monogame.mgcb.startup.CheckMgcbEditorInstalledActivity" />-->
-
-<!--    <editorNotificationProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbEditorNotificationProvider" />-->
 
     <projectConfigurable id="monogame.tools"
                          parentId="tools"
@@ -83,6 +62,40 @@
                          provider="me.seclerp.rider.plugins.monogame.settings.MgcbToolsetConfigurableProvider"
                          key="settings.mgcb.display.name"/>
 
+    <editorFloatingToolbarProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbEditorFloatingToolbarProvider"/>
+    <!-- End MGCB support -->
+
+    <!-- Begin Spritefont support -->
+    <fileType name="MonoGame SpriteFont File" implementationClass="me.seclerp.rider.plugins.monogame.spritefont.SpriteFontFileType"
+              fieldName="INSTANCE" language="XML" extensions="spritefont"/>
+    <!-- End Spritefont support -->
+
+    <!-- Begin MGFX support -->
+    <fileType name="MonoGame Effect File" implementationClass="me.seclerp.rider.plugins.monogame.effect.EffectFileType"
+              fieldName="INSTANCE" language="MGFX" extensions="fx"/>
+    <lang.altEnter language="MGFX" implementationClass="com.jetbrains.rider.intentions.altEnter.ReSharperBulbMenuModelFactory" />
+    <lang.parserDefinition language="MGFX" implementationClass="me.seclerp.rider.plugins.monogame.effect.EffectParserDefinition" />
+    <lang.syntaxHighlighterFactory language="MGFX" implementationClass="me.seclerp.rider.plugins.monogame.effect.EffectSyntaxHighlighterProvider" />
+    <backend.markup.adapterFactory language="MGFX" implementationClass="com.jetbrains.rdclient.daemon.FrontendMarkupAdapterFactory" />
+    <backend.actions.support language="MGFX" implementationClass="com.jetbrains.rider.actions.RiderActionSupportPolicy" />
+    <backend.autoPopup.support language="MGFX" implementationClass="com.jetbrains.rider.completion.BackendAndGenericRider" />
+    <iconProvider implementation="me.seclerp.rider.plugins.monogame.effect.EffectIconProvider" />
+    <completion.contributor language="MGFX" implementationClass="com.jetbrains.rider.completion.ProtocolCompletionContributor" />
+    <codeInsight.parameterInfo language="MGFX" implementationClass="com.jetbrains.rdclient.parameterInfo.FrontendParameterInfoHandler"/>
+    <lang.documentationProvider language="MGFX" implementationClass="com.jetbrains.rdclient.quickDoc.FrontendDocumentationProvider"/>
+    <backend.typedHandler language="MGFX" implementationClass="com.jetbrains.rider.cpp.fileType.CppTypedHandler"/>
+<!--    <langCodeStyleSettingsProvider implementation="com.jetbrains.rider.plugins.unity.ideaInterop.fileTypes.shaderLab.settings.ShaderLabStyleSettingsProvider"/>-->
+<!--    <breadcrumbsInfoProvider implementation="com.jetbrains.rider.plugins.unity.ideaInterop.fileTypes.shaderLab.breadcrumbs.ShaderLabBreadcrumbsInfoProvider"/>-->
+    <!-- End MGFX support -->
+
+    <!-- File templates -->
+    <internalFileTemplate name="Content Builder File" />
+    <internalFileTemplate name="Effect File" />
+    <internalFileTemplate name="Sprite Effect File" />
+    <internalFileTemplate name="SpriteFont File" />
+    <internalFileTemplate name="Localized SpriteFont File" />
+
+    <notificationGroup id="MonoGameRider" displayType="BALLOON"/>
   </extensions>
 
   <projectListeners>
