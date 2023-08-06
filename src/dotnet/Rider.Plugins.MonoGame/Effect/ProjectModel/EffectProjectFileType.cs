@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using JetBrains.ProjectModel;
 
-namespace Rider.Plugins.MonoGame.Effect.Psi;
+namespace Rider.Plugins.MonoGame.Effect.ProjectModel;
 
 [ProjectFileTypeDefinition(Name)]
 public class EffectProjectFileType : KnownProjectFileType

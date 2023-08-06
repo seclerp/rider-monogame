@@ -1,0 +1,487 @@
+%header%
+
+// No suport to Annotations
+
+GRAMMARTYPE = "LL"
+
+DESCRIPTION = "A grammar for the HLSL."
+
+AUTHOR      = "Vitor F. Pamplona, vitor@vitorpamplona.com"
+VERSION     = "1.0"
+DATE        = "10 September 2007"
+
+LICENSE     = "See GPL v2."
+
+COPYRIGHT   = "Copyright (c) 2007 Vitor F. Pamplona. All rights reserved."
+
+/**
+ TODO:
+ - Validation
+ */
+
+%tokens%
+
+ADD                          = "+"
+SUB                          = "-"
+MULT                         = "*"
+DIV                          = "/"
+MOD                          = "%"
+
+ADD_ADD                      = "++"
+SUB_SUB                      = "--"
+
+EQUAL						 = "="
+ADD_EQUAL 					 = "+="
+SUB_EQUAL 					 = "-="
+MULT_EQUAL 					 = "*="
+DIV_EQUAL 					 = "/="
+MOD_EQUAL 					 = "%="
+MINOR_MINOR_EQUAL			 = "<<="
+MAJOR_MAJOR_EQUAL			 = ">>="
+AND_EQUAL					 = "&="
+OR_EQUAL					 = "|="
+POT_EQUAL					 = "^="
+
+
+EQUAL_EQUAL 				 = "=="
+DIFF						 = "!=" 
+LESS_EQUAL 					 = "<="
+MORE_EQUAL					 = ">="
+
+TIL 						 = "~"
+MINOR_MINOR					 = "<<" 	
+MAJOR_MAJOR					 = ">>"
+AND							 = "&"
+OR							 = "|"
+POT							 = "^"
+AND_AND						 = "&&"
+OR_OR						 = "||"
+NOT							 = "!"
+
+MAJOR        	             = ">"
+MINOR		                 = "<"
+OPEN_PAREN                   = "("
+CLOSE_PAREN                  = ")"
+OPEN_BREACKET                = "{"
+CLOSE_BREACKET               = "}"
+OPEN_COLCHETES               = "["
+CLOSE_COLCHETES              = "]"
+DOUBLE_DOT					 = ":"
+DOT_COMMA					 = ";"
+COMMA					 	 = ","
+DOT							 = "."
+NUMBER                       = <<[0-9]+|[0-9]*\.[0-9]+(E[0-9]+)?(f)?>>
+NUMBER_2_4                   = <<[2-4]>>
+NUMBER_1_4                   = <<[1-4]>>
+WHITESPACE                   = <<[ ]+>> 
+TAB		                     = <<[\t]>>
+NEWLINE                      = <<[\n]>>
+NEWLINE2                     = <<[\r\n]>> 
+NEWLINE3                     = <<[\n\r]>>
+FORMFEED                     = <<[\r]>>
+
+STRING              		 = <<(".*[^\\]")|('.*[^\\]')>>
+RGBA						 = <<[rgba]+>>
+XYZW						 = <<[xyzw]+>>
+
+// KEYWORDS
+
+ASM 				= <<( ?i)asm>>
+ASM_FRAGMENT 		= "asm_fragment"
+BLENDSTATE 			= "BlendState"
+COLUMN_MAJOR 		= "column_major" // column in a single register
+COMPILE_FRAGMENT 	= "compile_frgment"
+DISCARD 			= "discard"
+DECL 				= "decl"
+DO 			 		= "do"
+ELSE 				= "else"
+EXTERN 				= "extern"
+END 				= "end"
+FALSE 				= "false"
+FOR 				= "for"
+IF 					= "if"
+IN 					= "in"
+INLINE 				= "inline"
+INOUT 				= "inout"
+MATRIX 				= "matrix"
+OUT 				= "out"
+PACKOFFSET			= "packoffset"
+PASS 				= "pass"
+PIXELFRAGMENT 		= "pixelfragment"
+REGISTER 			= "register"
+RETURN 				= "return"
+ROW_MAJOR  			= "row_major" // row in a single register
+SAMPLER 			= "sampler"
+SAMPLER1D 			= "sampler1D"
+SAMPLER2D 			= "sampler2D"
+SAMPLER3D 			= "sampler3D"
+SAMPLERCUBE 		= "samplerCUBE"
+SAMPLER_STATE 		= "sampler_state"
+SHARED 				= "shared"
+STATEBLOCK 			= "stateblock"
+STATEBLOCK_STATE 	= "stateblock_state"
+STATIC 				= "static"
+STRING_TYPE			= "string"
+STRUCT 				= "struct"
+TECHNIQUE 			= "technique"
+TEXTURE 			= "texture"
+TEXTURE1D 			= "texture1D"
+TEXTURE2D 			= "texture2D"
+TEXTURE3D 			= "texture3D"
+TEXTURECUBE 		= "textureCUBE"
+TRUE 				= "true"
+TYPEDEF 			= "typedef"
+UNIFORM 			= "uniform"
+VARYING				= "varying"
+VECTOR 				= "vector"
+VERTEXFRAGMENT 		= "vertexfragment"
+VOID 				= "void"
+VOLATILE 			= "volatile"
+WHILE 	 			= "while"
+
+// Other words. 
+
+STOP	 			= "stop"
+
+FLATTEN	 			= "flatten"
+BRANCH	 			= "branch"
+
+UNROLL				= "unroll"
+LOOP				= "loop"
+
+FORCECASE 			= "forcecase"
+CALL 				= "call"
+
+// Reserved Words (UNUSED)
+
+AUTO 			 	= "auto"     
+BREAK 				= "break"
+COMPILE				= "compile"
+CONST  				= "const"
+CHAR  				= "char"
+CLASS 				= "class"
+CASE 				= "case"
+CATCH 				= "catch"
+DEFAULT 			= "default"  
+DELETE 				= "delete" 
+CONST_CAST  		= "const_cast"
+CONTINUE		    = "continue"
+EXPLICIT 			= "explicit"
+FRIEND	 			= "friend"
+DYNAMIC_CAST 		= "dynamic_cast" 
+ENUM 				= "enum"
+MUTABLE 			= "mutable"  
+NAMESPACE 			= "namespace"           
+GOTO 				= "goto"         
+LONG 				= "long"
+PRIVATE 			= "private"  
+PROTECTED 			= "protected"           
+NEW 				= "new"          
+OPERATOR 			= "operator"
+PUBLIC 				= "public"       
+REINTERPRET_CAST 	= "reinterpret_cast"
+SHORT 				= "short"    
+STATIC_CAST 		= "static_cast"
+SIGNED 				= "signed"              
+SIZEOF 				= "sizeof"       
+SWITCH 				= "switch"   
+TEMPLATE 			= "template"            
+THIS 				= "this"         
+THROW 				= "throw"
+TRY 				= "try"      
+TYPENAME 			= "typename"            
+UNION 				= "union"        
+UNSIGNED 			= "unsigned"
+USING 				= "using" 
+VIRTUAL 			= "virtual"
+
+// Input Semantical Parameters
+
+BINORMAL 			= "BINORMAL" 	 // Binormal 	float4
+BLENDINDICES 		= "BLENDINDICES" // Blend indices 	uint
+BLENDWEIGHT 		= "BLENDWEIGHT"  // Blend weights 	float
+NORMAL				= "NORMAL" 		 // Normal vector 	float4
+POSITIONT			= "POSITIONT" 	 // Transformed vertex position. 	float4
+// TANGENT				= "TANGENT"		 // Tangent 	float4
+VFACE 				= "VFACE"		 // Floating-point scalar that indicates a back-facing primitive.
+VPOS 				= "VPOS" 		 // Contains the current pixel (x,y) location. 	float2
+
+// Output Semantical parameters
+
+FOG					= "FOG"			 //	Vertex fog 	float
+TESSFACTOR			= "TESSFACTOR"   // Tessellation factor 	float
+DEPTH				= "DEPTH"		 // Output depth
+
+// Input/Output Semantical Parameters
+
+POSITION			= <<POSITION([0-9])?>> 	 // Vertex position in object space. 	float4
+TEXCOORD			= <<TEXCOORD([0-9])?>>	 // Texture coordinates
+TEXUNIT 			= <<TEXUNIT([0-9])?>>	 // Texture coordinates
+COLOR				= <<COLOR([0-9])?>> 		 // Diffuse and specular color 	float4
+TANGENT				= <<TANGENT([0-9])?>>		 // Tangent 	float4
+PSIZE 				= "PSIZE"		 // Point size 	float
+
+// System-Value Semantics - they are new to Direct3D 10
+
+//SV_ClipDistance			  = <<SV_ClipDistance([0-9])?>>	//Clip distance data					float
+//SV_CullDistance			  = <<SV_CullDistance([0-9])?>>	//Cull distance data					float
+//SV_Depth				  = "DEPTH"						//Depth buffer data						float
+//SV_IsFrontFace			  = "IsFrontFace"				//A visible primitive					bool
+//SV_Position				  = "POSITION"					//Vertex position in homogeneous space	float4
+//SV_RenderTargetArrayIndex = "RenderTargetArrayIndex"	//Render-target array index				uint
+//SV_Target				  = <<SV_Target([0-7])>>		//A render-target array					float
+//SV_ViewportArrayIndex	  = "ViewportArrayIndex"		//Viewport array index					uint
+//SV_InstanceID			  = "InstanceID"				//Per-instance identifier				uint
+//SV_PrimitiveID			  = "PrimitiveID"				//Per-primitive identifier				uint
+//SV_VertexID				  = "VertexID"					//Per-vertex identifier					uint
+
+// Matrixes	
+WORLD			    = <<WORLD(I)?(T)?>>
+VIEW			    = <<VIEW(I)?(T)?>>
+PROJ	    		= <<PROJ(I)?(T)?>>
+WORLDVIEW		    = <<WORLDVIEW(I)?(T)?>>
+WORLDPROJ		    = <<WORLDPROJ(I)?(T)?>>
+VIEWPROJ		    = <<VIEWPROJ(I)?(T)?>>
+WORLDVIEWPROJ	    = <<WORLDVIEWPROJ(I)?(T)?>>
+
+
+// Matrix Types
+
+/** [row][column]
+ * [0][0], [0][1], [0][2], [0][3]
+ * [1][0], [1][1], [1][2], [1][3]
+ * [2][0], [2][1], [2][2], [2][3]
+ * [3][0], [3][1], [3][2], [3][3]
+ */
+
+
+FLOAT				= <<float([2-4](x[2-4])?)?>>
+INT					= <<int([2-4](x[2-4])?)?>>
+HALF				= <<half([2-4](x[2-4])?)?>>
+DOUBLE				= <<double([2-4](x[2-4])?)?>>
+BOOL				= <<bool([2-4](x[2-4])?)?>>
+
+
+BASIC_FLOAT			= "float" 
+BASIC_INT			= "int" 
+BASIC_HALF			= "half" 
+BASIC_BOOL			= "bool" 
+BASIC_DOUBLE		= "double"
+BASIC_UINT			= "uint"
+
+// Pre-Processor Directives
+
+PRE_DEFINE 	= <<#define[^\n\r]*>> 	// This directive is used to declare a new compiler macro.
+PRE_IF 		= <<#if[^\n\r]*>> 
+PRE_ELSEIF 	= <<#elseif[^\n\r]*>> 
+PRE_ENDIF 	= <<#endif[^\n\r]*>> 	  // This set of directives is used to define a copiler conditional directive.
+PRE_IFDEF  	= <<#ifdef[^\n\r]*>> 
+PRE_IFNDEF 	= <<#ifndef[^\n\r]*>>
+PRE_ERROR 	= <<#error[^\n\r]*>>      // This directive is used to force the compiler to emit an error and is
+                    	    		  // generally used in conjunction with the conditional directives.
+PRE_INCLUDE = <<#include[^\n\r]*>>    // This directive is used to include an external file into the compilation process.
+PRE_LINE 	= <<#line[^\n\r]*>>       // This directive is substituted with the current line number at which the directive is included within the source file.
+PRE_PRAGMA 	= <<#pragma[^\n\r]*>> 	  // This directive is used to enable and control certain compiler behaviors. They will be discussed later in more details.
+
+// Other Words
+
+NOINTERPOLATION 	= "nointerpolation"
+
+IDENTIFIER					 = <<[A-Za-z_][A-Za-z0-9_]*>>
+
+QUOTED_STRING                = <<"([^"]|"")*+">>
+COMMENT                      = <</\*([^*]|\*[^/])*\*/>>  
+COMMENTCPP                   = <<//[^\n\r]*>> 
+// COMMENTASM                   = <<;[^\n\r]*>> %ignore%
+
+%productions%
+
+// Describes the full file. OPEN_BREACKET
+// 1 - Functions or Variables
+// 2 - Structs
+// 3 - Techniques 
+
+File = WS (
+		 Function_OR_Variable_Declaration [WS]
+	   | Struct_Declaration [WS]
+       | Technique_Declaration [WS]
+       | Pre_Processor_Directives [WS]
+       )+;      
+
+
+Technique_Declaration = TECHNIQUE WS IDENTIFIER [WS] OPEN_BREACKET [WS] (Pass_Declaration [WS])* CLOSE_BREACKET;
+
+Pass_Declaration = PASS WS IDENTIFIER [WS] OPEN_BREACKET [WS] (Pass_Instructions [WS])* CLOSE_BREACKET;
+
+Pass_Instructions = IDENTIFIER [WS] EQUAL [WS] [COMPILE WS IDENTIFIER [WS]] (Expression [WS]) DOT_COMMA;
+
+Struct_Declaration = STRUCT WS IDENTIFIER [WS] OPEN_BREACKET [WS] (Variable_Declaration [WS] DOT_COMMA [WS])+ CLOSE_BREACKET [WS] DOT_COMMA;  
+
+Function_OR_Variable_Declaration = [Storage_Class WS] [Type_Modifier WS] Type WS IDENTIFIER [WS] (Function_PART | Variable_Declaration_PART);
+
+Variable_Declaration_PART = [OPEN_COLCHETES [WS] NUMBER [WS] CLOSE_COLCHETES [WS]] 
+					   [ COMMA [WS] IDENTIFIER [WS] [OPEN_COLCHETES [WS] NUMBER [WS] CLOSE_COLCHETES [WS]]]
+					   
+					   (DOUBLE_DOT [WS] (SemanticalParameters|Register_Func|Packoffset_Func) [WS])* 
+					   [Assignment_Operator [WS] Initializers [WS]] 
+					       
+					   DOT_COMMA;
+  
+Function_PART = Parameters [WS] [DOUBLE_DOT [WS] SemanticalParameters [WS]] OPEN_BREACKET [WS] Function_Body [WS] CLOSE_BREACKET; 
+
+Parameters = OPEN_PAREN [WS] [List_Of_Params [WS]] CLOSE_PAREN;
+
+List_Of_Params = Function_Param ([WS] COMMA [WS] Function_Param)*;
+
+Function_Param = [In_out_inout WS] Variable_Declaration;
+
+Function_Body = (Statement [WS])+; 
+
+Statement = Return_Statement
+//		  | Variable_Assignment
+		  | Flow_Control_Words
+		  | Do_Statement
+		  | [IF_Switch_Attributes] (Switch_Statement | IF_Statement)
+		  | [While_For_Attributes] (For_Statement | While_Statement)
+		  | Pre_Processor_Directives
+		  ;
+
+IF_Statement = IF [WS] OPEN_PAREN [WS] Condition [WS] CLOSE_PAREN [WS]  
+			   [Statement_Scope [WS]]
+			   [ELSE [WS] Statement_Scope];
+
+Switch_Statement = SWITCH [WS] OPEN_PAREN [WS] Expression [WS] CLOSE_PAREN [WS]  
+				OPEN_BREACKET [WS] (Case_Statement [WS])+ CLOSE_BREACKET;
+
+Case_Statement = (CASE [WS] NUMBER | DEFAULT) [WS] DOUBLE_DOT [[WS] Statement_Scope];
+
+While_Statement = WHILE [WS] OPEN_PAREN [WS] Condition [WS] CLOSE_PAREN [WS]
+			   Statement_Scope;
+
+Do_Statement = DO [WS] Statement_Scope [WS] WHILE [WS] OPEN_PAREN [WS] Condition [WS] CLOSE_PAREN [WS] DOT_COMMA;
+
+For_Statement = FOR [WS] OPEN_PAREN [WS]
+					[Expression [WS]] DOT_COMMA [[WS]Condition[WS]] DOT_COMMA [[WS]Expression[WS]]
+				CLOSE_PAREN [WS] 
+			   	Statement_Scope;
+			   	
+Pre_Processor_Directives = (PRE_DEFINE | PRE_IF | PRE_ELSEIF | PRE_ENDIF | PRE_IFDEF | PRE_IFNDEF | PRE_ERROR | PRE_INCLUDE | PRE_LINE | PRE_PRAGMA);
+
+Statement_Scope = OPEN_BREACKET [WS] Function_Body [WS] CLOSE_BREACKET | Function_Body; 
+
+Variable_Declaration = [Storage_Class WS] [Type_Modifier WS] Type WS
+					   IDENTIFIER [WS] [OPEN_COLCHETES [WS] NUMBER [WS] CLOSE_COLCHETES [WS]]
+					   (DOUBLE_DOT [WS] (SemanticalParameters|Register_Func|Packoffset_Func) [WS])* 
+					   [ Assignment_Operator [WS] Initializers [WS]]
+					   ;
+
+Return_Statement = [RETURN WS] Expression [WS] DOT_COMMA;
+
+// TODO: Colocar um  após Identifier_Composed
+Variable_Assignment = Identifier_Composed [WS] [OPEN_COLCHETES [WS] NUMBER [WS] CLOSE_COLCHETES [WS]] Assignment_Operator  [WS] Initializers [WS] DOT_COMMA;
+Variable_Assignment_WithoutDotComma = Identifier_Composed [WS] [OPEN_COLCHETES [WS] NUMBER [WS] CLOSE_COLCHETES [WS]] Assignment_Operator [WS] Initializers;					   
+
+Condition = Expression [WS] Comparison_Operators [WS] Expression;
+
+Initializers = [NOT] Expression; 
+
+
+Expression = [SUB] Term [[WS] ExpressionTail];
+
+ExpressionTail = (ADD | SUB) [WS] Expression;
+
+Term = Factor [WS] [TermTail];
+     
+TermTail = (MULT | DIV | MOD) [WS] Term;
+
+Factor = Atom
+       | OPEN_PAREN [WS] Expression [WS] CLOSE_PAREN [Compose_Identifier];     
+
+Atom = NUMBER 
+     | Function_Constructor_Call_OR_Variable_Declaration
+     | Prefix_Postfix_Operators [WS] Identifier_Composed [[WS] Prefix_Postfix_Operators]
+     | Identifier_Composed_Required [WS] [Prefix_Postfix_Operators | PartOf_Variable_Assignment] 
+     | (Storage_Class WS [Type_Modifier WS] | Type_Modifier WS) Type [WS] PartOf_Variable_Declaration;
+
+// KNOW: The variable_declaration is here because the ambiguities on compilation  
+Function_Constructor_Call_OR_Variable_Declaration = 
+		Type [WS] 
+		[ Prefix_Postfix_Operators
+		| PartOf_Constructor_Call
+		| PartOf_Variable_Declaration
+		| PartOf_Property_Specification
+		| PartOf_Variable_Assignment 
+		];
+											
+PartOf_Property_Specification = OPEN_BREACKET [WS] (Variable_Assignment [WS])+ CLOSE_BREACKET;
+
+PartOf_Constructor_Call = OPEN_PAREN [WS] [Expression [WS] (COMMA [WS] Expression [WS])*] CLOSE_PAREN [Compose_Identifier];        
+
+PartOf_Variable_Declaration = IDENTIFIER [WS] [OPEN_COLCHETES [WS] NUMBER [WS] CLOSE_COLCHETES [WS]] 
+					   [ COMMA [WS] IDENTIFIER [WS] [OPEN_COLCHETES [WS] NUMBER [WS] CLOSE_COLCHETES [WS]]]
+					   (DOUBLE_DOT [WS] (SemanticalParameters|Register_Func|Packoffset_Func) [WS])* 
+					   [ Assignment_Operator [WS] Initializers [WS] ]
+					    ;
+					   
+PartOf_Variable_Assignment = [OPEN_COLCHETES [WS] NUMBER [WS] CLOSE_COLCHETES] Assignment_Operator [WS] Initializers;
+
+Storage_Class = EXTERN | STATIC | NOINTERPOLATION | SHARED | UNIFORM | VOLATILE;
+
+Type_Modifier = CONST | ROW_MAJOR | COLUMN_MAJOR;
+
+Type = BASIC_FLOAT | FLOAT | BASIC_INT | INT | BASIC_UINT | BASIC_HALF | HALF 
+     | BASIC_DOUBLE | DOUBLE | BASIC_BOOL | BOOL | VectorExp | MatrixExp 
+     | SAMPLER | SAMPLER1D | SAMPLER2D | SAMPLER3D | SAMPLERCUBE | SAMPLER_STATE
+     | TEXTURE | TEXTURE1D | TEXTURE2D | TEXTURE3D | TEXTURECUBE 
+     | VOID
+     | IDENTIFIER;
+
+
+VectorExp = VECTOR [WS] MINOR [WS] (VectorExp_Type | VectorExp_Type_Number | VectorExp_Number) [WS] MAJOR;
+VectorExp_Type = Basic_Type;
+VectorExp_Number = NUMBER_2_4; 
+VectorExp_Type_Number=  Basic_Type [WS] COMMA [WS] NUMBER;
+
+MatrixExp = MATRIX [WS] MINOR [WS] Basic_Type [WS] COMMA [WS] NUMBER_1_4 [WS] COMMA [WS] NUMBER_1_4 [WS] MAJOR;
+
+Basic_Type = BASIC_FLOAT | BASIC_INT | BASIC_HALF | BASIC_DOUBLE | BASIC_BOOL;
+
+SemanticalParameters = InputSemanticalParameters | OutputSemanticalParameters | InOutSemanticalParameters | SemanticMatrixes;
+
+InputSemanticalParameters = BINORMAL | BLENDINDICES | BLENDWEIGHT 
+                          | NORMAL | POSITIONT 
+                          | TANGENT | VFACE | VPOS ;
+                          
+OutputSemanticalParameters = FOG | TESSFACTOR | DEPTH;
+
+InOutSemanticalParameters = POSITION | TEXCOORD | TEXUNIT | COLOR | PSIZE	;
+
+Assignment_Operator = EQUAL | ADD_EQUAL | SUB_EQUAL | MULT_EQUAL | DIV_EQUAL | MOD_EQUAL 
+					| MINOR_MINOR_EQUAL | MAJOR_MAJOR_EQUAL | AND_EQUAL | OR_EQUAL | POT_EQUAL; 
+
+Prefix_Postfix_Operators = ADD_ADD | SUB_SUB;
+
+Comparison_Operators = MINOR | MAJOR | EQUAL_EQUAL | DIFF | LESS_EQUAL | MORE_EQUAL;
+
+Boolean_Operators = AND_AND | OR_OR | NOT;
+
+
+In_out_inout = IN | OUT | INOUT;
+
+Register_Func = REGISTER [WS] OPEN_PAREN [WS] IDENTIFIER [WS] CLOSE_PAREN;
+
+Packoffset_Func = PACKOFFSET [WS] OPEN_PAREN [WS] Identifier_Composed [WS] CLOSE_PAREN;
+
+Identifier_Composed = IDENTIFIER [Compose_Identifier]; 
+Compose_Identifier = (DOT XYZW | DOT RGBA | DOT IDENTIFIER)+;
+Identifier_Composed_Required = IDENTIFIER Compose_Identifier;
+
+Flow_Control_Words = (STOP | CONTINUE | BREAK | DISCARD) [WS] DOT_COMMA;
+
+While_For_Attributes = UNROLL [WS] OPEN_PAREN [WS] NUMBER [WS] CLOSE_PAREN [WS] | LOOP WS;
+
+IF_Switch_Attributes = CALL WS | FORCECASE WS | FLATTEN WS | BRANCH WS;  
+
+SemanticMatrixes    = WORLDVIEWPROJ | WORLDVIEW | WORLDPROJ | VIEWPROJ | WORLD | VIEW | PROJ;
+
+WS = (WHITESPACE | TAB | NEWLINE | NEWLINE2 | NEWLINE3 | FORMFEED | COMMENT | COMMENTCPP)+;  

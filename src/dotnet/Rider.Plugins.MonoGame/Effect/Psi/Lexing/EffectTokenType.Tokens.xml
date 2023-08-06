@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<EffectTokens>
+
+  <!-- Default is 1000 -->
+  <BaseTokenNodeTypeIndex>1000</BaseTokenNodeTypeIndex>
+  <TokenTypeNamespace>Rider.Plugins.MonoGame.Effect.Psi.Lexing</TokenTypeNamespace>
+  <TokenTypeClass>EffectTokenType</TokenTypeClass>
+
+  <Tokens NodeType="EffectTokenNodeType">
+    <Token name="EFFECT_CODE" />
+  </Tokens>
+</EffectTokens>

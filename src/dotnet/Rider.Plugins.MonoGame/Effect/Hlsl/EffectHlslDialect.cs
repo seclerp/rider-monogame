@@ -4,7 +4,7 @@ namespace Rider.Plugins.MonoGame.Effect.Hlsl;
 
 public class EffectHlslDialect : CppHLSLDialect
 {
-    public EffectHlslDialect(bool isMachine64Bit, CppLanguageKind languageKind = CppLanguageKind.HLSL) : base(isMachine64Bit, languageKind)
+    public EffectHlslDialect() : base(true)
     {
     }
 }

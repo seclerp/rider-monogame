@@ -27,6 +27,13 @@
     <PsiLanguageNames Include="MGFX">
       <Visible>False</Visible>
     </PsiLanguageNames>
+    <CsLex Include="Effect/Psi/Lexing/Mgfx.lex" />
+    <TokenGenerator Include="Effect/Psi/Lexing/EffectTokenType.Tokens.xml">
+      <OutputFile>Effect/Psi/Lexing/EffectTokenType.Tokens.Generated.cs</OutputFile>
+    </TokenGenerator>
+    <Compile Update="Effect/Psi/Lexing/EffectTokenType.Tokens.Generated.cs">
+      <DependentUpon>EffectTokenType.Tokens.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
