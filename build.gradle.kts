@@ -149,25 +149,6 @@ tasks {
         dependsOn(generateMgcbLexer, generateMgcbParser)
     }
 
-    val generateEffectLexer by registering(GenerateLexerTask::class) {
-        sourceFile.set(file("src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/effect/Mgfx.flex"))
-        targetDir.set("src/rider/gen/me/seclerp/rider/plugins/monogame/effect")
-        targetClass.set("EffectLexer")
-        purgeOldFiles.set(true)
-    }
-
-    val generateEffectParser by registering(GenerateParserTask::class) {
-        sourceFile.set(file("src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/effect/Mgfx.bnf"))
-        targetRoot.set("src/rider/gen")
-        pathToParser.set("/parser/EffectParser.java")
-        pathToPsiRoot.set("/psi")
-        purgeOldFiles.set(true)
-    }
-
-    val generateEffectsTooling by registering {
-        dependsOn(generateEffectLexer, generateEffectParser)
-    }
-
     wrapper {
         gradleVersion = "8.2.1"
         distributionType = Wrapper.DistributionType.ALL
@@ -239,7 +220,7 @@ tasks {
     val rdgen by existing
 
     register("prepare") {
-        dependsOn(rdgen, generateMgcbTooling, generateEffectsTooling, generateNuGetConfig, generateSdkPackagesVersionsLock)
+        dependsOn(rdgen, generateMgcbTooling, generateNuGetConfig, generateSdkPackagesVersionsLock)
     }
 
     val compileDotNet by registering {
@@ -269,7 +250,7 @@ tasks {
     }
 
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        dependsOn(rdgen, generateMgcbTooling, generateEffectsTooling)
+        dependsOn(rdgen, generateMgcbTooling)
         kotlinOptions {
             jvmTarget = "17"
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"

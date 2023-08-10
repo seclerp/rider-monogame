@@ -28,6 +28,6 @@ class MgcbEditorFloatingToolbarProvider : FloatingToolbarProvider {
         val virtualFile = documentManager.getFile(document) ?: return false
         return virtualFile !is LightVirtualFileBase
             && virtualFile.isValid
-            && virtualFile.fileType == MgcbFileType.Instance
+            && virtualFile.fileType == MgcbFileType
     }
 }

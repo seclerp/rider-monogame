@@ -12,7 +12,7 @@ import com.intellij.psi.TokenType
 import com.intellij.psi.tree.IFileElementType
 import com.intellij.psi.tree.TokenSet
 import me.seclerp.rider.plugins.monogame.mgcb.parser.MgcbParser
-import me.seclerp.rider.plugins.monogame.mgcb.psi.EffectPsiFile
+import me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbFile
 import me.seclerp.rider.plugins.monogame.mgcb.psi.MgcbTypes
 
 class MgcbParserDefinition : ParserDefinition {
@@ -34,7 +34,7 @@ class MgcbParserDefinition : ParserDefinition {
 
     override fun getFileNodeType(): IFileElementType = FILE
 
-    override fun createFile(viewProvider: FileViewProvider): PsiFile = EffectPsiFile(viewProvider)
+    override fun createFile(viewProvider: FileViewProvider): PsiFile = MgcbFile(viewProvider)
 
     override fun spaceExistenceTypeBetweenTokens(left: ASTNode?, right: ASTNode?): ParserDefinition.SpaceRequirements =
         ParserDefinition.SpaceRequirements.MAY

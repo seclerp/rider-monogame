@@ -71,19 +71,10 @@
     <!-- End Spritefont support -->
 
     <!-- Begin MGFX support -->
-    <fileType name="MonoGame Effect File" implementationClass="me.seclerp.rider.plugins.monogame.effect.EffectFileType"
-              fieldName="INSTANCE" language="MGFX" extensions="fx"/>
-    <lang.altEnter language="MGFX" implementationClass="com.jetbrains.rider.intentions.altEnter.ReSharperBulbMenuModelFactory" />
-    <lang.parserDefinition language="MGFX" implementationClass="me.seclerp.rider.plugins.monogame.effect.EffectParserDefinition" />
-    <lang.syntaxHighlighterFactory language="MGFX" implementationClass="me.seclerp.rider.plugins.monogame.effect.EffectSyntaxHighlighterProvider" />
-    <backend.markup.adapterFactory language="MGFX" implementationClass="com.jetbrains.rdclient.daemon.FrontendMarkupAdapterFactory" />
-    <backend.actions.support language="MGFX" implementationClass="com.jetbrains.rider.actions.RiderActionSupportPolicy" />
-    <backend.autoPopup.support language="MGFX" implementationClass="com.jetbrains.rider.completion.BackendAndGenericRider" />
-    <iconProvider implementation="me.seclerp.rider.plugins.monogame.effect.EffectIconProvider" />
-    <completion.contributor language="MGFX" implementationClass="com.jetbrains.rider.completion.ProtocolCompletionContributor" />
-    <codeInsight.parameterInfo language="MGFX" implementationClass="com.jetbrains.rdclient.parameterInfo.FrontendParameterInfoHandler"/>
-    <lang.documentationProvider language="MGFX" implementationClass="com.jetbrains.rdclient.quickDoc.FrontendDocumentationProvider"/>
-    <backend.typedHandler language="MGFX" implementationClass="com.jetbrains.rider.cpp.fileType.CppTypedHandler"/>
+    <fileType name="MonoGame Effect Source File" implementationClass="me.seclerp.rider.plugins.monogame.effect.EffectSourceFileType"
+              fieldName="INSTANCE" language="C++" extensions="fx"/>
+    <fileType name="MonoGame Effect Header File" implementationClass="me.seclerp.rider.plugins.monogame.effect.EffectHeaderFileType"
+              fieldName="INSTANCE" language="C++" extensions="fxh"/>
 <!--    <langCodeStyleSettingsProvider implementation="com.jetbrains.rider.plugins.unity.ideaInterop.fileTypes.shaderLab.settings.ShaderLabStyleSettingsProvider"/>-->
 <!--    <breadcrumbsInfoProvider implementation="com.jetbrains.rider.plugins.unity.ideaInterop.fileTypes.shaderLab.breadcrumbs.ShaderLabBreadcrumbsInfoProvider"/>-->
     <!-- End MGFX support -->

@@ -2,19 +2,19 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi.Cpp.Caches;
 using JetBrains.ReSharper.Psi.Cpp.Language;
 using JetBrains.ReSharper.Psi.Cpp.Util;
-using Rider.Plugins.MonoGame.Effect.ProjectModel;
+using Rider.Plugins.MonoGame.Extensions;
 
-namespace Rider.Plugins.MonoGame.Effect.Hlsl;
+namespace Rider.Plugins.MonoGame.Effect;
 
 [SolutionComponent]
-public class EffectHlslCompilationPropertiesProvider : ICppCompilationPropertiesProvider
+public class EffectCppCompilationParametersProvider
 {
     public EffectHlslDialect EffectHlslDialect = new();
 
     public CppCompilationProperties GetCompilationProperties(IProject project, IProjectFile projectFile, CppFileLocation rootFile,
         CppGlobalSymbolCache globalCache)
     {
-        if (project.IsDotNetCoreProject() && rootFile.Location.ExtensionWithDot == EffectProjectFileType.MGFX_EXTENSION)
+        if (project.IsDotNetCoreProject() && rootFile.Location.ExtensionWithDot is CppProjectFileType.FX_EXTENSION or CppProjectFileType.FXH_EXTENSION)
         {
             return CreateProperties(EffectHlslDialect);
         }
@@ -27,7 +27,7 @@ public class EffectHlslCompilationPropertiesProvider : ICppCompilationProperties
         return new CppCompilationProperties
         {
             OverridenDialect = dialect,
-            LanguageKind = dialect.LanguageKind
+            LanguageKind = dialect.LanguageKind,
         };
     }
 }
