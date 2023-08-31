@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Antlr4BuildTasks" />
+        <PackageReference Include="Antlr4.Runtime.Standard" />
+        <PackageReference Include="JetBrains.Psi.Features.Core" PrivateAssets="all" />
+        <PackageReference Include="System.Runtime.CompilerServices.Unsafe" VersionOverride="5.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Antlr4 Include="Grammars\DiscountsLexer.g4;Grammars\DiscountsParser.g4">
+            <Listener>false</Listener>
+            <Visitor>false</Visitor>
+            <GAtn>true</GAtn>
+            <Package>foo</Package>
+            <Error>true</Error>
+            <IntermediateOutputPath>Grammars/gen</IntermediateOutputPath>
+<!--            <LibPath>Grammars/gen</LibPath>-->
+        </Antlr4>
+    </ItemGroup>
+
+</Project>
