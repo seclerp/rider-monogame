@@ -83,6 +83,7 @@
                          provider="me.seclerp.rider.plugins.monogame.settings.MgcbToolsetConfigurableProvider"
                          key="settings.mgcb.display.name"/>
 
+    <xml.schemaProvider implementation="me.seclerp.rider.plugins.monogame.spritefont.SpriteFontXmlSchemaProvider"/>
   </extensions>
 
   <projectListeners>
