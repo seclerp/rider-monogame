@@ -1,6 +1,7 @@
 @file:Suppress("HardCodedStringLiteral")
 
 import org.jetbrains.changelog.exceptions.MissingVersionException
+import java.util.*
 import kotlin.collections.*
 
 buildscript {
@@ -10,7 +11,7 @@ buildscript {
 
     // https://search.maven.org/artifact/com.jetbrains.rd/rd-gen
     dependencies {
-        classpath("com.jetbrains.rd:rd-gen:2023.2.2")
+        classpath("com.jetbrains.rd:rd-gen:2023.3.0")
     }
 }
 
@@ -22,9 +23,9 @@ repositories {
 plugins {
     id("me.filippov.gradle.jvm.wrapper") version "0.14.0"
     // https://plugins.gradle.org/plugin/org.jetbrains.changelog
-    id("org.jetbrains.changelog") version "2.0.0"
+    id("org.jetbrains.changelog") version "2.2.0"
     // https://plugins.gradle.org/plugin/org.jetbrains.intellij
-    id("org.jetbrains.intellij") version "1.13.3"
+    id("org.jetbrains.intellij") version "1.15.0"
     id("org.jetbrains.kotlin.jvm") version "1.8.20"
     // https://plugins.gradle.org/plugin/org.jetbrains.grammarkit
     id("org.jetbrains.grammarkit") version "2022.3.1"
@@ -85,7 +86,7 @@ apply(plugin = "com.jetbrains.rdgen")
 configure<com.jetbrains.rd.generator.gradle.RdGenExtension> {
     val modelDir = file("$projectDir/protocol/src/main/kotlin/model")
     val csOutput = file("$projectDir/src/dotnet/$dotnetPluginId/Rd")
-    val ktOutput = file("$projectDir/src/rider/main/kotlin/${riderPluginId.replace('.','/').toLowerCase()}/rd")
+    val ktOutput = file("$projectDir/src/rider/main/kotlin/${riderPluginId.replace('.','/').lowercase(Locale.getDefault())}/rd")
 
     verbose = true
     classpath({
