@@ -48,8 +48,9 @@ class MgcbEditorPreviewer(
     private val previewerPanel = lazy {
         val root = JBSplitter(false, 0.5f).apply {
             dividerWidth = 2
+            val schema = EditorColorsManager.getInstance().globalScheme
             divider.background = JBColor.lazy {
-                EditorColorsManager.getInstance().globalScheme.getColor(EditorColors.PREVIEW_BORDER_COLOR)
+                schema.getColor(EditorColors.PREVIEW_BORDER_COLOR) ?: schema.defaultBackground
             }
         }
 
@@ -95,8 +96,9 @@ class MgcbEditorPreviewer(
             firstComponent = propertiesPanel
             secondComponent = processorParamsPanel
             dividerWidth = 2
+            val schema = EditorColorsManager.getInstance().globalScheme
             divider.background = JBColor.lazy {
-                EditorColorsManager.getInstance().globalScheme.getColor(EditorColors.PREVIEW_BORDER_COLOR)
+                schema.getColor(EditorColors.PREVIEW_BORDER_COLOR) ?: schema.defaultBackground
             }
         }
     }

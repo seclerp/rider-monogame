@@ -11,7 +11,7 @@ buildscript {
 
     // https://search.maven.org/artifact/com.jetbrains.rd/rd-gen
     dependencies {
-        classpath("com.jetbrains.rd:rd-gen:2023.3.0")
+        classpath("com.jetbrains.rd:rd-gen:2023.3.2")
     }
 }
 
@@ -25,8 +25,8 @@ plugins {
     // https://plugins.gradle.org/plugin/org.jetbrains.changelog
     id("org.jetbrains.changelog") version "2.2.0"
     // https://plugins.gradle.org/plugin/org.jetbrains.intellij
-    id("org.jetbrains.intellij") version "1.15.0"
-    id("org.jetbrains.kotlin.jvm") version "1.8.20"
+    id("org.jetbrains.intellij") version "1.16.1"
+    id("org.jetbrains.kotlin.jvm") version "1.9.22"
     // https://plugins.gradle.org/plugin/org.jetbrains.grammarkit
     id("org.jetbrains.grammarkit") version "2022.3.1"
 }
@@ -46,7 +46,6 @@ val pluginVersion: String by project
 val buildConfiguration = ext.properties["buildConfiguration"] ?: "Debug"
 
 val publishToken: String by project
-val publishDistributionFile: String by project
 val publishChannel: String by project
 
 val rdLibDirectory: () -> File = { file("${tasks.setupDependencies.get().idea.get().classes}/lib/rd") }
@@ -252,8 +251,8 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("232.0")
-        untilBuild.set("232.*")
+        sinceBuild.set("233.0")
+        untilBuild.set("233.*")
         val latestChangelog = try {
             changelog.getUnreleased()
         } catch (_: MissingVersionException) {
@@ -318,7 +317,6 @@ tasks {
 
     publishPlugin {
         token.set(publishToken)
-        distributionFile.set(File(publishDistributionFile))
         channels.set(listOf(publishChannel))
     }
 }
