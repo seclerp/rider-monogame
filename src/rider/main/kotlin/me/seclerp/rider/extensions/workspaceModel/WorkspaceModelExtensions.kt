@@ -6,8 +6,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.backend.workspace.WorkspaceModel
 import com.intellij.platform.backend.workspace.virtualFile
-import com.intellij.platform.workspace.storage.url.VirtualFileUrlManager
-import com.intellij.workspaceModel.ide.getInstance
 import com.jetbrains.rider.projectView.workspace.ProjectModelEntity
 import com.jetbrains.rider.projectView.workspace.containingProjectEntity
 import com.jetbrains.rider.projectView.workspace.getContentRootUrl
@@ -21,6 +19,6 @@ fun WorkspaceModel.containingProjectEntity(file: VirtualFile, project: Project):
 
 fun WorkspaceModel.containingProjectDirectory(file: VirtualFile, project: Project): VirtualFile? {
     return containingProjectEntity(file, project)
-        ?.getContentRootUrl(VirtualFileUrlManager.getInstance(project))
+        ?.getContentRootUrl(WorkspaceModel.getInstance(project).getVirtualFileUrlManager())
         ?.virtualFile
 }

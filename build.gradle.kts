@@ -11,7 +11,7 @@ buildscript {
 
     // https://search.maven.org/artifact/com.jetbrains.rd/rd-gen
     dependencies {
-        classpath("com.jetbrains.rd:rd-gen:2023.3.2")
+        classpath("com.jetbrains.rd:rd-gen:2024.1.1")
     }
 }
 
@@ -25,10 +25,11 @@ plugins {
     // https://plugins.gradle.org/plugin/org.jetbrains.changelog
     id("org.jetbrains.changelog") version "2.2.0"
     // https://plugins.gradle.org/plugin/org.jetbrains.intellij
-    id("org.jetbrains.intellij") version "1.16.1"
-    id("org.jetbrains.kotlin.jvm") version "1.9.22"
+    id("org.jetbrains.intellij") version "1.17.2"
+    // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
+    id("org.jetbrains.kotlin.jvm") version "1.9.23"
     // https://plugins.gradle.org/plugin/org.jetbrains.grammarkit
-    id("org.jetbrains.grammarkit") version "2022.3.1"
+    id("org.jetbrains.grammarkit") version "2022.3.2.2"
 }
 
 apply {
@@ -129,21 +130,20 @@ intellij {
 tasks {
     generateLexer {
         sourceFile.set(file("src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/mgcb/Mgcb.flex"))
-        targetDir.set("src/rider/gen/me/seclerp/rider/plugins/monogame/mgcb")
-        targetClass.set("MgcbLexer")
+        targetOutputDir.set(file("src/rider/gen/me/seclerp/rider/plugins/monogame/mgcb"))
         purgeOldFiles.set(true)
     }
 
     generateParser {
         sourceFile.set(file("src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/mgcb/Mgcb.bnf"))
-        targetRoot.set("src/rider/gen")
+        targetRootOutputDir.set(file("src/rider/gen"))
         pathToParser.set("/parser/MgcbParser.java")
         pathToPsiRoot.set("/psi")
         purgeOldFiles.set(true)
     }
 
     wrapper {
-        gradleVersion = "7.5.1"
+        gradleVersion = "8.3"
         distributionType = Wrapper.DistributionType.ALL
         distributionUrl = "https://cache-redirector.jetbrains.com/services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
     }
@@ -160,7 +160,7 @@ tasks {
         doLast {
             nuGetConfigFile.writeTextIfChanged("""
                 <?xml version="1.0" encoding="utf-8"?>
-                <!-- Auto-generated from 'generateNuGetConfig' task of old.build_gradle.kts -->
+                <!-- Auto-generated from 'generateNuGetConfig' task of build.gradle.kts -->
                 <!-- Run `gradlew :prepare` to regenerate -->
                 <configuration>
                   <packageSources>
@@ -251,8 +251,8 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("233.0")
-        untilBuild.set("233.*")
+        sinceBuild.set("241.0")
+        untilBuild.set("241.*")
         val latestChangelog = try {
             changelog.getUnreleased()
         } catch (_: MissingVersionException) {
