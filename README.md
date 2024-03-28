@@ -4,7 +4,7 @@
   <br /><br />
   This plugin improves MonoGame usage experience inside JetBrains Rider.
   <br /><br />
-  <a href="https://github.com/seclerp/rider-efcore/actions/workflows/build.yml"><img src="https://github.com/seclerp/rider-efcore/actions/workflows/build.yml/badge.svg" alt="Build"></a>
+  <a href="https://github.com/seclerp/rider-monogame/actions/workflows/build.yml"><img src="https://github.com/seclerp/rider-monogame/actions/workflows/build.yml/badge.svg" alt="Build"></a>
 </div>
 
 ---
