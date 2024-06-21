@@ -1,39 +1,38 @@
 @file:Suppress("HardCodedStringLiteral")
 
+import com.jetbrains.plugin.structure.base.utils.isFile
+import com.jetbrains.plugin.structure.base.utils.listFiles
 import org.jetbrains.changelog.exceptions.MissingVersionException
+import org.jetbrains.intellij.platform.gradle.Constants
+import org.jetbrains.intellij.platform.gradle.tasks.PrepareSandboxTask
 import java.util.*
 import kotlin.collections.*
-
-buildscript {
-    repositories {
-        maven { setUrl("https://cache-redirector.jetbrains.com/maven-central") }
-    }
-
-    // https://search.maven.org/artifact/com.jetbrains.rd/rd-gen
-    dependencies {
-        classpath("com.jetbrains.rd:rd-gen:2024.1.1")
-    }
-}
+import kotlin.io.path.absolute
+import kotlin.io.path.isDirectory
+import kotlin.io.path.name
+import kotlin.io.path.readText
 
 repositories {
+    maven("https://cache-redirector.jetbrains.com/intellij-dependencies")
+    maven("https://cache-redirector.jetbrains.com/intellij-repository/releases")
     maven("https://cache-redirector.jetbrains.com/intellij-repository/snapshots")
     maven("https://cache-redirector.jetbrains.com/maven-central")
+    intellijPlatform {
+        defaultRepositories()
+        jetbrainsRuntime()
+    }
 }
 
 plugins {
-    id("me.filippov.gradle.jvm.wrapper") version "0.14.0"
+    id("me.filippov.gradle.jvm.wrapper")
     // https://plugins.gradle.org/plugin/org.jetbrains.changelog
     id("org.jetbrains.changelog") version "2.2.0"
-    // https://plugins.gradle.org/plugin/org.jetbrains.intellij
-    id("org.jetbrains.intellij") version "1.17.2"
+    // https://plugins.gradle.org/plugin/org.jetbrains.intellij.platform
+    id("org.jetbrains.intellij.platform")
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
-    id("org.jetbrains.kotlin.jvm") version "1.9.23"
+    id("org.jetbrains.kotlin.jvm")
     // https://plugins.gradle.org/plugin/org.jetbrains.grammarkit
     id("org.jetbrains.grammarkit") version "2022.3.2.2"
-}
-
-apply {
-    plugin("com.jetbrains.rdgen")
 }
 
 dependencies {
@@ -46,11 +45,12 @@ val productVersion: String by project
 val pluginVersion: String by project
 val buildConfiguration = ext.properties["buildConfiguration"] ?: "Debug"
 
+intellijPlatform {
+    buildSearchableOptions = buildConfiguration == "Release"
+}
+
 val publishToken: String by project
 val publishChannel: String by project
-
-val rdLibDirectory: () -> File = { file("${tasks.setupDependencies.get().idea.get().classes}/lib/rd") }
-extra["rdLibDirectory"] = rdLibDirectory
 
 val dotNetSrcDir = File(projectDir, "src/dotnet")
 
@@ -81,35 +81,12 @@ sourceSets {
     }
 }
 
-apply(plugin = "com.jetbrains.rdgen")
+dependencies {
+    intellijPlatform {
+        rider(productVersion)
+        jetbrainsRuntime()
 
-configure<com.jetbrains.rd.generator.gradle.RdGenExtension> {
-    val modelDir = file("$projectDir/protocol/src/main/kotlin/model")
-    val csOutput = file("$projectDir/src/dotnet/$dotnetPluginId/Rd")
-    val ktOutput = file("$projectDir/src/rider/main/kotlin/${riderPluginId.replace('.','/').lowercase(Locale.getDefault())}/rd")
-
-    verbose = true
-    classpath({
-        "${rdLibDirectory()}/rider-model.jar"
-    })
-    sources("$modelDir/rider")
-    hashFolder = "$buildDir"
-    packages = "model.rider"
-
-    generator {
-        language = "kotlin"
-        transform = "asis"
-        root = "com.jetbrains.rider.model.nova.ide.IdeRoot"
-        namespace = "me.seclerp.rider.plugins.efcore.model"
-        directory = "$ktOutput"
-    }
-
-    generator {
-        language = "csharp"
-        transform = "reversed"
-        root = "com.jetbrains.rider.model.nova.ide.IdeRoot"
-        namespace = "Rider.Plugins.EfCore"
-        directory = "$csOutput"
+        instrumentationTools()
     }
 }
 
@@ -118,13 +95,21 @@ grammarKit {
     grammarKitRelease.set("2022.3.1")
 }
 
-intellij {
-    type.set("RD")
-    version.set(productVersion)
-    downloadSources.set(false)
-    plugins.set(listOf<String>(
-//        "com.intellij.database"
-    ))
+val riderModel: Configuration by configurations.creating {
+    isCanBeConsumed = true
+    isCanBeResolved = false
+}
+
+artifacts {
+    add(riderModel.name, provider {
+        intellijPlatform.platformPath.resolve("lib/rd/rider-model.jar").also {
+            check(it.isFile) {
+                "rider-model.jar is not found at $riderModel"
+            }
+        }
+    }) {
+        builtBy(Constants.Tasks.INITIALIZE_INTELLIJ_PLATFORM_PLUGIN)
+    }
 }
 
 tasks {
@@ -149,8 +134,8 @@ tasks {
     }
 
     val riderSdkPath by lazy {
-        val path = setupDependencies.get().idea.get().classes.resolve("lib/DotNetSdkForRdPlugins")
-        if (!path.isDirectory) error("$path does not exist or not a directory")
+        val path = intellijPlatform.platformPath.resolve("lib/DotNetSdkForRdPlugins").absolute()
+        if (!path.isDirectory()) error("$path does not exist or not a directory")
 
         println("Rider SDK path: $path")
         return@lazy path
@@ -180,13 +165,13 @@ tasks {
             val packageRefRegex = "PackageReference\\.(.+).Props".toRegex()
             val versionRegex = "<Version>(.+)</Version>".toRegex()
             val packagesWithVersions = sdkPropsFolder.listFiles()
-                ?.mapNotNull { file ->
+                .mapNotNull { file ->
                     val packageId = packageRefRegex.matchEntire(file.name)?.groupValues?.get(1) ?: return@mapNotNull null
                     val version = versionRegex.find(file.readText())?.groupValues?.get(1) ?: return@mapNotNull null
 
                     packageId to version
                 }
-                ?.filter { (packageId, _) -> !excludedNuGets.contains(packageId) } ?: emptyList()
+                .filter { (packageId, _) -> !excludedNuGets.contains(packageId) } ?: emptyList()
 
             val directoryPackagesFileContents = buildString {
                 appendLine("""
@@ -210,14 +195,12 @@ tasks {
         }
     }
 
-    val rdgen by existing
-
     register("prepare") {
-        dependsOn(rdgen, generateLexer, generateParser, generateNuGetConfig, generateSdkPackagesVersionsLock)
+        dependsOn(":protocol:rdgen", generateLexer, generateParser, generateNuGetConfig, generateSdkPackagesVersionsLock)
     }
 
     val compileDotNet by registering {
-        dependsOn(rdgen, generateNuGetConfig, generateSdkPackagesVersionsLock)
+        dependsOn(":protocol:rdgen", generateNuGetConfig, generateSdkPackagesVersionsLock)
         doLast {
             exec {
                 workingDir(dotNetSrcDir)
@@ -243,7 +226,7 @@ tasks {
     }
 
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        dependsOn(rdgen, generateLexer, generateParser)
+        dependsOn(":protocol:rdgen", generateLexer, generateParser)
         kotlinOptions {
             jvmTarget = "17"
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
@@ -251,8 +234,8 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("241.0")
-        untilBuild.set("241.*")
+        sinceBuild.set("242.0")
+        untilBuild.set("242.*")
         val latestChangelog = try {
             changelog.getUnreleased()
         } catch (_: MissingVersionException) {
@@ -292,7 +275,7 @@ tasks {
         environment["LOCAL_ENV_RUN"] = "true"
     }
 
-    withType<org.jetbrains.intellij.tasks.PrepareSandboxTask> {
+    withType<PrepareSandboxTask> {
         dependsOn(compileDotNet)
 
         val outputFolder = file("$dotNetSrcDir/$dotnetPluginId/bin/$dotnetPluginId/$buildConfiguration")
