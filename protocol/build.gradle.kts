@@ -29,7 +29,7 @@ rdgen {
         transform = "asis"
         root = "com.jetbrains.rider.model.nova.ide.IdeRoot"
         namespace = "com.jetbrains.rider.plugins.efcore.model"
-        directory = file("$projectDir/src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/rd").absolutePath
+        directory = file("$repoRoot/src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/rd").absolutePath
     }
 
     generator {
@@ -37,7 +37,7 @@ rdgen {
         transform = "reversed"
         root = "com.jetbrains.rider.model.nova.ide.IdeRoot"
         namespace = "Rider.Plugins.EfCore"
-        directory = file("$projectDir/src/dotnet/Rider.Plugins.MonoGame/Rd").absolutePath
+        directory = file("$repoRoot/src/dotnet/Rider.Plugins.MonoGame/Rd").absolutePath
     }
 }
 
