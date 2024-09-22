@@ -18,7 +18,7 @@ class MgcbEditorWithPreview(
         textEditor.editor.document.addDocumentListener(documentListener)
     }
 
-    override fun isShowFloatingToolbar() = false
+    override val isShowFloatingToolbar = false
 
     override fun dispose() {
         textEditor.editor.document.removeDocumentListener(documentListener)

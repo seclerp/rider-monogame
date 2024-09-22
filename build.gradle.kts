@@ -83,7 +83,7 @@ sourceSets {
 
 dependencies {
     intellijPlatform {
-        rider(productVersion)
+        rider(productVersion, useInstaller = false)
         jetbrainsRuntime()
 
         instrumentationTools()
@@ -104,7 +104,7 @@ artifacts {
     add(riderModel.name, provider {
         intellijPlatform.platformPath.resolve("lib/rd/rider-model.jar").also {
             check(it.isFile) {
-                "rider-model.jar is not found at $riderModel"
+                "rider-model.jar is not found at $it"
             }
         }
     }) {
