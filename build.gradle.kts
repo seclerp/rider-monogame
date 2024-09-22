@@ -175,7 +175,7 @@ tasks {
 
             val directoryPackagesFileContents = buildString {
                 appendLine("""
-                    <!-- Auto-generated from 'generateSdkPackagesVersionsLock' task of old.build_gradle.kts -->
+                    <!-- Auto-generated from 'generateSdkPackagesVersionsLock' task of build_gradle.kts -->
                     <!-- Run `gradlew :prepare` to regenerate -->
                     <Project>
                       <ItemGroup>
