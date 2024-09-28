@@ -5,7 +5,6 @@ import com.jetbrains.plugin.structure.base.utils.listFiles
 import org.jetbrains.changelog.exceptions.MissingVersionException
 import org.jetbrains.intellij.platform.gradle.Constants
 import org.jetbrains.intellij.platform.gradle.tasks.PrepareSandboxTask
-import java.util.*
 import kotlin.collections.*
 import kotlin.io.path.absolute
 import kotlin.io.path.isDirectory
@@ -234,8 +233,8 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("242.0")
-        untilBuild.set("242.*")
+        sinceBuild.set("243.0")
+        untilBuild.set("243.*")
         val latestChangelog = try {
             changelog.getUnreleased()
         } catch (_: MissingVersionException) {
