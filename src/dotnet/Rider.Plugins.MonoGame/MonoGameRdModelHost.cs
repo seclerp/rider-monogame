@@ -1,5 +1,6 @@
 using System;
 using JetBrains.Annotations;
+using JetBrains.Application.Parts;
 using JetBrains.Collections.Viewable;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
@@ -7,19 +8,17 @@ using JetBrains.ProjectModel.NuGet.DotNetTools;
 using JetBrains.Rd.Base;
 using JetBrains.RdBackend.Common.Features;
 using JetBrains.ReSharper.Feature.Services.Protocol;
-using JetBrains.Util;
 using Rider.Plugins.MonoGame.Mgcb;
 
 namespace Rider.Plugins.MonoGame;
 
-[SolutionComponent]
+[SolutionComponent(Instantiation.ContainerAsyncPrimaryThread)]
 public class MonoGameRdModelHost
 {
     public MonoGameRdModelHost(
         Lifetime lifetime,
         ISolution solution,
-        MgcbToolsetTracker toolsetTracker,
-        ILogger logger)
+        MgcbToolsetTracker toolsetTracker)
     {
         var model = solution.GetProtocolSolution().GetMonoGameRiderModel();
 
