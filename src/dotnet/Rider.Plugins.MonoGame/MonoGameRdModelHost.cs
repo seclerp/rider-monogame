@@ -9,6 +9,7 @@ using JetBrains.Rd.Base;
 using JetBrains.RdBackend.Common.Features;
 using JetBrains.ReSharper.Feature.Services.Protocol;
 using Rider.Plugins.MonoGame.Mgcb;
+using Rider.Plugins.MonoGame.Mgcb.Tools;
 
 namespace Rider.Plugins.MonoGame;
 

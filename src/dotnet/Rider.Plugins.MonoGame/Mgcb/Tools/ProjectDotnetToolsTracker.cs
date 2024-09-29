@@ -5,7 +5,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.NuGet.DotNetTools;
 using JetBrains.Util;
 
-namespace Rider.Plugins.MonoGame.Mgcb;
+namespace Rider.Plugins.MonoGame.Mgcb.Tools;
 
 public class ProjectDotnetToolsTracker : NuGetDotnetToolsTrackerBase
 {

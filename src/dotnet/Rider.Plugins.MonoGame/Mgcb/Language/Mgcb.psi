@@ -1,0 +1,83 @@
+options
+{
+// Parser options
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Parser class name and namespace
+  parserPackage="Rider.Plugins.MonoGame.Mgcb.Language.Parsing";
+  parserClassName="MgcbParserGenerated";
+// Strongly type the lexer we're using. ILexer<int> is the caching lexer instance
+  "lexerClassName"="JetBrains.ReSharper.Psi.Parsing.ILexer";
+// FQN of (non-generated) class that provides messages for the parser
+  parserMessagesClass="Rider.Plugins.MonoGame.Mgcb.Language.Parsing.ParserMessages";
+// Parser, error messages + token bitsets target folder
+  parserTargetSubdir="Parsing/Generated";
+// Don't generate a bitset unless there's 4 or more comparisons to be made
+  tokenBitsetThreshold=4;
+// Composite node type/element generation options
+// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Existing language specific ITreeNode
+  "psiElementClassFQName"="Rider.Plugins.MonoGame.Mgcb.Language.Parsing.Tree.IMgcbTreeNode";
+// Existing token type containing class + namespace
+  tokenTypePackageName="Rider.Plugins.MonoGame.Mgcb.Language.Parsing";
+  tokenTypeClassName="MgcbTokenTypes";
+// Set base index for generated (element, not token) node types. Defaults to 2000, tokens default to 1000
+// tokenTypeBaseIndex=2000;
+// Tree node interface namespace + target folder (also target folder for navigators + visitors)
+  psiInterfacePackageName="Rider.Plugins.MonoGame.Mgcb.Language.Parsing.Tree";
+  psiInterfacesTargetSubdir="Parsing/Tree";
+// Tree node implementation namespace, base type and target folder
+  psiStubsPackageName="Rider.Plugins.MonoGame.Mgcb.Language.Parsing.Tree.Impl";
+  psiStubsBaseClass="MgcbCompositeElement";
+  psiStubsTargetSubdir="Parsing/Tree/Impl";
+// Existing composite node type base class
+  elementTypeBaseClass="MgcbCompositeNodeType";
+// Namespace for generating custom interface when `customInterface` option used
+  customInterfacePackage="Rider.Plugins.MonoGame.Mgcb.Language.Parsing.Tree";
+// Any role used in this file that begins with this prefix must be defined in `ChildRole`
+  publicChildRolePrefix="Mgcb_";
+// Namespace and suffix for custom element instance implementation created by
+// node type when `customImpl` option is specified.
+// Default suffix is `Impl`
+  customImplPackage="Rider.Plugins.MonoGame.Mgcb.Language.Parsing.Tree.Impl";
+  "customImplSuffix"="";
+// Required on. Changes behaviour of various things, e.g. public child role values based on prefix
+  disableReflection;
+// Required. If missing, generates Add/Remove methods for each collection
+  generateWorkingPsi;
+}
+
+mgcbFile
+options {
+  stubBase="MgcbFileElement";
+}
+:
+ (item)*
+;
+
+private item
+:
+  option
+  | set_instruction
+  | if_instruction
+  | COMMENT
+  | WHITE_SPACE
+;
+
+option
+:
+  OPTION_KEY OPTION_SEPARATOR OPTION_VALUE
+  | OPTION_KEY OPTION_SEPARATOR
+  | OPTION_KEY
+;
+
+set_instruction
+:
+  SET_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER EQ PREPROCESSOR_VALUE
+  | SET_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER
+;
+
+if_instruction
+:
+  IF_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER EQ PREPROCESSOR_VALUE WHITE_SPACE item* ENDIF_KEYWORD
+  | IF_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER WHITE_SPACE item* ENDIF_KEYWORD
+;

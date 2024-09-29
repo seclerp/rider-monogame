@@ -2,7 +2,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ProjectModel.NuGet.DotNetTools;
 
-namespace Rider.Plugins.MonoGame.Mgcb;
+namespace Rider.Plugins.MonoGame.Mgcb.Tools;
 
 public static class MgcbEditorCommandNameResolver
 {

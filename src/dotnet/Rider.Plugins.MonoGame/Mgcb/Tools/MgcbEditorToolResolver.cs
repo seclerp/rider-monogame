@@ -6,7 +6,7 @@ using JetBrains.ProjectModel.NuGet.DotNetTools;
 using NuGet.Versioning;
 using Rider.Plugins.MonoGame.Extensions;
 
-namespace Rider.Plugins.MonoGame.Mgcb;
+namespace Rider.Plugins.MonoGame.Mgcb.Tools;
 
 public static class MgcbEditorToolResolver
 {
