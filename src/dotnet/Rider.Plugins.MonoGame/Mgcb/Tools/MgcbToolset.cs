@@ -1,6 +1,6 @@
 using JetBrains.DataFlow;
 
-namespace Rider.Plugins.MonoGame.Mgcb;
+namespace Rider.Plugins.MonoGame.Mgcb.Tools;
 
 public class MgcbToolset<TTool> where TTool : class
 {

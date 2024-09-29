@@ -10,7 +10,7 @@ using JetBrains.ProjectModel.NuGet.DotNetTools;
 using JetBrains.Util;
 using Rider.Plugins.MonoGame.Extensions;
 
-namespace Rider.Plugins.MonoGame.Mgcb;
+namespace Rider.Plugins.MonoGame.Mgcb.Tools;
 
 /// <summary>
 /// MonoGame MGCB tools aka mgcb-editor could be installed in different places:<br/>

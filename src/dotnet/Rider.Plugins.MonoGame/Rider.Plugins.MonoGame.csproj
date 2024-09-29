@@ -21,6 +21,14 @@
     <PackageReference Include="JetBrains.Psi.Features.Core" />
     <PackageReference Include="JetBrains.Rider.RdBackend.Common" />
   </ItemGroup>
+  
+  <ItemGroup Label="MgcbLanguage">
+    <PsiLanguageNames Include="Mgcb">
+      <Visible>False</Visible>
+    </PsiLanguageNames>
+    <CsLex Include="Mgcb/Language/Mgcb.lex" />
+    <ParserGen Include="Mgcb/Language/Mgcb.psi" />
+  </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 

@@ -41,6 +41,9 @@
     <fileType name="MonoGame Content Pipeline File" implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbFileType"
               fieldName="Instance" language="MGCB" extensions="mgcb"/>
 
+    <fileType name="MonoGame Content Pipeline File (ReSharper)" implementationClass="me.seclerp.rider.plugins.monogame.mgcb.resharper.MgcbReSharperFileType"
+              fieldName="Instance" language="MgcbReSharper" extensions="mgcb2"/>
+
     <fileType name="MonoGame Effect File" implementationClass="me.seclerp.rider.plugins.monogame.effect.EffectFileType"
               fieldName="Instance" language="TEXT" extensions="fx"/>
 
@@ -58,6 +61,7 @@
     <fileEditorProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbEditorProvider" />
 
     <internalFileTemplate name="Content Builder File" />
+    <internalFileTemplate name="Content Builder File (ReSharper)" />
     <internalFileTemplate name="Effect File" />
     <internalFileTemplate name="Sprite Effect File" />
     <internalFileTemplate name="SpriteFont File" />

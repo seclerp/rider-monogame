@@ -1,4 +1,4 @@
-namespace Rider.Plugins.MonoGame.Mgcb;
+namespace Rider.Plugins.MonoGame.Mgcb.Tools;
 
 public class KnownDotNetToolsCommands
 {
