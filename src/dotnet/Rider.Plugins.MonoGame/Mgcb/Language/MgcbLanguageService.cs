@@ -29,7 +29,7 @@ public class MgcbLanguageService : LanguageService
 
     public override IParser CreateParser(ILexer lexer, IPsiModule module, IPsiSourceFile sourceFile)
     {
-        return new MgcbParser();
+        return new MgcbParser(lexer);
     }
 
     public override IEnumerable<ITypeDeclaration> FindTypeDeclarations(IFile file)

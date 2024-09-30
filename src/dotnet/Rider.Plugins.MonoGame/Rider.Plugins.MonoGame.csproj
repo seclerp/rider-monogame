@@ -1,10 +1,8 @@
-﻿<Project>
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <LanguageTargets>$(MSBuildToolsPath)\Microsoft.CSharp.targets</LanguageTargets>
   </PropertyGroup>
-
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
@@ -15,11 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Platform.Core.Ide" />
-    <PackageReference Include="JetBrains.Platform.Core.Text" />
-    <PackageReference Include="JetBrains.Platform.Core.Shell" />
-    <PackageReference Include="JetBrains.Psi.Features.Core" />
-    <PackageReference Include="JetBrains.Rider.RdBackend.Common" />
+    <PackageReference Include="JetBrains.Platform.Core.Ide" PrivateAssets="all" />
+    <PackageReference Include="JetBrains.Platform.Core.Text" PrivateAssets="all" />
+    <PackageReference Include="JetBrains.Platform.Core.Shell" PrivateAssets="all" />
+    <PackageReference Include="JetBrains.Psi.Features.Core" PrivateAssets="all" />
+    <PackageReference Include="JetBrains.Rider.RdBackend.Common" PrivateAssets="all" />
   </ItemGroup>
   
   <ItemGroup Label="MgcbLanguage">
@@ -30,6 +28,10 @@
     <ParserGen Include="Mgcb/Language/Mgcb.psi" />
   </ItemGroup>
 
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>Rider.Plugins.MonoGame.UnitTests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
 
 </Project>

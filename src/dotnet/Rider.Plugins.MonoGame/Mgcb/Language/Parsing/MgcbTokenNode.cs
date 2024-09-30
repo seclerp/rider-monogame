@@ -21,4 +21,9 @@ public class MgcbTokenNode(string text, MgcbTokenType type) : LeafElementBase, I
     public override NodeType NodeType => type;
     public override PsiLanguageType Language => MgcbLanguage.Instance;
     public TokenNodeType GetTokenType() => type;
+
+    public override string ToString()
+    {
+        return $"({type}, '{text}')";
+    }
 }
