@@ -21,4 +21,9 @@ public class MgcbTokenType(string representation, int index) : TokenNodeType(rep
     public override bool IsKeyword => false;
 
     public override string TokenRepresentation => representation;
+
+    public override string ToString()
+    {
+        return $"{representation}";
+    }
 }

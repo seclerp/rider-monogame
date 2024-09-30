@@ -2,7 +2,7 @@
 
 namespace Rider.Plugins.MonoGame.Mgcb.Language.Parsing;
 
-internal record struct TokenPosition<TTokenType>(
+public record struct TokenPosition<TTokenType>(
     TTokenType CurrentTokenType,
     int YyBufferIndex,
     int YyBufferStart,
