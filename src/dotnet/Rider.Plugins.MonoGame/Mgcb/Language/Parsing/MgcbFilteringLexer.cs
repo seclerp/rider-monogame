@@ -8,6 +8,6 @@ public class MgcbFilteringLexer([NotNull] ILexer lexer) : FilteringLexer(lexer)
     // TODO: Revisit after splitting WHITESPACE and NEWLINE tokens, as NEWLINE are very important for parsing
     protected override bool Skip(TokenNodeType tokenType)
     {
-        return tokenType.IsComment;
+        return false;
     }
 }

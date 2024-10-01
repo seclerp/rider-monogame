@@ -21,7 +21,7 @@
   </ItemGroup>
   
   <ItemGroup Label="MgcbLanguage">
-    <PsiLanguageNames Include="Mgcb">
+    <PsiLanguageNames Include="MgcbReSharper">
       <Visible>False</Visible>
     </PsiLanguageNames>
     <CsLex Include="Mgcb/Language/Mgcb.lex" />

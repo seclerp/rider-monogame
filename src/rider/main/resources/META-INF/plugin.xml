@@ -52,11 +52,22 @@
 
     <lang.parserDefinition language="MGCB"
                            implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbParserDefinition"/>
+
+    <lang.parserDefinition language="MgcbReSharper" implementationClass="me.seclerp.rider.plugins.monogame.mgcb.resharper.MgcbReSharperParserDefinition" />
+
     <lang.syntaxHighlighterFactory language="MGCB"
                                    implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbSyntaxHighlighterFactory"/>
+
+    <lang.syntaxHighlighterFactory language="MgcbReSharper"
+                                   implementationClass="me.seclerp.rider.plugins.monogame.mgcb.resharper.MgcbReSharperSyntaxHighlighterProvider" />
+
     <colorSettingsPage implementation="me.seclerp.rider.plugins.monogame.mgcb.settings.MgcbColorSettingsPage"/>
     <completion.contributor language="MGCB"
                             implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbCompletionContributor"/>
+
+    <backend.markup.adapterFactory language="MgcbReSharper" implementationClass="com.jetbrains.rdclient.daemon.FrontendMarkupAdapterFactory" />
+    <backend.actions.support language="MgcbReSharper" implementationClass="com.jetbrains.rider.actions.RiderActionSupportPolicy" />
+    <backend.autoPopup.support language="MgcbReSharper" implementationClass="com.jetbrains.rider.completion.BackendAndGenericRider" />
 
     <fileEditorProvider implementation="me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbEditorProvider" />
 
