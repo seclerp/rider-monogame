@@ -1,7 +1,6 @@
 package me.seclerp.rider.plugins.monogame.mgcb.resharper
 
 import com.jetbrains.rider.ideaInterop.fileTypes.RiderLanguageBase
-import me.seclerp.rider.plugins.monogame.mgcb.MgcbLanguage
 
 class MgcbReSharperLanguage : RiderLanguageBase("MgcbReSharper", "MgcbReSharper") {
     override fun isCaseSensitive(): Boolean = true
@@ -10,3 +9,4 @@ class MgcbReSharperLanguage : RiderLanguageBase("MgcbReSharper", "MgcbReSharper"
         val Instance = MgcbReSharperLanguage()
     }
 }
+
