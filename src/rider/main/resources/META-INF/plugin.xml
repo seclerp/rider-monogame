@@ -84,6 +84,9 @@
                          key="settings.mgcb.display.name"/>
 
     <xml.schemaProvider implementation="me.seclerp.rider.plugins.monogame.spritefont.SpriteFontXmlSchemaProvider"/>
+
+    <projectTemplateCustomizer implementation="me.seclerp.rider.plugins.monogame.templates.MonoGameProjectTemplateCustomizer"/>
+
   </extensions>
 
   <projectListeners>
