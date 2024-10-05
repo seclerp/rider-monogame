@@ -33,5 +33,7 @@ class MonoGameTemplateType : PredefinedProjectTemplateType() {
             )
 
             override fun getType(template: RdProjectTemplate) = template.name
+                .removePrefix("MonoGame ")
+                .replace("Application", "App")
         }
 }
