@@ -34,7 +34,7 @@ options
 // Namespace for generating custom interface when `customInterface` option used
   customInterfacePackage="Rider.Plugins.MonoGame.Mgcb.Language.Parsing.Tree";
 // Any role used in this file that begins with this prefix must be defined in `ChildRole`
-  publicChildRolePrefix="Mgcb_";
+  publicChildRolePrefix="MGCB_";
 // Namespace and suffix for custom element instance implementation created by
 // node type when `customImpl` option is specified.
 // Default suffix is `Impl`
@@ -75,6 +75,6 @@ errorhandling set_instruction
 
 errorhandling if_instruction
 :
-  IF_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER EQ PREPROCESSOR_VALUE WHITE_SPACE? NEW_LINE? (LIST (WHITE_SPACE? item? WHITE_SPACE?) SEP NEW_LINE)? NEW_LINE? ENDIF_KEYWORD
-  | IF_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER WHITE_SPACE? NEW_LINE? (LIST (WHITE_SPACE? item? WHITE_SPACE?) SEP NEW_LINE)? NEW_LINE? ENDIF_KEYWORD
+  IF_KEYWORD<MGCB_IF_KEYWORD, IfKeyword> WHITE_SPACE PREPROCESSOR_IDENTIFIER<MGCB_IDENTIFIER, Identifier> EQ PREPROCESSOR_VALUE<MGCB_VALUE, Value> WHITE_SPACE? NEW_LINE? (LIST (WHITE_SPACE? item? WHITE_SPACE?) SEP NEW_LINE)? NEW_LINE? ENDIF_KEYWORD<MGCB_ENDIF_KEYWORD, EndIfKeyword>
+  | IF_KEYWORD<MGCB_IF_KEYWORD, IfKeyword> WHITE_SPACE PREPROCESSOR_IDENTIFIER<MGCB_IDENTIFIER, Identifier> WHITE_SPACE? NEW_LINE? (LIST (WHITE_SPACE? item? WHITE_SPACE?) SEP NEW_LINE)? NEW_LINE? ENDIF_KEYWORD<MGCB_ENDIF_KEYWORD, EndIfKeyword>
 ;
