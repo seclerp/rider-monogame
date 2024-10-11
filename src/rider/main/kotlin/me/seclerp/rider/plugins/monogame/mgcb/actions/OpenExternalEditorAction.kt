@@ -5,19 +5,20 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.SystemInfo
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.backend.workspace.workspaceModel
 import com.jetbrains.rider.model.RdProjectDescriptor
-import me.seclerp.rider.extensions.commandLine.CommandBuilder
-import me.seclerp.rider.extensions.commandLine.DefaultCommandExecutor
-import me.seclerp.rider.extensions.commandLine.buildCommand
-import me.seclerp.rider.extensions.commandLine.buildDotnetCommand
+import com.jetbrains.rider.model.dotNetActiveRuntimeModel
+import com.jetbrains.rider.projectView.solution
+import me.seclerp.rider.extensions.commandLine.*
 import me.seclerp.rider.extensions.workspaceModel.containingProjectDirectory
 import me.seclerp.rider.extensions.workspaceModel.containingProjectEntity
 import me.seclerp.rider.plugins.monogame.MonoGameIcons
 import me.seclerp.rider.plugins.monogame.MonoGameUiBundle
 import me.seclerp.rider.plugins.monogame.mgcb.toolset.MgcbResolvedTool
 import me.seclerp.rider.plugins.monogame.mgcb.toolset.MgcbToolsetHost
+import me.seclerp.rider.plugins.monogame.notifications.Notifications
 
 @Suppress("DialogTitleCapitalization", "UnstableApiUsage")
 class OpenExternalEditorAction : AnAction(MonoGameIcons.MgcbFile) {
@@ -63,9 +64,24 @@ class OpenExternalEditorAction : AnAction(MonoGameIcons.MgcbFile) {
             param(contentFile.path)
         }
 
+        fun getToolset(): DotNetToolset {
+            return when {
+                // MGCB Editor doesn't work on Apple Silicon
+                SystemInfo.isMac && SystemInfo.isAarch64 -> {
+                    if (intellijProject.solution.dotNetActiveRuntimeModel.activeRuntime.valueOrNull?.nonNativeDotNetCliExePaths?.x64.isNullOrEmpty()) {
+                        Notifications.notifyX64ToolsetRequired(intellijProject)
+                        DotNetToolset.NATIVE
+                    } else {
+                        DotNetToolset.X64
+                    }
+                }
+                else -> DotNetToolset.NATIVE
+            }
+        }
+
         val command =
             when (editorTool) {
-                is MgcbResolvedTool.Local -> buildDotnetCommand(intellijProject, editorTool.definition.commandName) { configureEditorCommand() }
+                is MgcbResolvedTool.Local -> buildDotnetCommand(intellijProject, editorTool.definition.commandName, toolset = getToolset()) { configureEditorCommand() }
                 is MgcbResolvedTool.Global -> buildCommand(editorTool.definition.commandName) { configureEditorCommand() }
                 is MgcbResolvedTool.None -> null
             }

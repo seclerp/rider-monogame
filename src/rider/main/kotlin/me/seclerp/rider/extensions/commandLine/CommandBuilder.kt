@@ -61,11 +61,10 @@ open class CommandBuilder(vararg baseCommands: @NonNls String) {
     fun build(): GeneralCommandLine = generalCommandLine
 }
 
-fun buildDotnetCommand(project: Project, vararg baseCommands: @NonNls String, builder: CommandBuilder.() -> Unit = {}) =
+fun buildDotnetCommand(project: Project, vararg baseCommands: @NonNls String, toolset: DotNetToolset = DotNetToolset.NATIVE, builder: CommandBuilder.() -> Unit = {}) =
     CommandBuilder(*baseCommands)
         .apply {
-            val activeToolset = project.solution.dotNetActiveRuntimeModel.activeRuntime.valueOrNull
-            executable(activeToolset?.dotNetCliExePath ?: throw Exception(".NET / .NET Core is not configured, unable to run commands."))
+            executable(toolset.resolveExecutable(project) ?: throw Exception(".NET / .NET Core is not configured, unable to run commands."))
             workingDirectory(project.solutionDirectoryPath.toString())
             environment("DOTNET_SKIP_FIRST_TIME_EXPERIENCE", "true")
             environment("DOTNET_NOLOGO", "true")
