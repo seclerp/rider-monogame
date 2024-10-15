@@ -26,12 +26,35 @@
     </PsiLanguageNames>
     <CsLex Include="Mgcb/Language/Mgcb.lex" />
     <ParserGen Include="Mgcb/Language/Mgcb.psi" />
+    <ErrorsGen Include="Mgcb/Language/Feature/Daemon/Errors/MgcbErrors.xml">
+      <Namespace>Rider.Plugins.MonoGame.Mgcb.Language.Feature.Daemon.Errors</Namespace>
+      <OutputFile>Mgcb/Language/Feature/Daemon/Errors/MgcbErrors.Generated.cs</OutputFile>
+      <Mode>ERRORS</Mode>
+    </ErrorsGen>
+    <Compile Update="Mgcb\Language\Feature\Daemon\Errors\MgcbErrors.Generated.cs">
+      <DependentUpon>MgcbErrors.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
       <_Parameter1>Rider.Plugins.MonoGame.UnitTests</_Parameter1>
     </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
 
 </Project>
