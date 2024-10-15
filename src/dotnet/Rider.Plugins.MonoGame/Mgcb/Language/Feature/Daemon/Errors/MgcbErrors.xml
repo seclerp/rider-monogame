@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Errors language="C#" configurableSeverityImplementationLanguage="MgcbReSharper" baseClass="MgcbHighlightingBase">
+    <Usings>
+        Rider.Plugins.MonoGame.Mgcb.Language.Parsing.Tree;
+        Strings = Rider.Plugins.MonoGame.Resources.Strings;
+    </Usings>
+
+    <StaticSeverityGroups>
+        <Group name="MGCB Errors" key="MgcbErrors" />
+        <Group name="MGCB Warnings" key="MgcbWarnings" />
+    </StaticSeverityGroups>
+
+    <Error name="MgcbSyntax" staticGroup="MgcbErrors">
+        <Parameter type="string" name="text" />
+        <Parameter type="DocumentRange" name="documentRange" />
+        <Message resourceName="Message" resourceType="Strings">
+            <Argument>Text</Argument>
+        </Message>
+        <Range>DocumentRange</Range>
+        <Behavour attributeID="ERROR" overlapResolvePolicy="ERROR" />
+    </Error>
+</Errors>
