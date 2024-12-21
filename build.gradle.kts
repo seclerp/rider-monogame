@@ -83,6 +83,7 @@ sourceSets {
 dependencies {
     intellijPlatform {
         rider(productVersion, useInstaller = false)
+        bundledModule("intellij.rider")
         jetbrainsRuntime()
 
         instrumentationTools()
