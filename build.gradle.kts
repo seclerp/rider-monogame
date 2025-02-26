@@ -25,7 +25,7 @@ repositories {
 plugins {
     id("me.filippov.gradle.jvm.wrapper")
     // https://plugins.gradle.org/plugin/org.jetbrains.changelog
-    id("org.jetbrains.changelog") version "2.2.0"
+    id("org.jetbrains.changelog") version "2.2.1"
     // https://plugins.gradle.org/plugin/org.jetbrains.intellij.platform
     id("org.jetbrains.intellij.platform")
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
@@ -128,7 +128,7 @@ tasks {
     }
 
     wrapper {
-        gradleVersion = "8.3"
+        gradleVersion = "8.11"
         distributionType = Wrapper.DistributionType.ALL
         distributionUrl = "https://cache-redirector.jetbrains.com/services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
     }
@@ -228,14 +228,14 @@ tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         dependsOn(":protocol:rdgen", generateLexer, generateParser)
         kotlinOptions {
-            jvmTarget = "17"
+            jvmTarget = "21"
             freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
         }
     }
 
     patchPluginXml {
-        sinceBuild.set("243.0")
-        untilBuild.set("243.*")
+        sinceBuild.set("251.0")
+        untilBuild.set("251.*")
         val latestChangelog = try {
             changelog.getUnreleased()
         } catch (_: MissingVersionException) {

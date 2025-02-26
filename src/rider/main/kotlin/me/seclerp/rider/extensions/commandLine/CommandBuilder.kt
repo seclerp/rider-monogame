@@ -5,8 +5,8 @@ import com.intellij.openapi.project.Project
 import com.jetbrains.rider.model.dotNetActiveRuntimeModel
 import com.jetbrains.rider.projectView.solution
 import com.jetbrains.rider.projectView.solutionDirectoryPath
-import com.jetbrains.rider.run.FormatPreservingCommandLine
-import com.jetbrains.rider.run.withRawParameters
+import com.jetbrains.rider.shared.run.FormatPreservingCommandLine
+import com.jetbrains.rider.shared.run.withRawParameters
 import org.jetbrains.annotations.NonNls
 import java.nio.charset.Charset
 
