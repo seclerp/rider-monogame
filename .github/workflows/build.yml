@@ -90,7 +90,7 @@ jobs:
           tree ${{ env.ARTIFACTS_FOLDER }}
 
       - name: 📦 Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: plugin-artifacts-${{ matrix.os }}
           path: ${{ env.ARTIFACTS_FOLDER }}/
