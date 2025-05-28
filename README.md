@@ -63,8 +63,6 @@ Easily create MonoGame related assets using file templates under Add menu
 
 #### Using marketplace:
 
-> **For EAP users**: you should add `https://plugins.jetbrains.com/plugins/eap/list` to your plugin repositories list before installing
-
 1. Go to `Settings` / `Plugins` / `Marketplace`
 1. Search for "MonoGame"
 1. Click `Install`, then `Save`
@@ -85,7 +83,7 @@ Additional file templates are located under <kbd>Add</kbd> section of a folder o
 
 ### Requirements
 
-- JetBrains Rider **2022.3+**
+- JetBrains Rider **2025.1+**
 
 - Project with MonoGame installed (**3.8+ is recommended**)  
 
@@ -93,7 +91,7 @@ Additional file templates are located under <kbd>Add</kbd> section of a folder o
 
 ### Development
 
-> **Note**: You should have JDK 11 and .NET SDK 5.0+ installed and configured.
+> **Note**: You should have JDK 21 and .NET SDK 8.0+ installed and configured.
 
 #### Preparing
 
@@ -101,14 +99,7 @@ Additional file templates are located under <kbd>Add</kbd> section of a folder o
 
 #### Building plugin parts
 
-- for stable version of Rider:
-
-  `./gradlew buildPlugin`
-
-
-- for EAP version of Rider:
-
-  `./gradlew buildPlugin -PRiderSdkVersion=2022.3.0-eap01 -PProductVersion=2022.3-EAP1-SNAPSHOT`
+`./gradlew buildPlugin`
 
 It will build both frontend and backend parts.
 
@@ -130,7 +121,7 @@ This project uses customized git strategy.
 
 Each `release/*` branch plays main development branch role for specific release.
 
-For example, `release/222` means that branch is related to `222.*` release cycle for `2022.2` Rider version.
+For example, `release/251` means that branch is related to `251.*` release cycle for `2025.1` Rider version.
 
 ### See also
 
