@@ -5,9 +5,5 @@ using JetBrains.ReSharper.Psi.Impl;
 
 namespace Rider.Plugins.MonoGame.Mgcb.Language;
 
-public class MgcbFileProperties : DefaultPsiProjectFileProperties
-{
-    public MgcbFileProperties([NotNull] IProjectFile projectFile, [NotNull] IPsiSourceFile sourceFile) : base(projectFile, sourceFile)
-    {
-    }
-}
+public class MgcbFileProperties([NotNull] IProjectFile projectFile, [NotNull] IPsiSourceFile sourceFile)
+    : DefaultPsiProjectFileProperties(projectFile, sourceFile);

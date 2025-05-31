@@ -7,15 +7,11 @@ using JetBrains.Util;
 
 namespace Rider.Plugins.MonoGame.Mgcb.Tools;
 
-public class ProjectDotnetToolsTracker : NuGetDotnetToolsTrackerBase
-{
-    public ProjectDotnetToolsTracker(
-        Lifetime lifetime,
-        IProject project,
-        IFileSystemTracker fileSystemTracker,
-        IShellLocks locks,
-        ILogger logger,
-        ISolutionToolset solutionToolset) : base(lifetime, project.Location, fileSystemTracker, locks, logger, solutionToolset)
-    {
-    }
-}
+public class ProjectDotnetToolsTracker(
+    Lifetime lifetime,
+    IProject project,
+    IFileSystemTracker fileSystemTracker,
+    IShellLocks locks,
+    ILogger logger,
+    ISolutionToolset solutionToolset)
+    : NuGetDotnetToolsTrackerBase(lifetime, project.Location, fileSystemTracker, locks, logger, solutionToolset);

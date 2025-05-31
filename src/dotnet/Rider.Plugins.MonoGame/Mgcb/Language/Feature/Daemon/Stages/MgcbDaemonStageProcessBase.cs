@@ -6,18 +6,11 @@ using Rider.Plugins.MonoGame.Mgcb.Language.Parsing.Tree;
 
 namespace Rider.Plugins.MonoGame.Mgcb.Language.Feature.Daemon.Stages;
 
-public abstract class MgcbDaemonStageProcessBase : TreeNodeVisitor<IHighlightingConsumer>,
-    IRecursiveElementProcessor<IHighlightingConsumer>, IDaemonStageProcess
+public abstract class MgcbDaemonStageProcessBase(IDaemonProcess process, IMgcbFile file)
+    : TreeNodeVisitor<IHighlightingConsumer>,
+        IRecursiveElementProcessor<IHighlightingConsumer>, IDaemonStageProcess
 {
-    private readonly IMgcbFile myFile;
-
-    public IDaemonProcess DaemonProcess { get; }
-
-    protected MgcbDaemonStageProcessBase(IDaemonProcess process, IMgcbFile file)
-    {
-        DaemonProcess = process;
-        myFile = file;
-    }
+    public IDaemonProcess DaemonProcess { get; } = process;
 
     public bool IsProcessingFinished(IHighlightingConsumer context)
     {
@@ -51,8 +44,8 @@ public abstract class MgcbDaemonStageProcessBase : TreeNodeVisitor<IHighlighting
     private void HighlightInFile(Action<IMgcbFile, IHighlightingConsumer> fileHighlighter,
         Action<DaemonStageResult> commiter)
     {
-        var consumer = new FilteringHighlightingConsumer(DaemonProcess.SourceFile, myFile, DaemonProcess.ContextBoundSettingsStore);
-        fileHighlighter(myFile, consumer);
+        var consumer = new FilteringHighlightingConsumer(DaemonProcess.SourceFile, file, DaemonProcess.ContextBoundSettingsStore);
+        fileHighlighter(file, consumer);
         commiter(new DaemonStageResult(consumer.CollectHighlightings()));
     }
 }

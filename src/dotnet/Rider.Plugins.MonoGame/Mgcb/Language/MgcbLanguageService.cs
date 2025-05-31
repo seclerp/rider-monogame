@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
+using JetBrains.Application.Components;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Caches2;
 using JetBrains.ReSharper.Psi.Impl;
@@ -11,13 +12,11 @@ using Rider.Plugins.MonoGame.Mgcb.Language.Parsing;
 namespace Rider.Plugins.MonoGame.Mgcb.Language;
 
 [Language(typeof(MgcbLanguage))]
-public class MgcbLanguageService : LanguageService
+public class MgcbLanguageService(
+    [NotNull] MgcbLanguage psiLanguageType,
+    [NotNull] ILazy<IConstantValueService> constantValueService)
+    : LanguageService(psiLanguageType, constantValueService)
 {
-    public MgcbLanguageService([NotNull] MgcbLanguage psiLanguageType, [NotNull] IConstantValueService constantValueService) 
-        : base(psiLanguageType, constantValueService)
-    {
-    }
-
     public override ILexerFactory GetPrimaryLexerFactory() => new MgcbLexerFactory();
 
     public override ILexer CreateFilteringLexer(ILexer lexer) => new MgcbFilteringLexer(lexer);

@@ -34,7 +34,7 @@ namespace Rider.Plugins.MonoGame.Mgcb.Language.Feature.Daemon.Errors
   #region MgcbSyntaxError
 
   [StaticSeverityHighlighting(Severity.ERROR, typeof(MgcbErrors), Languages = "MgcbReSharper", AttributeId = AnalysisHighlightingAttributeIds.ERROR, OverlapResolve = OverlapResolveKind.ERROR, ToolTipFormatStringResourceType = typeof(Strings), ToolTipFormatStringResourceName = nameof(Strings.Message))]
-  public sealed partial class MgcbSyntaxError : MgcbHighlightingBase, IHighlighting
+  public sealed partial class MgcbSyntaxError : MgcbHighlightingBase, IHighlighting, IHighlightingWithFormatArguments
   {
     private readonly string MESSAGE = Strings.Message;
 
@@ -42,7 +42,9 @@ namespace Rider.Plugins.MonoGame.Mgcb.Language.Feature.Daemon.Errors
     {
       Text = text;
       DocumentRange = documentRange;
-      ToolTip = string.Format(MESSAGE, Text);
+      var __formatArgument = Text;
+      ToolTip = string.Format(MESSAGE, __formatArgument);
+      FormatArguments = JetBrains.ReSharper.Feature.Services.Daemon.HighlightingToolTipHelper.TrivializeFormatArgument(__formatArgument);
     }
 
     public string Text { get; }
@@ -50,6 +52,7 @@ namespace Rider.Plugins.MonoGame.Mgcb.Language.Feature.Daemon.Errors
 
     public /*Localized*/ string ToolTip { get; }
     public /*Localized*/ string ErrorStripeToolTip => ToolTip;
+    public object FormatArguments { get; }
 
     public DocumentRange CalculateRange()
     {
