@@ -15,7 +15,7 @@
       ]
     },
     "dotnet-mgcb-editor-linux": {
-      "version": "3.8.1.303",
+      "version": "3.8.4",
       "commands": [
         "mgcb-editor-linux"
       ]
