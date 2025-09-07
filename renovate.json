@@ -9,6 +9,7 @@
         "dotnet-mgcb-editor",
         "dotnet-mgcb-editor-mac",
         "dotnet-mgcb-editor-windows",
+        "dotnet-mgcb-editor-linux",
         "dotnet-mgcb"
       ]
     }
