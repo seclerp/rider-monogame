@@ -21,7 +21,7 @@
       ]
     },
     "dotnet-mgcb-editor-windows": {
-      "version": "3.8.1.303",
+      "version": "3.8.4",
       "commands": [
         "mgcb-editor-windows"
       ]
