@@ -25,7 +25,7 @@ repositories {
 plugins {
     id("me.filippov.gradle.jvm.wrapper")
     // https://plugins.gradle.org/plugin/org.jetbrains.changelog
-    id("org.jetbrains.changelog") version "2.2.1"
+    id("org.jetbrains.changelog") version "2.4.0"
     // https://plugins.gradle.org/plugin/org.jetbrains.intellij.platform
     id("org.jetbrains.intellij.platform")
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
