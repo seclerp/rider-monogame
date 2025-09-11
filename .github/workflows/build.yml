@@ -15,7 +15,7 @@ jobs:
         os: [ windows-latest, macos-latest, ubuntu-latest ]
     steps:
       - name: 📝 Fetch Sources
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 🛠 Import environment
         uses: ./.github/workflows/environment
