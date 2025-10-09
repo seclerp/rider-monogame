@@ -43,7 +43,7 @@ jvmWrapper {
 }
 
 dependencies {
-    testImplementation("org.testng:testng:7.7.0")
+    testImplementation("org.testng:testng:7.11.0")
 }
 
 val riderPluginId: String by project
