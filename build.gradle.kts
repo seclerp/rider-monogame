@@ -2,9 +2,11 @@
 
 import com.jetbrains.plugin.structure.base.utils.isFile
 import com.jetbrains.plugin.structure.base.utils.listFiles
+import org.gradle.kotlin.dsl.support.serviceOf
 import org.jetbrains.changelog.exceptions.MissingVersionException
 import org.jetbrains.intellij.platform.gradle.Constants
 import org.jetbrains.intellij.platform.gradle.tasks.PrepareSandboxTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import kotlin.collections.*
 import kotlin.io.path.absolute
 import kotlin.io.path.isDirectory
@@ -21,6 +23,8 @@ repositories {
         jetbrainsRuntime()
     }
 }
+
+val grammarKitMissingDependencies by configurations.creating
 
 plugins {
     id("me.filippov.gradle.jvm.wrapper")
@@ -90,12 +94,17 @@ sourceSets {
 
 dependencies {
     intellijPlatform {
-        rider(productVersion, useInstaller = false)
+        rider(productVersion) {
+            useInstaller = false
+        }
         bundledModule("intellij.rider")
         jetbrainsRuntime()
-
-        instrumentationTools()
     }
+
+    // Workaround for https://youtrack.jetbrains.com/issue/IJPL-217565/it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap-in-253.x
+    grammarKitMissingDependencies("it.unimi.dsi:fastutil:8.5.15")
+    grammarKitMissingDependencies("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0")
+    grammarKitMissingDependencies("org.jetbrains.intellij.deps:asm-all:9.6.1")
 }
 
 grammarKit {
@@ -128,6 +137,8 @@ tasks {
     }
 
     generateParser {
+        classpath += files(grammarKitMissingDependencies)
+
         sourceFile.set(file("src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/mgcb/Mgcb.bnf"))
         targetRootOutputDir.set(file("src/rider/gen"))
         pathToParser.set("/parser/MgcbParser.java")
@@ -210,7 +221,7 @@ tasks {
     val compileDotNet by registering {
         dependsOn(":protocol:rdgen", generateNuGetConfig, generateSdkPackagesVersionsLock)
         doLast {
-            exec {
+            serviceOf<ExecOperations>().exec {
                 workingDir(dotNetSrcDir)
                 executable("dotnet")
                 args("build", "-c", buildConfiguration)
@@ -224,7 +235,7 @@ tasks {
             val testsDir = dotNetSrcDir.resolve("Tests")
             testsDir.list { entry, name -> entry.isDirectory && name != ".DS_Store" }
                 ?.forEach {
-                    exec {
+                    serviceOf<ExecOperations>().exec {
                         workingDir(testsDir.absolutePath)
                         executable("dotnet")
                         args("test", "-c", buildConfiguration, it)
@@ -235,15 +246,16 @@ tasks {
 
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         dependsOn(":protocol:rdgen", generateLexer, generateParser)
-        kotlinOptions {
-            jvmTarget = "21"
-            freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
+        kotlin {
+            compilerOptions {
+                jvmTarget = JvmTarget.JVM_21
+                freeCompilerArgs.add("-Xopt-in=kotlin.RequiresOptIn")
+            }
         }
     }
 
     patchPluginXml {
-        sinceBuild.set("252.0")
-        untilBuild.set("252.*")
+        sinceBuild.set("253.0")
         val latestChangelog = try {
             changelog.getUnreleased()
         } catch (_: MissingVersionException) {
