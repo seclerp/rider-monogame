@@ -9,5 +9,8 @@ internal object MonoGameTemplateMetadata {
         const val GAME_LIB = "Game Library"
         const val CONTENT_PIPELINE_EXTENSION = "Content Pipeline Extension"
         const val SHARED_LIB = "Shared Library Project"
+        const val CONTENT_BUILDER = "Content Builder"
+        const val _2D_START_KIT = "2D StartKit"
+        const val BLANK_2D_START_KIT = "Blank 2D StartKit"
     }
 }
