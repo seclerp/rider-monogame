@@ -102,7 +102,7 @@ dependencies {
     }
 
     // Workaround for https://youtrack.jetbrains.com/issue/IJPL-217565/it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap-in-253.x
-    grammarKitMissingDependencies("it.unimi.dsi:fastutil:8.5.15")
+    grammarKitMissingDependencies("it.unimi.dsi:fastutil:8.5.18")
     grammarKitMissingDependencies("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0")
     grammarKitMissingDependencies("org.jetbrains.intellij.deps:asm-all:9.6.1")
 }
