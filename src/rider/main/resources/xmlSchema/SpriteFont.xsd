@@ -1,35 +1,59 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+        attributeFormDefault="qualified">
+
+    <xs:simpleType name="singleChar">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="fontStyle">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Regular"/>
+            <xs:enumeration value="Bold"/>
+            <xs:enumeration value="Italic"/>
+            <xs:enumeration value="BoldItalic"/>
+            <xs:enumeration value="Bold Italic"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:element name="XnaContent">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="Asset">
                     <xs:complexType mixed="true">
                         <xs:sequence>
-                            <xs:element type="xs:string" name="FontName"/>
-                            <xs:element type="xs:string" name="Size"/>
-                            <xs:element type="xs:string" name="Spacing"/>
-                            <xs:element type="xs:string" name="UseKerning"/>
-                            <xs:element type="xs:string" name="Style"/>
+                            <xs:element name="FontName" type="xs:string"/>
+                            <xs:element name="Size" type="xs:float"/>
+                            <xs:element name="Spacing" type="xs:float"/>
+                            <xs:element name="UseKerning" type="xs:boolean"/>
+                            <xs:element name="Style" type="fontStyle"/>
+                            <xs:element name="DefaultCharacter" type="singleChar" minOccurs="0"/>
                             <xs:element name="CharacterRegions">
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:element name="CharacterRegion">
+                                        <xs:element name="CharacterRegion" maxOccurs="unbounded" minOccurs="1">
                                             <xs:complexType>
                                                 <xs:sequence>
-                                                    <xs:element type="xs:string" name="Start"/>
-                                                    <xs:element type="xs:string" name="End"/>
+                                                    <xs:element name="Start" type="singleChar"/>
+                                                    <xs:element name="End" type="singleChar"/>
                                                 </xs:sequence>
                                             </xs:complexType>
                                         </xs:element>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
+
                         </xs:sequence>
-                        <xs:attribute type="xs:string" name="Type" use="optional"/>
+                        <xs:attribute name="Type" type="xs:string" use="optional"/>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
 </xs:schema>
