@@ -1,15 +1,20 @@
 package me.seclerp.rider.plugins.monogame.mgcb.previewer.services
 
+import com.intellij.openapi.application.EDT
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.util.IconLoader
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.BuildEntry
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.MgcbModel
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.tree.*
 import me.seclerp.rider.plugins.monogame.substringAfterLast
 import me.seclerp.rider.plugins.monogame.substringBeforeLast
 
-@Service
-class MgcbBuildTreeManager {
+@Service(Service.Level.PROJECT)
+class MgcbBuildTreeManager(private val scope: CoroutineScope) {
     fun createEmpty(): MgcbTree {
         val tree = MgcbTree()
         tree.cellRenderer = MgcbNodeRenderer()
@@ -38,20 +43,24 @@ class MgcbBuildTreeManager {
             .filter { it.first == "" }
             .map { createNodeFrom(it.second, nodeCache) }
 
-        val currentSelection = tree.getSelectedUrl()
-        val currentExpanded = tree.getExpandedUrls()
+        scope.launch {
+            withContext(Dispatchers.EDT) {
+                val currentSelection = tree.getSelectedUrl()
+                val currentExpanded = tree.getExpandedUrls()
 
-        tree.clear()
+                tree.clear()
 
-        for (node in topLevelNodes) {
-            tree.root.add(node)
-        }
+                for (node in topLevelNodes) {
+                    tree.root.add(node)
+                }
 
-        tree.reload()
-        tree.restoreExpandedUrl(currentExpanded)
+                tree.reload()
+                tree.restoreExpandedUrl(currentExpanded)
 
-        if (currentSelection != null) {
-            tree.restoreSelectedUrl(currentSelection)
+                if (currentSelection != null) {
+                    tree.restoreSelectedUrl(currentSelection)
+                }
+            }
         }
     }
 

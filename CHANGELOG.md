@@ -5,6 +5,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [253.2.0] - 2026-01-06
+### Added
+- General: Support for Rider 2025.3.1
+- Templates: Proper icons for new 2D StartKit and Content Builder project templates
+### Changed
+- Spritefont: Actualized the XSD schema for `.spritefont` files according to the latest doc (#67)
+### Fixed
+- MGCB Previewer: Fixed found UI/EDT threading violation issues (#66)
+
 ## [253.1.0] - 2025-11-12
 ### Added
 - General: Support for Rider 2025.3
@@ -85,7 +94,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Open in external MGCB editor action
 - Additional file templates
 
-[Unreleased]: https://github.com/seclerp/rider-monogame/compare/v252.0.0-eap02...v253.1.0
+[Unreleased]: https://github.com/seclerp/rider-monogame/compare/v253.2.0...HEAD
+[253.2.0]: https://github.com/seclerp/rider-monogame/compare/v253.1.0...v253.2.0
 [253.1.0]: https://github.com/seclerp/rider-monogame/compare/v252.0.0-eap02...v253.1.0
 [252.0.0-eap02]: https://github.com/seclerp/rider-monogame/compare/v251.1.0...252.0.0-eap02
 [251.1.0]: https://github.com/seclerp/rider-monogame/compare/v251.0.0-eap05...v251.1.0

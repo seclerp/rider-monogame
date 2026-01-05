@@ -1,5 +1,7 @@
 package me.seclerp.rider.plugins.monogame.mgcb.previewer
 
+import com.intellij.openapi.application.EDT
+import com.intellij.openapi.application.readAction
 import com.intellij.openapi.editor.colors.EditorColors
 import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.fileEditor.FileEditor
@@ -16,6 +18,10 @@ import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
 import com.jetbrains.rider.util.idea.getService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.listeners.MgcbProcessedUpdateListener
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.properties.MgcbProperty
 import me.seclerp.rider.plugins.monogame.mgcb.previewer.properties.MgcbPropertyTableModel
@@ -32,6 +38,7 @@ import javax.swing.JPanel
 class MgcbEditorPreviewer(
     private val project: Project,
     private val currentFile: VirtualFile,
+    private val scope: CoroutineScope
 ) : UserDataHolderBase(), FileEditor {
 
     private val analyzerService = project.getService<MgcbAnalyzer>()
@@ -54,24 +61,30 @@ class MgcbEditorPreviewer(
             }
         }
 
-        val mgcbFile = PsiManager.getInstance(project).findFile(currentFile) as MgcbFile
-        model = analyzerService.analyzeFile(mgcbFile)
+        scope.launch {
+            val mgcbFile = readAction { PsiManager.getInstance(project).findFile(currentFile) as MgcbFile }
+            model = readAction { analyzerService.analyzeFile(mgcbFile) }
 
-        val entriesTree = getBuildEntriesTreePanel()
-        val propertiesPanel = getPropertiesPanel()
+            val entriesTree = getBuildEntriesTreePanel()
+            val propertiesPanel = getPropertiesPanel()
 
-        connection.subscribe(MgcbPreviewerTopics.MGCB_PROCESSED_UPDATE_TOPIC, object : MgcbProcessedUpdateListener {
-            override fun handle(file: VirtualFile, mgcbModel: MgcbModel) {
-                if (file == currentFile) {
-                    applyMgcbModel(mgcbModel)
+            connection.subscribe(MgcbPreviewerTopics.MGCB_PROCESSED_UPDATE_TOPIC, object : MgcbProcessedUpdateListener {
+                override fun handle(file: VirtualFile, mgcbModel: MgcbModel) {
+                    if (file == currentFile) {
+                        applyMgcbModel(mgcbModel)
+                    }
+                }
+            })
+
+            withContext(Dispatchers.EDT) {
+                root.apply {
+                    firstComponent = entriesTree
+                    secondComponent = propertiesPanel
                 }
             }
-        })
-
-        root.apply {
-            firstComponent = entriesTree
-            secondComponent = propertiesPanel
         }
+
+        root
     }
 
     private fun applyMgcbModel(mgcbModel: MgcbModel) {
