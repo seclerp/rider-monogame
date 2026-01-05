@@ -23,7 +23,7 @@ jobs:
           distribution: jetbrains
 
       - name: 📦 Download artifacts
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v12
         with:
           name: plugin-artifacts-ubuntu-latest
           path: ${{ env.ARTIFACTS_FOLDER }}
