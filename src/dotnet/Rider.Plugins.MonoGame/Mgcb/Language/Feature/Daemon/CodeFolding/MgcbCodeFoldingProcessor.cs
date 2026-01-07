@@ -1,5 +1,3 @@
-using System.Diagnostics;
-using System.Threading;
 using JetBrains.ReSharper.Daemon.CodeFolding;
 using JetBrains.ReSharper.Psi.Tree;
 using Rider.Plugins.MonoGame.Mgcb.Language.Parsing.Tree;
@@ -23,10 +21,17 @@ public class MgcbCodeFoldingProcessor : TreeNodeVisitor<FoldingHighlightingConsu
 
     public override void VisitIf_instructionNode(IIf_instruction if_instructionParam, FoldingHighlightingConsumer consumer)
     {
-        var placeholder = if_instructionParam.Value is not null
-            ? $"{if_instructionParam.IfKeyword.GetText()} {if_instructionParam.Identifier.GetText()}={if_instructionParam.Value.GetText()}"
-            : $"{if_instructionParam.IfKeyword.GetText()} {if_instructionParam.Identifier.GetText()}";
+        if (if_instructionParam.IfKeyword is null || if_instructionParam.EndIfKeyword is null)
+            return;
 
+        var placeholder = GetPlaceholder(if_instructionParam);
         consumer.AddFoldingForBracedConstruct(if_instructionParam.IfKeyword, if_instructionParam.EndIfKeyword, if_instructionParam, placeholder: placeholder);
+    }
+
+    private static string GetPlaceholder(IIf_instruction if_instructionParam)
+    {
+        return if_instructionParam.Value is not null
+            ? $"{if_instructionParam.IfKeyword?.GetText()} {if_instructionParam.Identifier?.GetText()}={if_instructionParam.Value?.GetText()}"
+            : $"{if_instructionParam.IfKeyword?.GetText()} {if_instructionParam.Identifier?.GetText()}";
     }
 }
