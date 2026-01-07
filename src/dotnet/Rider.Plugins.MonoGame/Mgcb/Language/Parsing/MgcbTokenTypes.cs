@@ -82,4 +82,7 @@ public static class MgcbTokenTypes
 
     public static readonly TokenNodeType NEW_LINE = new NewLineType("NEW_LINE", NEW_LINE_NODE_TYPE_INDEX);
     public const int NEW_LINE_NODE_TYPE_INDEX = Offset + 15;
+
+    public static readonly TokenNodeType BAD_CHARACTER = new MgcbTokenType("BAD_CHARACTER", BAD_CHARACTER_NODE_TYPE_INDEX);
+    public const int BAD_CHARACTER_NODE_TYPE_INDEX = Offset + 16;
 }

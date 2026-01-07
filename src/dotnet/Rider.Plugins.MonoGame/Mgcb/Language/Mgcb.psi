@@ -66,15 +66,18 @@ errorhandling private item
 errorhandling option
 :
   OPTION_KEY (OPTION_SEPARATOR OPTION_VALUE)?
+  | OPTION_KEY {error,"Separator ':' and value expected"}
 ;
 
 errorhandling set_instruction
 :
   SET_KEYWORD WHITE_SPACE PREPROCESSOR_IDENTIFIER (EQ PREPROCESSOR_VALUE)?
+  | SET_KEYWORD {error,"Identifier expected after $set"}
 ;
 
 errorhandling if_instruction
 :
   IF_KEYWORD<MGCB_IF_KEYWORD, IfKeyword> WHITE_SPACE PREPROCESSOR_IDENTIFIER<MGCB_IDENTIFIER, Identifier> EQ PREPROCESSOR_VALUE<MGCB_VALUE, Value> WHITE_SPACE? NEW_LINE? (LIST (WHITE_SPACE? item? WHITE_SPACE?) SEP NEW_LINE)? NEW_LINE? ENDIF_KEYWORD<MGCB_ENDIF_KEYWORD, EndIfKeyword>
   | IF_KEYWORD<MGCB_IF_KEYWORD, IfKeyword> WHITE_SPACE PREPROCESSOR_IDENTIFIER<MGCB_IDENTIFIER, Identifier> WHITE_SPACE? NEW_LINE? (LIST (WHITE_SPACE? item? WHITE_SPACE?) SEP NEW_LINE)? NEW_LINE? ENDIF_KEYWORD<MGCB_ENDIF_KEYWORD, EndIfKeyword>
+  | IF_KEYWORD {error,"Expected identifier after $if"}
 ;

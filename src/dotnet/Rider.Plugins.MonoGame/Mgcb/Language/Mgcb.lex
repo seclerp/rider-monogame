@@ -68,4 +68,4 @@ ENDIF_KEYWORD="$endif"
 <WAITING_IF_VALUE> {PREPROCESSOR_VALUE}                     { yybegin(YYINITIAL); return MgcbTokenTypes.PREPROCESSOR_VALUE; }
 <YYINITIAL> {ENDIF_KEYWORD}                                 { yybegin(YYINITIAL); return MgcbTokenTypes.ENDIF_KEYWORD; }
 
-[^]                                                         { return TokenType.BAD_CHARACTER; }
+<YYINITIAL, WAITING_OPTION_KEY, WAITING_OPTION_VALUE, WAITING_SET_KEY, WAITING_SET_VALUE, WAITING_IF_KEY, WAITING_IF_VALUE> [^] { yybegin(YYINITIAL); return MgcbTokenTypes.BAD_CHARACTER; }
