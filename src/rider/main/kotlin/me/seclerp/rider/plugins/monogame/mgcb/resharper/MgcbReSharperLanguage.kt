@@ -1,8 +1,8 @@
 package me.seclerp.rider.plugins.monogame.mgcb.resharper
 
-import com.jetbrains.rider.ideaInterop.fileTypes.RiderLanguageBase
+import com.intellij.lang.Language
 
-class MgcbReSharperLanguage : RiderLanguageBase("MgcbReSharper", "MgcbReSharper") {
+class MgcbReSharperLanguage : Language("MgcbReSharper", "MgcbReSharper") {
     override fun isCaseSensitive(): Boolean = true
 
     companion object {

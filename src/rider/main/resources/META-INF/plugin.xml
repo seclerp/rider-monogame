@@ -50,6 +50,8 @@
     <fileType name="MonoGame SpriteFont File" implementationClass="me.seclerp.rider.plugins.monogame.spritefont.SpriteFontFileType"
               fieldName="Instance" language="XML" extensions="spritefont"/>
 
+    <rd.languageAssociation backendLanguage="MgcbReSharper" frontendLanguage="MgcbReSharper" />
+
     <lang.parserDefinition language="MGCB"
                            implementationClass="me.seclerp.rider.plugins.monogame.mgcb.MgcbParserDefinition"/>
 
