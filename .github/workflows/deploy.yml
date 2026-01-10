@@ -4,6 +4,11 @@ on:
     workflows: [Build & Text]
     types: [completed]
     branches: [ release/* ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   on-success-build:
     runs-on: ubuntu-latest
