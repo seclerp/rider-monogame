@@ -1,18 +1,18 @@
 using JetBrains.ProjectModel;
+using JetBrains.ProjectModel.Properties.VCXProj;
 using JetBrains.ReSharper.Psi.Cpp.Caches;
 using JetBrains.ReSharper.Psi.Cpp.Language;
 using JetBrains.ReSharper.Psi.Cpp.Util;
-using Rider.Plugins.MonoGame.Extensions;
 
 namespace Rider.Plugins.MonoGame.Effect;
 
-[SolutionComponent]
-public class EffectCppCompilationParametersProvider
+[CppCompilationPropertiesProvider(Priority = CppCompilationPropertiesProviderAttribute.NORMAL_PRIORITY)]
+public class EffectCppCompilationPropertiesProvider : ICppCompilationPropertiesProvider
 {
     public EffectHlslDialect EffectHlslDialect = new();
 
     public CppCompilationProperties GetCompilationProperties(IProject project, IProjectFile projectFile, CppFileLocation rootFile,
-        CppGlobalSymbolCache globalCache)
+        CppGlobalSymbolCache globalCache, CppIntelliSenseInfo intelliSenseInfo)
     {
         if (project.IsDotNetCoreProject() && rootFile.Location.ExtensionWithDot is CppProjectFileType.FX_EXTENSION or CppProjectFileType.FXH_EXTENSION)
         {

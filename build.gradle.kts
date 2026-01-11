@@ -96,6 +96,8 @@ dependencies {
             useInstaller = false
         }
         bundledModule("intellij.rider")
+        bundledModule("intellij.rider.cpp.core")
+        bundledModule("intellij.rider.cpp.core.languages")
         jetbrainsRuntime()
     }
 }

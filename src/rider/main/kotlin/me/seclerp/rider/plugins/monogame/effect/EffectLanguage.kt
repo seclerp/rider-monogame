@@ -1,8 +1,8 @@
 package me.seclerp.rider.plugins.monogame.effect
 
-import com.jetbrains.rider.ideaInterop.fileTypes.RiderLanguageBase
+import com.intellij.lang.Language
 
-object EffectLanguage : RiderLanguageBase("MGFX", "MGFX") {
+object EffectLanguage : Language("MGFX", "MGFX") {
     override fun isCaseSensitive(): Boolean = false
 }
 

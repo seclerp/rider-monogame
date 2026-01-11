@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Application.Parts;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi.Modules;
@@ -6,7 +7,7 @@ using Rider.Plugins.MonoGame.Extensions;
 
 namespace Rider.Plugins.MonoGame.Effect;
 
-[SolutionComponent]
+[SolutionComponent(Instantiation.DemandAnyThreadSafe)]
 public class EffectPsiModuleProviderFilter : IProjectPsiModuleProviderFilter
 {
     public Tuple<IProjectPsiModuleHandler, IPsiModuleDecorator> OverrideHandler(Lifetime lifetime, IProject project,
