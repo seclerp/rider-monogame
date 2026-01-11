@@ -11,6 +11,7 @@ namespace Rider.Plugins.MonoGame;
 public interface IMonoGameRiderZone : IPsiLanguageZone,
     IRequire<ILanguageCSharpZone>,
     IRequire<DaemonZone>,
+    IRequire<ILanguageCppZone>,
     IRequire<INuGetZone>
 {
 }

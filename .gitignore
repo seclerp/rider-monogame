@@ -21,3 +21,5 @@ _ReSharper*
 _dotTrace*
 gen
 Rd
+
+*.Generated.cs
