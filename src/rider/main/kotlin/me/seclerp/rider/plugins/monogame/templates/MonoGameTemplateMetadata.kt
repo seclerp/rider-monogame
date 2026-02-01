@@ -12,5 +12,7 @@ internal object MonoGameTemplateMetadata {
         const val CONTENT_BUILDER = "Content Builder"
         const val _2D_START_KIT = "2D StartKit"
         const val BLANK_2D_START_KIT = "Blank 2D StartKit"
+        const val CONTENT_BUILDER_2D_START_KIT = "Content Builder Platform 2D StartKit"
+        const val CONTENT_BUILDER_BLANK_START_KIT = "Content Builder Platform Blank StartKit"
     }
 }

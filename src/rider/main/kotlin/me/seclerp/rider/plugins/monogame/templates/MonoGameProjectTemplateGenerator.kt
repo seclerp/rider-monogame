@@ -28,6 +28,8 @@ internal class MonoGameProjectTemplateGenerator(
         TemplateTypeWithIcon(Names.CONTENT_BUILDER, MonoGameIcons.MgcbFile),
         TemplateTypeWithIcon(Names._2D_START_KIT, MonoGameIcons.MgcbFile),
         TemplateTypeWithIcon(Names.BLANK_2D_START_KIT, MonoGameIcons.MgcbFile),
+        TemplateTypeWithIcon(Names.CONTENT_BUILDER_2D_START_KIT, MonoGameIcons.MgcbFile),
+        TemplateTypeWithIcon(Names.CONTENT_BUILDER_BLANK_START_KIT, MonoGameIcons.MgcbFile),
     )
 
     override fun getType(template: RdProjectTemplate) = template.name
