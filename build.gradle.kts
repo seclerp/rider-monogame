@@ -298,6 +298,12 @@ tasks {
     withType<PrepareSandboxTask> {
         dependsOn(compileDotNet)
 
+        fun moveToPlugin(files: List<String>, destinationFolder: String) {
+            files.forEach {
+                from(it) { into("${intellijPlatform.projectName.get()}/$destinationFolder") }
+            }
+        }
+
         val outputFolder = file("$dotNetSrcDir/$dotnetPluginId/bin/$dotnetPluginId/$buildConfiguration")
         val backendFiles = listOf(
             "$outputFolder/$dotnetPluginId.dll",
@@ -306,15 +312,18 @@ tasks {
             // TODO: add additional assemblies
         )
 
-        for (f in backendFiles) {
-            from(f) { into("${rootProject.name}/dotnet") }
-        }
+        moveToPlugin(backendFiles, "dotnet")
+        moveToPlugin(listOf("projectTemplates"), "projectTemplates")
 
         doLast {
-            for (f in backendFiles) {
-                val file = file(f)
-                if (!file.exists()) throw RuntimeException("File \"$file\" does not exist")
+            fun validateFiles(files: List<String>, destinationFolder: String) {
+                files.forEach {
+                    val file = file(it)
+                    if (!file.exists()) throw RuntimeException("File $file does not exist")
+                    logger.warn("$name: ${file.name} -> $destinationDir/${intellijPlatform.projectName.get()}/$destinationFolder")
+                }
             }
+            validateFiles(backendFiles, "dotnet")
         }
     }
 
