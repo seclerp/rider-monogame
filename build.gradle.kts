@@ -7,7 +7,11 @@ import org.jetbrains.changelog.exceptions.MissingVersionException
 import org.jetbrains.intellij.platform.gradle.Constants
 import org.jetbrains.intellij.platform.gradle.tasks.PrepareSandboxTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import kotlin.collections.*
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+import java.util.*
 import kotlin.io.path.absolute
 import kotlin.io.path.isDirectory
 import kotlin.io.path.name
@@ -330,5 +334,104 @@ tasks {
     publishPlugin {
         token.set(publishToken)
         channels.set(listOf(publishChannel))
+    }
+
+    register("bumpProjectTemplates") {
+        val packageVersionProp = project.findProperty("packageVersion") as? String
+        val downloadUrl = when (packageVersionProp) {
+            null -> "https://www.nuget.org/api/v2/package/MonoGame.Templates.CSharp"
+            else -> "https://www.nuget.org/api/v2/package/MonoGame.Templates.CSharp/$packageVersionProp"
+        }
+
+        doLast {
+            val workDir = temporaryDir.resolve(UUID.randomUUID().toString())
+
+            try {
+                workDir.mkdirs()
+                val nupkgFile = workDir.resolve("MonoGame.Templates.CSharp.nupkg")
+                val targetDir = file("projectTemplates")
+
+                // 1. Download
+                logger.lifecycle("Downloading package from $downloadUrl...")
+                val client = HttpClient.newBuilder()
+                    .followRedirects(HttpClient.Redirect.NORMAL)
+                    .build()
+
+                val request = HttpRequest.newBuilder()
+                    .uri(URI(downloadUrl))
+                    .GET()
+                    .build()
+
+                val response = client.send(request, HttpResponse.BodyHandlers.ofInputStream())
+
+                require(response.statusCode() == 200) {
+                    "Failed to download package: HTTP ${response.statusCode()}"
+                }
+
+                response.body().use { input ->
+                    nupkgFile.outputStream().use { output ->
+                        input.copyTo(output)
+                    }
+                }
+
+                require(nupkgFile.exists() && nupkgFile.length() > 0) {
+                    "Failed to download package from $downloadUrl"
+                }
+
+                // 2. Unpack
+                logger.lifecycle("Unpacking package...")
+                copy {
+                    from(zipTree(nupkgFile))
+                    into(workDir)
+                    include("content/content/**", "*.nuspec")
+                }
+
+                // Extract version from .nuspec
+                val nuspecFile = workDir.listFiles()?.firstOrNull { it.extension == "nuspec" }
+                val version = when {
+                    nuspecFile?.exists() == true -> {
+                        val versionMatch = "<version>(.+?)</version>".toRegex(RegexOption.IGNORE_CASE)
+                            .find(nuspecFile.readText())
+                        versionMatch?.groupValues?.get(1) ?: "unknown"
+                    }
+                    else -> packageVersionProp ?: "unknown"
+                }
+
+                // 3. Clean target directory
+                logger.lifecycle("Cleaning projectTemplates directory...")
+                targetDir.apply {
+                    if (exists()) {
+                        deleteRecursively()
+                    }
+                    mkdirs()
+                }
+
+                // 4. Copy templates
+                val contentSource = workDir.resolve("content/content")
+                require(contentSource.exists() && contentSource.isDirectory) {
+                    "Content directory not found in package: ${contentSource.absolutePath}"
+                }
+
+                logger.lifecycle("Copying templates to projectTemplates...")
+                copy {
+                    from(contentSource)
+                    into(targetDir)
+                }
+
+                logger.lifecycle("Saving the templates version into .version file...")
+                File(targetDir, ".version").writeTextIfChanged(version)
+
+                logger.lifecycle("Successfully bumped project templates to version: $version")
+
+            } catch (e: Exception) {
+                logger.error("Failed to bump project templates: ${e.message}", e)
+                throw e
+            } finally {
+                if (workDir.exists()) {
+                    logger.lifecycle("Cleaning up temporary files...")
+                    delete(workDir)
+                }
+            }
+        }
     }
 }
