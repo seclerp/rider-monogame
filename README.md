@@ -83,7 +83,7 @@ Additional file templates are located under <kbd>Add</kbd> section of a folder o
 
 ### Requirements
 
-- JetBrains Rider **2025.1+**
+- JetBrains Rider **2025.3.2+**
 
 - Project with MonoGame installed (**3.8+ is recommended**)  
 
