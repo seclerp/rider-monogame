@@ -250,12 +250,13 @@ tasks {
             compilerOptions {
                 jvmTarget = JvmTarget.JVM_21
                 freeCompilerArgs.add("-Xopt-in=kotlin.RequiresOptIn")
+                freeCompilerArgs.add("-Xcontext-parameters=true")
             }
         }
     }
 
     patchPluginXml {
-        sinceBuild.set("253.0")
+        sinceBuild.set("253.2")
         val latestChangelog = try {
             changelog.getUnreleased()
         } catch (_: MissingVersionException) {
