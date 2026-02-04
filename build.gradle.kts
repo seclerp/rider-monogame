@@ -257,6 +257,7 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("253.2")
+        untilBuild.set("253.*")
         val latestChangelog = try {
             changelog.getUnreleased()
         } catch (_: MissingVersionException) {
