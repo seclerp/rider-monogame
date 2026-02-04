@@ -24,8 +24,6 @@ repositories {
     }
 }
 
-val grammarKitMissingDependencies by configurations.creating
-
 plugins {
     id("me.filippov.gradle.jvm.wrapper")
     // https://plugins.gradle.org/plugin/org.jetbrains.changelog
@@ -35,7 +33,7 @@ plugins {
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
     id("org.jetbrains.kotlin.jvm")
     // https://plugins.gradle.org/plugin/org.jetbrains.grammarkit
-    id("org.jetbrains.grammarkit") version "2022.3.2.2"
+    id("org.jetbrains.grammarkit") version "2023.3.0.1"
 }
 
 jvmWrapper {
@@ -100,16 +98,11 @@ dependencies {
         bundledModule("intellij.rider")
         jetbrainsRuntime()
     }
-
-    // Workaround for https://youtrack.jetbrains.com/issue/IJPL-217565/it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap-in-253.x
-    grammarKitMissingDependencies("it.unimi.dsi:fastutil:8.5.18")
-    grammarKitMissingDependencies("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0")
-    grammarKitMissingDependencies("org.jetbrains.intellij.deps:asm-all:9.6.1")
 }
 
 grammarKit {
     jflexRelease.set("1.9.1")
-    grammarKitRelease.set("2022.3.1")
+    grammarKitRelease.set("2023.3")
 }
 
 val riderModel: Configuration by configurations.creating {
