@@ -65,7 +65,7 @@ fun buildDotnetCommand(project: Project, vararg baseCommands: @NonNls String, bu
     CommandBuilder(*baseCommands)
         .apply {
             val activeToolset = project.solution.dotNetActiveRuntimeModel.activeRuntime.valueOrNull
-            executable(activeToolset?.dotNetCliExePath ?: throw Exception(".NET / .NET Core is not configured, unable to run commands."))
+            executable(activeToolset?.dotNetCliExePath?.value ?: throw Exception(".NET / .NET Core is not configured, unable to run commands."))
             workingDirectory(project.solutionDirectoryPath.toString())
             environment("DOTNET_SKIP_FIRST_TIME_EXPERIENCE", "true")
             environment("DOTNET_NOLOGO", "true")
