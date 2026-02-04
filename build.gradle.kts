@@ -130,7 +130,12 @@ tasks {
     }
 
     generateParser {
-        classpath += files(grammarKitMissingDependencies)
+        // TODO: Remove this dirty workaround after fixing of
+        //  https://github.com/JetBrains/gradle-grammar-kit-plugin/issues/223
+        val platformLibs = intellijPlatform.platformPath.resolve("lib")
+        classpath += fileTree(platformLibs) {
+            include("*.jar")
+        }
 
         sourceFile.set(file("src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/mgcb/Mgcb.bnf"))
         targetRootOutputDir.set(file("src/rider/gen"))
