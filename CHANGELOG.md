@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [261.0.0-eap03] - 2026-02-11
+### Added
+- General: Support for Rider 2026.1 (EAP 3+)
+
 ## [253.3.0] - 2026-02-02
 ### Added
 - Templates: Rework integration with a New Project Wizard – introduce the ability to install and manage MonoGame templates
@@ -98,7 +102,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Open in external MGCB editor action
 - Additional file templates
 
-[Unreleased]: https://github.com/seclerp/rider-monogame/compare/v253.3.0...HEAD
+[Unreleased]: https://github.com/seclerp/rider-monogame/compare/v261.0.0-eap03...HEAD
+[261.0.0-eap03]: https://github.com/seclerp/rider-monogame/compare/v253.3.0...v261.0.0-eap03
 [253.3.0]: https://github.com/seclerp/rider-monogame/compare/v253.2.0...v253.3.0
 [253.2.0]: https://github.com/seclerp/rider-monogame/compare/v253.1.0...v253.2.0
 [253.1.0]: https://github.com/seclerp/rider-monogame/compare/v252.0.0-eap02...v253.1.0
