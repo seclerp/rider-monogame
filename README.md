@@ -19,7 +19,6 @@ This plugin improves MonoGame usage experience inside JetBrains Rider.
 - **Asset file templates**: Create MGCB, Spritefont and Effect files directly from Rider.
 - **Spritefont editor support**: Syntax highlighting for `.spritefont` files together with XML-schema based autocompletion. 
 - **New Project wizard integration**: Install & manage MonoGame templates directly from New Project wizard dialog.
----
 
 ### How to install
 
