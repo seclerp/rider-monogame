@@ -1,62 +1,23 @@
-<div align="center">
-  <h1>MonoGame plugin for JetBrains Rider</h1>
-  <img src="img/rider-monogame-cover.png" alt="Logo">
-  <br /><br />
-  This plugin improves MonoGame usage experience inside JetBrains Rider.
-  <br /><br />
-  <a href="https://github.com/seclerp/rider-monogame/actions/workflows/build.yml"><img src="https://github.com/seclerp/rider-monogame/actions/workflows/build.yml/badge.svg" alt="Build"></a>
-</div>
+<img align="left" width="128" height="128" src="/img/logo-paddings.png">
+<h3>
+  MonoGame plugin for JetBrains Rider
+  &nbsp;&nbsp;
+  <a href="https://github.com/seclerp/rider-monogame/actions/workflows/build.yml"><img src="https://github.com/seclerp/rider-monogame/actions/workflows/build.yml/badge.svg" alt="Build" align="absmiddle"></a>
+</h3>
 
----
+This plugin improves MonoGame usage experience inside JetBrains Rider.
 
-<div align="center">
-  <h3>MGCB file editing</h3>
-</div>
+<br/>
 
-<p>
-  <img align="left" src="img/how-to-use-1.png"  alt="How to use 1"/>
-  <h3>Autocomplete and syntax highlighting</h3>
-  All supported MGCB options properly highlighted and could be autocompleted
-</p>
+### Features
 
-<br /><br />
-
-<p>
-  <img align="left" src="img/how-to-use-2.png"  alt="How to use 1"/>
-  <h3>Build entries previewer</h3>
-  See all your assets in a realtime tree view according to their declarations
-</p>
-
-<br /><br />
-
-<p>
-  <img align="left" src="img/how-to-use-3.png"  alt="How to use 1"/>
-  <h3>Table view for a build entry properties</h3>
-  Review build entry properties and processor parameters in a table representation
-</p>
-
-<br /><br />
-
-<p>
-  <img align="left" src="img/how-to-use-4.png"  alt="How to use 1"/>
-  <h3>Open in external MGCB editor action</h3>
-  Jump to external MGCB editor GUI in one click
-</p>
-
-<br />
-
-<div align="center">
-  <h3>Other</h3>
-</div>
-
-<p>
-  <img align="left" src="img/how-to-use-5.png"  alt="How to use 1"/>
-  <h3>Additional file templates</h3>
-
-Easily create MonoGame related assets using file templates under Add menu
-</p>
-<br />
-
+- **MGCB file autocomplete and syntax highlighting**: All supported MGCB options are properly highlighted in editor and could be autocompleted.
+- **Build entries previewer**: See all your assets in a realtime tree view according to their declarations.
+- **Table preview for a build entry properties**: Review build entry properties and processor parameters in a table representation.
+- **"Open in external MGCB editor" action**: Jump to external MGCB editor GUI in one click.
+- **Asset file templates**: Create MGCB, Spritefont and Effect files directly from Rider.
+- **Spritefont editor support**: Syntax highlighting for `.spritefont` files together with XML-schema based autocompletion. 
+- **New Project wizard integration**: Install & manage MonoGame templates directly from New Project wizard dialog.
 ---
 
 ### How to install
@@ -85,13 +46,11 @@ Additional file templates are located under <kbd>Add</kbd> section of a folder o
 
 - JetBrains Rider **2025.3.2+**
 
-- Project with MonoGame installed (**3.8+ is recommended**)  
-
-> **Note**: Projects with older versions of MonoGame might work, but with issues
+- Project with MonoGame installed (**3.8+ is recommended**)
 
 ### Development
 
-> **Note**: You should have JDK 21 and .NET SDK 8.0+ installed and configured.
+> **Note**: You should have JDK 21 and .NET SDK 10.0+ installed and configured.
 
 #### Preparing
 
