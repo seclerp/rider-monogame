@@ -1,8 +1,9 @@
 <img align="left" width="128" height="128" src="/img/logo-paddings.png">
 <h3>
   MonoGame plugin for JetBrains Rider
-  &nbsp;&nbsp;
+  &nbsp;
   <a href="https://github.com/seclerp/rider-monogame/actions/workflows/build.yml"><img src="https://github.com/seclerp/rider-monogame/actions/workflows/build.yml/badge.svg" alt="Build" align="absmiddle"></a>
+  <a href="https://plugins.jetbrains.com/plugin/18415-monogame"><img src="https://img.shields.io/jetbrains/plugin/v/18415.svg?label=Plugin&logoColor=black&colorB=0A7BBB&logo=data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMjMuOTUxIiBoZWlnaHQ9IjIzLjk1MiIgc3R5bGU9InN0cm9rZS13aWR0aDogMHB4OyBzdHJva2U6IHJnYigyNTUsIDI1NSwgMjU1KTsgcGFpbnQtb3JkZXI6IGZpbGw7IGZpbGw6IHJnYigyNTUsIDI1NSwgMjU1KTsiLz4KICA8cGF0aCBkPSJNMCAwdjI0aDI0VjB6bTcuMDMxIDMuMTEzQTQuMDYzIDQuMDYzIDAgMCAxIDkuNzIgNC4xNGEzLjIzIDMuMjMgMCAwIDEgLjg0IDIuMjhBMy4xNiAzLjE2IDAgMCAxIDguNCA5LjU0bDIuNDYgMy42SDguMjhMNi4xMiA5LjlINC4zOHYzLjI0SDIuMTZWMy4xMmMxLjYxLS4wMDQgMy4yODEuMDA5IDQuODcxLS4wMDd6bTUuNTA5LjAwN2gzLjk2YzMuMTggMCA1LjM0IDIuMTYgNS4zNCA1LjA0IDAgMi44Mi0yLjE2IDUuMDQtNS4zNCA1LjA0aC0zLjk2em00LjA2OSAxLjk3NmMtLjYwNy4wMS0xLjIzNS4wMDQtMS44NDkuMDA0djYuMDZoMS43NGEyLjg4MiAyLjg4MiAwIDAgMCAzLjA2LTMgMi44OTcgMi44OTcgMCAwIDAtMi45NTEtMy4wNjR6TTQuMzE5IDUuMXYyLjg4SDYuNmMxLjA4IDAgMS42OC0uNiAxLjY4LTEuNDQgMC0uOTYtLjY2LTEuNDQtMS43NC0xLjQ0ek0yLjE2IDE5LjVoOVYyMWgtOVoiLz4KPC9zdmc+" alt="Version"  align="absmiddle"></a>
 </h3>
 
 This plugin improves MonoGame usage experience inside JetBrains Rider.
