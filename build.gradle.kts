@@ -33,7 +33,7 @@ plugins {
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
     id("org.jetbrains.kotlin.jvm")
     // https://plugins.gradle.org/plugin/org.jetbrains.grammarkit
-    id("org.jetbrains.grammarkit") version "2023.3.0.1"
+    id("org.jetbrains.grammarkit") version "2023.3.0.3"
 }
 
 jvmWrapper {
