@@ -30,10 +30,10 @@ plugins {
     id("org.jetbrains.changelog") version "2.5.0"
     // https://plugins.gradle.org/plugin/org.jetbrains.intellij.platform
     id("org.jetbrains.intellij.platform")
+    // https://plugins.gradle.org/plugin/org.jetbrains.intellij.platform.grammarkit
+    id("org.jetbrains.intellij.platform.grammarkit")
     // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.jvm
     id("org.jetbrains.kotlin.jvm")
-    // https://plugins.gradle.org/plugin/org.jetbrains.grammarkit
-    id("org.jetbrains.grammarkit") version "2023.3.0.1"
 }
 
 jvmWrapper {
@@ -97,12 +97,9 @@ dependencies {
         }
         bundledModule("intellij.rider")
         jetbrainsRuntime()
+        jflex()
+        grammarKit()
     }
-}
-
-grammarKit {
-    jflexRelease.set("1.9.1")
-    grammarKitRelease.set("2023.3")
 }
 
 val riderModel: Configuration by configurations.creating {
@@ -130,13 +127,6 @@ tasks {
     }
 
     generateParser {
-        // TODO: Remove this dirty workaround after fixing of
-        //  https://github.com/JetBrains/gradle-grammar-kit-plugin/issues/223
-        val platformLibs = intellijPlatform.platformPath.resolve("lib")
-        classpath += fileTree(platformLibs) {
-            include("*.jar")
-        }
-
         sourceFile.set(file("src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/mgcb/Mgcb.bnf"))
         targetRootOutputDir.set(file("src/rider/gen"))
         pathToParser.set("/parser/MgcbParser.java")

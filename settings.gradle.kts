@@ -20,6 +20,7 @@ pluginManagement {
         id("com.jetbrains.rdgen") version rdVersion
         id("org.jetbrains.kotlin.jvm") version rdKotlinVersion
         id("org.jetbrains.intellij.platform") version intellijPlatformGradleVersion
+        id("org.jetbrains.intellij.platform.grammarkit") version intellijPlatformGradleVersion
         id("me.filippov.gradle.jvm.wrapper") version gradleJvmWrapperVersion
     }
 
