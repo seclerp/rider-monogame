@@ -97,8 +97,6 @@ dependencies {
         }
         bundledModule("intellij.rider")
         jetbrainsRuntime()
-        jflex("1.9.2")
-        grammarKit("2023.3.1")
     }
 }
 
