@@ -107,7 +107,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Additional file templates
 
 [Unreleased]: https://github.com/seclerp/rider-monogame/compare/v261.0.0-eap07...HEAD
-[261.0.0-eap03]: https://github.com/seclerp/rider-monogame/compare/v261.0.0-eap03...v261.0.0-eap07
+[261.0.0-eap07]: https://github.com/seclerp/rider-monogame/compare/v261.0.0-eap03...v261.0.0-eap07
 [261.0.0-eap03]: https://github.com/seclerp/rider-monogame/compare/v253.3.0...v261.0.0-eap03
 [253.3.0]: https://github.com/seclerp/rider-monogame/compare/v253.2.0...v253.3.0
 [253.2.0]: https://github.com/seclerp/rider-monogame/compare/v253.1.0...v253.2.0
