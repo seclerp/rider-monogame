@@ -12,6 +12,11 @@
         "dotnet-mgcb-editor-linux",
         "dotnet-mgcb"
       ]
+    },
+    {
+      "description": "Block internal JetBrains/Kotlin dev builds",
+      "matchPackagePrefixes": ["org.jetbrains.kotlin"],
+      "allowedVersions": "!/-(mars|dev|ij|m)\\d*/i"
     }
   ]
 }
