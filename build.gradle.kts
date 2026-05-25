@@ -120,15 +120,14 @@ artifacts {
 tasks {
     generateLexer {
         sourceFile.set(file("src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/mgcb/Mgcb.flex"))
-        targetOutputDir.set(file("src/rider/gen/me/seclerp/rider/plugins/monogame/mgcb"))
+        targetRootOutputDir.set(file("src/rider/gen/lexer"))
+        packageName.set("me.seclerp.rider.plugins.monogame.mgcb")
         purgeOldFiles.set(true)
     }
 
     generateParser {
         sourceFile.set(file("src/rider/main/kotlin/me/seclerp/rider/plugins/monogame/mgcb/Mgcb.bnf"))
-        targetRootOutputDir.set(file("src/rider/gen"))
-        pathToParser.set("/parser/MgcbParser.java")
-        pathToPsiRoot.set("/psi")
+        targetRootOutputDir.set(file("src/rider/gen/parser"))
         purgeOldFiles.set(true)
     }
 
