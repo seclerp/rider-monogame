@@ -1,7 +1,7 @@
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Properties.VCXProj;
 using JetBrains.ReSharper.Psi.Cpp.Caches;
-using JetBrains.ReSharper.Psi.Cpp.Language;
+using JetBrains.ReSharper.Psi.Cpp.Symbols;
 using JetBrains.ReSharper.Psi.Cpp.Util;
 
 namespace Rider.Plugins.MonoGame.Effect;
@@ -22,12 +22,25 @@ public class EffectCppCompilationPropertiesProvider : ICppCompilationPropertiesP
         return null;
     }
 
-    private static CppCompilationProperties CreateProperties(CppHLSLDialect dialect)
+    private static CppCompilationProperties CreateProperties(EffectHlslDialect dialect)
     {
         return new CppCompilationProperties
         {
             OverridenDialect = dialect,
             LanguageKind = dialect.LanguageKind,
+            PredefinedMacros =
+            {
+                CppPPDefineSymbolUtil.CreatePredefinedSymbol("MGFX", "1"),
+                CppPPDefineSymbolUtil.CreatePredefinedSymbol("HLSL", "1"),
+                CppPPDefineSymbolUtil.CreatePredefinedSymbol("SM4", "1"),
+
+                // DX9-era legacy texture type aliases (HLSL is case-insensitive)
+                CppPPDefineSymbolUtil.CreatePredefinedSymbol("texture", "Texture2D"),
+                CppPPDefineSymbolUtil.CreatePredefinedSymbol("texture1D", "Texture1D"),
+                CppPPDefineSymbolUtil.CreatePredefinedSymbol("texture2D", "Texture2D"),
+                CppPPDefineSymbolUtil.CreatePredefinedSymbol("texture3D", "Texture3D"),
+                CppPPDefineSymbolUtil.CreatePredefinedSymbol("textureCUBE", "TextureCube"),
+            }
         };
     }
 }
