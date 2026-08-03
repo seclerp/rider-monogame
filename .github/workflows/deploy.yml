@@ -24,8 +24,8 @@ jobs:
       - name: 🛠 Setup JDK
         uses: actions/setup-java@v5
         with:
-          java-version: 21
-          distribution: jetbrains
+          java-version: 25
+          distribution: corretto
 
       - name: 📦 Download artifacts
         uses: dawidd6/action-download-artifact@v2

@@ -37,11 +37,11 @@ plugins {
 }
 
 jvmWrapper {
-    linuxAarch64JvmUrl = "https://download.oracle.com/java/21/archive/jdk-21.0.3_linux-aarch64_bin.tar.gz"
-    linuxX64JvmUrl = "https://download.oracle.com/java/21/archive/jdk-21.0.3_linux-x64_bin.tar.gz"
-    macAarch64JvmUrl = "https://download.oracle.com/java/21/archive/jdk-21.0.3_macos-aarch64_bin.tar.gz"
-    macX64JvmUrl = "https://download.oracle.com/java/21/archive/jdk-21.0.3_macos-x64_bin.tar.gz"
-    windowsX64JvmUrl = "https://download.oracle.com/java/21/archive/jdk-21.0.3_windows-x64_bin.zip"
+    linuxAarch64JvmUrl = "https://corretto.aws/downloads/latest/amazon-corretto-25-aarch64-linux-jdk.tar.gz"
+    linuxX64JvmUrl = "https://corretto.aws/downloads/latest/amazon-corretto-25-x64-linux-jdk.tar.gz"
+    macAarch64JvmUrl = "https://corretto.aws/downloads/latest/amazon-corretto-25-aarch64-macos-jdk.tar.gz"
+    macX64JvmUrl = "https://corretto.aws/downloads/latest/amazon-corretto-25-x64-macos-jdk.tar.gz"
+    windowsX64JvmUrl = "https://corretto.aws/downloads/latest/amazon-corretto-25-x64-windows-jdk.zip"
 }
 
 dependencies {
@@ -96,6 +96,8 @@ dependencies {
             useInstaller = false
         }
         bundledModule("intellij.rider")
+        bundledModule("intellij.rider.rdclient.dotnet")
+        bundledModule("intellij.rider.shared")
         jetbrainsRuntime()
     }
 }
@@ -132,7 +134,7 @@ tasks {
     }
 
     wrapper {
-        gradleVersion = "9.2.1"
+        gradleVersion = "9.6.1"
         distributionType = Wrapper.DistributionType.ALL
         distributionUrl = "https://cache-redirector.jetbrains.com/services.gradle.org/distributions/gradle-${gradleVersion}-all.zip"
     }
@@ -233,7 +235,7 @@ tasks {
         dependsOn(":protocol:rdgen", generateLexer, generateParser)
         kotlin {
             compilerOptions {
-                jvmTarget = JvmTarget.JVM_21
+                jvmTarget = JvmTarget.JVM_25
                 freeCompilerArgs.add("-Xopt-in=kotlin.RequiresOptIn")
                 freeCompilerArgs.add("-Xcontext-parameters=true")
             }
@@ -241,8 +243,8 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("261.0")
-        untilBuild.set("261.*")
+        sinceBuild.set("262.0")
+        untilBuild.set("262.*")
         val latestChangelog = try {
             changelog.getUnreleased()
         } catch (_: MissingVersionException) {

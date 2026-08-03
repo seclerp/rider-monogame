@@ -29,8 +29,8 @@ jobs:
       - name: 🛠 Setup JDK
         uses: actions/setup-java@v5
         with:
-          java-version: 21
-          distribution: jetbrains
+          java-version: 25
+          distribution: corretto
 
       - name: 🛠 Setup .NET SDK
         uses: actions/setup-dotnet@v5

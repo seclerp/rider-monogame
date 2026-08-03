@@ -5,6 +5,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [262.1.0] - 2026-08-03
+### Added
+- General: Support for Rider 2026.2
+
 ## [261.1.0] - 2026-05-25
 ### Added
 - General: Support for Rider 2026.1.2
@@ -110,8 +114,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Open in external MGCB editor action
 - Additional file templates
 
-[Unreleased]: https://github.com/seclerp/rider-monogame/compare/v261.1.2...HEAD
-[261.1.2]: https://github.com/seclerp/rider-monogame/compare/v261.0.0-eap07...v261.1.2
+[Unreleased]: https://github.com/seclerp/rider-monogame/compare/v262.1.0...HEAD
+[262.2.0]: https://github.com/seclerp/rider-monogame/compare/v261.1.0...v262.1.0
+[261.1.0]: https://github.com/seclerp/rider-monogame/compare/v261.0.0-eap07...v261.1.0
 [261.0.0-eap07]: https://github.com/seclerp/rider-monogame/compare/v261.0.0-eap03...v261.0.0-eap07
 [261.0.0-eap03]: https://github.com/seclerp/rider-monogame/compare/v253.3.0...v261.0.0-eap03
 [253.3.0]: https://github.com/seclerp/rider-monogame/compare/v253.2.0...v253.3.0
