@@ -38,13 +38,13 @@ jobs:
           dotnet-version: 10.0.101
 
       - name: 🔧 Prepare build devenv
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           cache-disabled: true
           arguments: prepare
 
       - name: 🏗 Build Plugin (Stable)
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: buildPlugin
 
