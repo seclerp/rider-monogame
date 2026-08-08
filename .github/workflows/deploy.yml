@@ -28,7 +28,7 @@ jobs:
           distribution: corretto
 
       - name: 📦 Download artifacts
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with:
           name: plugin-artifacts-ubuntu-latest
           path: ${{ env.ARTIFACTS_FOLDER }}
