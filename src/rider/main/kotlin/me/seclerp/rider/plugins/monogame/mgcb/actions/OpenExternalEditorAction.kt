@@ -70,6 +70,6 @@ class OpenExternalEditorAction : AnAction(MonoGameIcons.MgcbFile) {
                 is MgcbResolvedTool.None -> null
             }
 
-        DefaultCommandExecutor.getInstance(intellijProject).execute(command ?: return)
+        DefaultCommandExecutor.getInstance(intellijProject).executeDetached(command ?: return)
     }
 }

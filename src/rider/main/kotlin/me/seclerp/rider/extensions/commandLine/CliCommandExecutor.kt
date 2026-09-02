@@ -7,4 +7,5 @@ abstract class CliCommandExecutor(
     protected val intellijProject: Project
 ) {
     abstract fun execute(command: GeneralCommandLine)
+    abstract fun executeDetached(command: GeneralCommandLine)
 }
