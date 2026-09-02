@@ -78,33 +78,10 @@ Subsystem: description (#ISSUE_ID by @USER_ID)
 
 ## Release preparation process
 
-If asked by the user to prepare a release, follow this workflow **step by step**, in order:
-
-1. **Fetch recent changes.** Before doing anything else, run `git fetch` for the requested release
-   branch (or the currently checked out branch if none was explicitly requested), and make sure the
-   local branch is up to date with its remote counterpart.
-2. **Determine the next version.** Before writing or editing anything, compute the next plugin
-   version according to [Semantic Versioning](https://semver.org/spec/v2.0.0.html), based on the
-   contents of the `[Unreleased]` section of `CHANGELOG.md`. Then ask the user to confirm the
-   version and the changes that will be included in it. If the user agrees, proceed. Otherwise,
-   apply the corrections requested by the user and confirm again.
-3. **Bump the version.** Update the `pluginVersion` field in `gradle.properties` according to the
-   version agreed upon in step 2.
-4. **Verify the build.** Run `./gradlew :buildPlugin` and make sure it succeeds.
-5. **Update the changelog.** In `CHANGELOG.md`, turn the `[Unreleased]` section into a new
-   released section named after the new version, with today's date (format: `## [X.Y.Z] - YYYY-MM-DD`),
-   and leave a fresh empty `[Unreleased]` section above it. Update the compare links at the bottom
-   of the file (`[Unreleased]` and the new version entry) to point to the correct tags.
-6. **Commit the changes** using this strict format:
-
-   ```
-   Prepare `VERSION`
-
-   - <concise bullet describing what you did in step 3>
-   - <concise bullet describing what you did in step 5>
-   ```
-
-   Do not add co-authors to this commit unless explicitly asked to (see "Commits" above).
+If asked by the user to prepare, cut, bump, or ship a release, use the `prepare-release` skill
+(`.agents/skills/prepare-release/SKILL.md`), which covers fetching the target branch, computing
+the next version from the changelog, bumping `gradle.properties`, verifying the build, updating
+`CHANGELOG.md`, and committing — in that order.
 
 ## Architecture notes
 
