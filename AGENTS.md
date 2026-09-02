@@ -66,6 +66,16 @@ If there is an external contributor:
 Subsystem: description (#ISSUE_ID by @USER_ID)
 ```
 
+## Pull requests
+
+- Create pull requests using the `gh` CLI (e.g. `gh pr create`).
+- Title and body should be concise.
+- If the PR fixes an existing issue, the body must include a separate line:
+
+  ```
+  Fix #ISSUE_ID
+  ```
+
 ## Release preparation process
 
 If asked by the user to prepare a release, follow this workflow **step by step**, in order:
