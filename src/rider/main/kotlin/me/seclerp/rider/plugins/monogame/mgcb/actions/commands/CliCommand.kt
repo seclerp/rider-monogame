@@ -8,7 +8,6 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.Project
 
-@Suppress("UnstableApiUsage")
 open class CliCommand(
     private val command: GeneralCommandLine,
 ) {

@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 package me.seclerp.rider.extensions.workspaceModel
 
 import com.intellij.openapi.project.Project

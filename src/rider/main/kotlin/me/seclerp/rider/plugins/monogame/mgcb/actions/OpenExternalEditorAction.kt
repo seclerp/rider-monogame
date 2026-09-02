@@ -19,7 +19,7 @@ import me.seclerp.rider.plugins.monogame.MonoGameUiBundle
 import me.seclerp.rider.plugins.monogame.mgcb.toolset.MgcbResolvedTool
 import me.seclerp.rider.plugins.monogame.mgcb.toolset.MgcbToolsetHost
 
-@Suppress("DialogTitleCapitalization", "UnstableApiUsage")
+@Suppress("DialogTitleCapitalization")
 class OpenExternalEditorAction : AnAction(MonoGameIcons.MgcbFile) {
     override fun actionPerformed(actionEvent: AnActionEvent) {
         val intellijProject = actionEvent.project ?: return
