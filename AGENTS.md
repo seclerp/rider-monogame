@@ -39,6 +39,32 @@ instance; it is not a substitute for `buildPlugin` verification.
 
 - Commits should **not** include any co-authors unless explicitly asked to.
 - Keep commit messages focused on a single logical change.
+- Commit messages should be concise and not too verbose.
+- If a commit is related to an issue, include a separate line in the commit message:
+
+  ```
+  Fix #ISSUE_ID
+  ```
+
+## Changelog entries
+
+Each `CHANGELOG.md` entry should follow the pattern:
+
+```
+Subsystem: description
+```
+
+If there is an issue ID:
+
+```
+Subsystem: description (#ISSUE_ID)
+```
+
+If there is an external contributor:
+
+```
+Subsystem: description (#ISSUE_ID by @USER_ID)
+```
 
 ## Release preparation process
 
