@@ -50,6 +50,14 @@ class DefaultCommandExecutor(
         }
     }
 
+    override fun executeDetached(command: GeneralCommandLine) {
+        try {
+            command.toProcessBuilder().start()
+        } catch (e: Exception) {
+            failed(command.commandLineString, e)
+        }
+    }
+
     private fun failed(command: String, exception: Exception) {
         logger.error(buildString {
             append("Command '$command' failed\n")
