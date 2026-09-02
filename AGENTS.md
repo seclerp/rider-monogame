@@ -125,3 +125,12 @@ Development requires JDK 21+ and .NET SDK 10.0+ installed and configured (see `R
 This project uses a customized git strategy: each `release/*` branch is the main development
 branch for a specific Rider release cycle (e.g. `release/251` tracks the `251.*`/`2025.1` cycle).
 Keep this in mind when proposing branches or targeting pull requests.
+
+Branch naming rules:
+
+- `feature/name` — for new features.
+- `bugfix/name` — for bug fixes.
+- `release/number` — major release branches targeting a specific Rider release cycle. The
+  number encodes the Rider version: `262` targets Rider 2026.2, `251` targets Rider 2025.1, etc.
+
+Names should be concise, lowercased, and use `-` as the word separator (e.g. `feature/mgcb-editor-detached-launch`).
