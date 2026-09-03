@@ -42,6 +42,17 @@ public class MgcbToolsetTracker
         MgcbSolutionToolset = CreateSolutionToolset(solutionToolsTracker);
         MgcbProjectsToolset = new ViewableMap<IProject, MgcbToolset<LocalTool>>();
 
+        // NuGetDotnetToolsTrackerBase caches an empty DotNetToolCache if the .NET Core toolset
+        // isn't resolved yet at the first manifest scan, and never rescans on its own once the
+        // toolset becomes available later. Force a rescan whenever the toolset changes to work
+        // around this, otherwise a correctly installed local tool can stay undetected forever.
+        toolset.Changed.Advise(lifetime, _ =>
+        {
+            solutionToolsTracker.QueueManifestUpdate();
+            foreach (var projectToolsTracker in _projectToolsTrackers.Values)
+                projectToolsTracker.QueueManifestUpdate();
+        });
+
         projectsCollection.Projects.View(
             lifetime,
             (projectLifetime, project) =>

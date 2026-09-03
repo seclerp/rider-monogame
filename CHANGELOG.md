@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - MGCB: Fix globally installed `mgcb-editor` tool failing to launch on Linux/macOS (#63)
+- MGCB: Fix "Open in MGCB editor" staying disabled forever when the .NET SDK toolset resolves after the initial local tool manifest scan (#63)
 
 ## [262.1.1] - 2026-09-02
 ### Fixed
