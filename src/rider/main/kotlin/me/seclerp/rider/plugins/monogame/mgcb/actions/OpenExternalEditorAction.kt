@@ -66,7 +66,10 @@ class OpenExternalEditorAction : AnAction(MonoGameIcons.MgcbFile) {
         val command =
             when (editorTool) {
                 is MgcbResolvedTool.Local -> buildDotnetCommand(intellijProject, editorTool.definition.commandName) { configureEditorCommand() }
-                is MgcbResolvedTool.Global -> buildCommand(editorTool.definition.commandName) { configureEditorCommand() }
+                is MgcbResolvedTool.Global -> buildCommand {
+                    executable(editorTool.definition.commandName)
+                    configureEditorCommand()
+                }
                 is MgcbResolvedTool.None -> null
             }
 
