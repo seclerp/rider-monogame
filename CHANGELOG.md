@@ -4,6 +4,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [262.1.2] - 2026-09-03
 ### Fixed
 - MGCB: Fix globally installed `mgcb-editor` tool failing to launch on Linux/macOS (#63)
 - MGCB: Fix "Open in MGCB editor" staying disabled forever when the .NET SDK toolset resolves after the initial local tool manifest scan (#63)
@@ -121,7 +123,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Open in external MGCB editor action
 - Additional file templates
 
-[Unreleased]: https://github.com/seclerp/rider-monogame/compare/v262.1.1...HEAD
+[Unreleased]: https://github.com/seclerp/rider-monogame/compare/v262.1.2...HEAD
+[262.1.2]: https://github.com/seclerp/rider-monogame/compare/v262.1.1...v262.1.2
 [262.1.1]: https://github.com/seclerp/rider-monogame/compare/v262.1.0...v262.1.1
 [262.1.0]: https://github.com/seclerp/rider-monogame/compare/v261.1.0...v262.1.0
 [261.1.0]: https://github.com/seclerp/rider-monogame/compare/v261.0.0-eap07...v261.1.0
