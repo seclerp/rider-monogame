@@ -4,6 +4,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [262.1.3] - 2026-09-04
 ### Fixed
 - MGCB: Run `mgcb-editor` by its absolute path instead of relying on `PATH` and the working directory (#63)
 - MGCB: Report and log `mgcb-editor` launch failures instead of silently doing nothing (#63)
@@ -127,7 +129,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Open in external MGCB editor action
 - Additional file templates
 
-[Unreleased]: https://github.com/seclerp/rider-monogame/compare/v262.1.2...HEAD
+[Unreleased]: https://github.com/seclerp/rider-monogame/compare/v262.1.3...HEAD
+[262.1.3]: https://github.com/seclerp/rider-monogame/compare/v262.1.2...v262.1.3
 [262.1.2]: https://github.com/seclerp/rider-monogame/compare/v262.1.1...v262.1.2
 [262.1.1]: https://github.com/seclerp/rider-monogame/compare/v262.1.0...v262.1.1
 [262.1.0]: https://github.com/seclerp/rider-monogame/compare/v261.1.0...v262.1.0
