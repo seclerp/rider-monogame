@@ -18,6 +18,9 @@ import me.seclerp.rider.plugins.monogame.MonoGameIcons
 import me.seclerp.rider.plugins.monogame.MonoGameUiBundle
 import me.seclerp.rider.plugins.monogame.mgcb.toolset.MgcbResolvedTool
 import me.seclerp.rider.plugins.monogame.mgcb.toolset.MgcbToolsetHost
+import kotlin.io.path.Path
+import kotlin.io.path.isRegularFile
+import kotlin.io.path.nameWithoutExtension
 
 @Suppress("DialogTitleCapitalization")
 class OpenExternalEditorAction : AnAction(MonoGameIcons.MgcbFile) {
@@ -63,16 +66,48 @@ class OpenExternalEditorAction : AnAction(MonoGameIcons.MgcbFile) {
             param(contentFile.path)
         }
 
+        // Whenever the exact tool location is known, prefer running it directly through the .NET CLI.
+        // That is exactly what the .NET CLI itself does under the hood, and unlike the rules described
+        // above, it doesn't depend on the environment at all: neither on PATH (global tools), nor on the
+        // working directory being covered by the tool manifest (local tools).
+        fun buildExecCommand(executablePath: String) =
+            buildDotnetCommand(intellijProject, "exec") {
+                param(resolveEditorAssembly(executablePath))
+                configureEditorCommand()
+            }
+
         val command =
             when (editorTool) {
-                is MgcbResolvedTool.Local -> buildDotnetCommand(intellijProject, editorTool.definition.commandName) { configureEditorCommand() }
-                is MgcbResolvedTool.Global -> buildCommand {
-                    executable(editorTool.definition.commandName)
-                    configureEditorCommand()
-                }
+                is MgcbResolvedTool.Local ->
+                    editorTool.definition.executablePath?.let { buildExecCommand(it) }
+                        ?: buildDotnetCommand(intellijProject, editorTool.definition.commandName) { configureEditorCommand() }
+                is MgcbResolvedTool.Global ->
+                    editorTool.definition.executablePath?.let { buildExecCommand(it) }
+                        ?: buildCommand {
+                            executable(editorTool.definition.commandName)
+                            configureEditorCommand()
+                        }
                 is MgcbResolvedTool.None -> null
             }
 
         DefaultCommandExecutor.getInstance(intellijProject).executeDetached(command ?: return)
+    }
+
+    // The entry point of the 'mgcb-editor-*' tools is just a launcher: it spawns the real editor
+    // application, which is shipped next to it inside the '<tool>-data' folder, and exits immediately
+    // with a success code, hiding any failure of the editor itself.
+    // That application is spawned through its own framework-dependent application host, which locates
+    // the .NET runtime on its own, relying on DOTNET_ROOT or on one of the default install locations.
+    // Neither of them is guaranteed to be there: the IDE doesn't necessarily pass the shell environment
+    // to child processes, and the SDK might be installed into a custom location.
+    // Running the editor assembly directly through the known 'dotnet' executable skips the application
+    // host entirely, so the runtime is always resolved, and makes the editor process the one being
+    // tracked, so its failures are actually visible.
+    private fun resolveEditorAssembly(executablePath: String): String {
+        val executable = Path(executablePath)
+        val name = executable.nameWithoutExtension
+        val editorAssembly = executable.resolveSibling("$name-data").resolve("$name.dll")
+
+        return if (editorAssembly.isRegularFile()) editorAssembly.toString() else executablePath
     }
 }

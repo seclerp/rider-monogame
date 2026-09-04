@@ -5,7 +5,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Fixed
+- MGCB: Run `mgcb-editor` by its absolute path instead of relying on `PATH` and the working directory (#63)
 - MGCB: Report and log `mgcb-editor` launch failures instead of silently doing nothing (#63)
+- MGCB: Launch the MGCB editor application through the resolved `dotnet` executable instead of its launcher, which failed to find the .NET runtime and hid all the editor failures (#63)
 
 ## [262.1.2] - 2026-09-03
 ### Fixed

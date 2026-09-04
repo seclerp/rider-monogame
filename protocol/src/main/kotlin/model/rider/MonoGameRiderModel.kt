@@ -12,6 +12,7 @@ object MonoGameRiderModel : Ext(SolutionModel.Solution) {
         field("packageId", PredefinedType.string)
         field("commandName", PredefinedType.string)
         field("version", PredefinedType.string)
+        field("executablePath", PredefinedType.string.nullable)
     }
 
     private val MgcbEditorToolset = aggregatedef("MgcbEditorToolset") {

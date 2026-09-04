@@ -58,13 +58,17 @@ public class MonoGameRdModelHost
         });
     }
 
+    // The executable path is passed to the frontend to be able to run the tool without relying on
+    // the environment (i.e. PATH for global tools or the working directory for local ones).
     [NotNull]
     private static ToolDefinition MapGlobalTool([NotNull] GlobalToolCacheEntry tool) =>
-        new (tool.ToolName, MgcbEditorCommandNameResolver.Resolve(tool), tool.Version.ToString());
+        new (tool.ToolName, MgcbEditorCommandNameResolver.Resolve(tool), tool.Version.ToString(),
+            tool.EntryPointPath?.FullPath);
 
     [NotNull]
     private static ToolDefinition MapLocalTool([NotNull] LocalTool tool) =>
-        new (tool.PackageId, MgcbEditorCommandNameResolver.Resolve(tool), tool.Version);
+        new (tool.PackageId, MgcbEditorCommandNameResolver.Resolve(tool), tool.Version,
+            tool.PathToExecutable?.FullPath);
 
     private static void Unset(MgcbEditorToolset toolset)
     {
